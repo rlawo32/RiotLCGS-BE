@@ -16,6 +16,8 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+application-apikey.properties
+application-supabase.properties
 
 ### IntelliJ IDEA ###
 .idea
