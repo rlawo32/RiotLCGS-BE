@@ -1,9 +1,7 @@
 package riot.lcgs.riotlcgsbe.jpa.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class LCG_Match_Team {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "row_num")
     private Long rowNum;
 
@@ -21,22 +20,22 @@ public class LCG_Match_Team {
     private Long lgcGameId;
 
     @Column(name = "lcg_team_id")
-    private String lgcTeamId;
+    private int lgcTeamId;
 
-    @Column(name = "lcg_first_dragon")
-    private boolean lgcFirstDragon;
+    @Column(name = "lcg_first_dragon", length = 1)
+    private String lgcFirstDragon;
 
-    @Column(name = "lcg_first_baron")
-    private boolean lgcFirstBaron;
+    @Column(name = "lcg_first_baron", length = 1)
+    private String lgcFirstBaron;
 
-    @Column(name = "lcg_first_kill")
-    private boolean lgcFirstKill;
+    @Column(name = "lcg_first_kill", length = 1)
+    private String lgcFirstKill;
 
-    @Column(name = "lcg_first_tower")
-    private boolean lgcFirstTower;
+    @Column(name = "lcg_first_tower", length = 1)
+    private String lgcFirstTower;
 
-    @Column(name = "lcg_first_inhibitor")
-    private boolean lgcFirstInhibitor;
+    @Column(name = "lcg_first_inhibitor", length = 1)
+    private String lgcFirstInhibitor;
 
     @Column(name = "lcg_dragon_total")
     private int lgcDragonTotal;
@@ -113,4 +112,46 @@ public class LCG_Match_Team {
     @Column(name = "lcg_bans_name_10")
     private String lgcBansName10;
 
+    @Builder
+    public LCG_Match_Team(Long lgcGameId, int lgcTeamId, String lgcFirstDragon, String lgcFirstBaron,
+                          String lgcFirstKill, String lgcFirstTower, String lgcFirstInhibitor, int lgcDragonTotal,
+                          int lgcBaronTotal, int lgcTowerTotal, int lgcHordeTotal, int lgcHeraldTotal,
+                          int lgcBansChamp1, String lgcBansName1, int lgcBansChamp2, String lgcBansName2,
+                          int lgcBansChamp3, String lgcBansName3, int lgcBansChamp4, String lgcBansName4,
+                          int lgcBansChamp5, String lgcBansName5, int lgcBansChamp6, String lgcBansName6,
+                          int lgcBansChamp7, String lgcBansName7, int lgcBansChamp8, String lgcBansName8,
+                          int lgcBansChamp9, String lgcBansName9, int lgcBansChamp10, String lgcBansName10) {
+        this.lgcGameId = lgcGameId;
+        this.lgcTeamId = lgcTeamId;
+        this.lgcFirstDragon = lgcFirstDragon;
+        this.lgcFirstBaron = lgcFirstBaron;
+        this.lgcFirstKill = lgcFirstKill;
+        this.lgcFirstTower = lgcFirstTower;
+        this.lgcFirstInhibitor = lgcFirstInhibitor;
+        this.lgcDragonTotal = lgcDragonTotal;
+        this.lgcBaronTotal = lgcBaronTotal;
+        this.lgcTowerTotal = lgcTowerTotal;
+        this.lgcHordeTotal = lgcHordeTotal;
+        this.lgcHeraldTotal = lgcHeraldTotal;
+        this.lgcBansChamp1 = lgcBansChamp1;
+        this.lgcBansName1 = lgcBansName1;
+        this.lgcBansChamp2 = lgcBansChamp2;
+        this.lgcBansName2 = lgcBansName2;
+        this.lgcBansChamp3 = lgcBansChamp3;
+        this.lgcBansName3 = lgcBansName3;
+        this.lgcBansChamp4 = lgcBansChamp4;
+        this.lgcBansName4 = lgcBansName4;
+        this.lgcBansChamp5 = lgcBansChamp5;
+        this.lgcBansName5 = lgcBansName5;
+        this.lgcBansChamp6 = lgcBansChamp6;
+        this.lgcBansName6 = lgcBansName6;
+        this.lgcBansChamp7 = lgcBansChamp7;
+        this.lgcBansName7 = lgcBansName7;
+        this.lgcBansChamp8 = lgcBansChamp8;
+        this.lgcBansName8 = lgcBansName8;
+        this.lgcBansChamp9 = lgcBansChamp9;
+        this.lgcBansName9 = lgcBansName9;
+        this.lgcBansChamp10 = lgcBansChamp10;
+        this.lgcBansName10 = lgcBansName10;
+    }
 }
