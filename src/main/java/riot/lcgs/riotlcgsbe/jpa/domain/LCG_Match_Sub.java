@@ -1,9 +1,7 @@
 package riot.lcgs.riotlcgsbe.jpa.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class LCG_Match_Sub {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "row_num")
     private Long rowNum;
 
@@ -23,11 +22,11 @@ public class LCG_Match_Sub {
     @Column(name = "lcg_participant_id")
     private int lgcParticipantId;
 
-    @Column(name = "lcg_first_kill")
-    private boolean lgcFirstKill;
+    @Column(name = "lcg_first_kill", length = 1)
+    private String lgcFirstKill;
 
-    @Column(name = "lcg_first_tower")
-    private boolean lgcFirstTower;
+    @Column(name = "lcg_first_tower", length = 1)
+    private String lgcFirstTower;
 
     @Column(name = "lcg_double_kill")
     private int lgcDoubleKill;
@@ -41,9 +40,6 @@ public class LCG_Match_Sub {
     @Column(name = "lcg_penta_kill")
     private int lgcPentaKill;
 
-    @Column(name = "lcg_destroy_tower")
-    private int lgcDestroyTower;
-
     @Column(name = "lcg_normal_ward")
     private int lgcNormalWard;
 
@@ -56,9 +52,34 @@ public class LCG_Match_Sub {
     @Column(name = "lcg_heal_total")
     private int lgcHealTotal;
 
+    @Column(name = "lcg_crowd_time")
+    private int lgcCrowdTime;
+
+    @Column(name = "lcg_destroy_tower")
+    private int lgcDestroyTower;
+
     @Column(name = "lcg_damage_tower")
     private int lgcDamageTower;
 
-    @Column(name = "lcg_crowd_time")
-    private int lgcCrowdTime;
+    @Builder
+    public LCG_Match_Sub(Long lgcGameId, int lgcParticipantId, String lgcFirstKill, String lgcFirstTower,
+                         int lgcDoubleKill, int lgcTripleKill, int lgcQuadraKill, int lgcPentaKill,
+                         int lgcNormalWard, int lgcVisionWard, int lgcGoldTotal, int lgcHealTotal,
+                         int lgcCrowdTime, int lgcDestroyTower, int lgcDamageTower) {
+        this.lgcGameId = lgcGameId;
+        this.lgcParticipantId = lgcParticipantId;
+        this.lgcFirstKill = lgcFirstKill;
+        this.lgcFirstTower = lgcFirstTower;
+        this.lgcDoubleKill = lgcDoubleKill;
+        this.lgcTripleKill = lgcTripleKill;
+        this.lgcQuadraKill = lgcQuadraKill;
+        this.lgcPentaKill = lgcPentaKill;
+        this.lgcNormalWard = lgcNormalWard;
+        this.lgcVisionWard = lgcVisionWard;
+        this.lgcGoldTotal = lgcGoldTotal;
+        this.lgcHealTotal = lgcHealTotal;
+        this.lgcCrowdTime = lgcCrowdTime;
+        this.lgcDestroyTower = lgcDestroyTower;
+        this.lgcDamageTower = lgcDamageTower;
+    }
 }
