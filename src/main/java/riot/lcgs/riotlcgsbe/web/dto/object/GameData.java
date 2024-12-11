@@ -9,12 +9,12 @@ public class GameData {
     private String endOfGameResult;
     private Long gameCreation;
     private String gameCreationDate;
-    private Long gameDuration;
+    private int gameDuration;
     private Long gameId;
     private String gameMode;
     private String gameType;
     private String gameVersion;
-    private Long mapId;
+    private int mapId;
     private List<ParticipantIdentities> participantIdentities;
     private List<Participants> participants;
     private Long queueId;
