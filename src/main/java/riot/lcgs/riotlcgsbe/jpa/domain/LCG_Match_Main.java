@@ -1,9 +1,7 @@
 package riot.lcgs.riotlcgsbe.jpa.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class LCG_Match_Main {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "row_num")
     private Long rowNum;
 
@@ -24,7 +23,7 @@ public class LCG_Match_Main {
     private int lgcParticipantId;
 
     @Column(name = "lcg_team_id")
-    private String lgcTeamId;
+    private int lgcTeamId;
 
     @Column(name = "lcg_summoner_id")
     private Long lgcSummonerId;
@@ -34,9 +33,6 @@ public class LCG_Match_Main {
 
     @Column(name = "lcg_summoner_tag")
     private String lgcSummonerTag;
-
-    @Column(name = "lcg_summoner_level")
-    private String lgcSummonerLevel;
 
     @Column(name = "lcg_champion_id")
     private int lgcChampionId;
@@ -103,4 +99,42 @@ public class LCG_Match_Main {
 
     @Column(name = "lcg_vision_score")
     private int lgcVisionScore;
+
+    @Builder
+    public LCG_Match_Main(Long lgcGameId, int lgcParticipantId, int lgcTeamId, Long lgcSummonerId,
+                          String lgcSummonerName, String lgcSummonerTag, int lgcChampionId,
+                          String lgcChampionName, int lgcChampionLevel, int lgcSpellId1, int lgcSpellId2,
+                          int lgcPerkId1, int lgcPerkId2, int lgcItemId1, int lgcItemId2, int lgcItemId3,
+                          int lgcItemId4, int lgcItemId5, int lgcItemId6, int lgcItemId7, int lgcKillCount,
+                          int lgcDeathCount, int lgcAssistCount, int lgcDamageTotal, int lgcDamageTaken,
+                          int lgcMinionCount, int lgcJungleCount, int lgcVisionScore) {
+        this.lgcGameId = lgcGameId;
+        this.lgcParticipantId = lgcParticipantId;
+        this.lgcTeamId = lgcTeamId;
+        this.lgcSummonerId = lgcSummonerId;
+        this.lgcSummonerName = lgcSummonerName;
+        this.lgcSummonerTag = lgcSummonerTag;
+        this.lgcChampionId = lgcChampionId;
+        this.lgcChampionName = lgcChampionName;
+        this.lgcChampionLevel = lgcChampionLevel;
+        this.lgcSpellId1 = lgcSpellId1;
+        this.lgcSpellId2 = lgcSpellId2;
+        this.lgcPerkId1 = lgcPerkId1;
+        this.lgcPerkId2 = lgcPerkId2;
+        this.lgcItemId1 = lgcItemId1;
+        this.lgcItemId2 = lgcItemId2;
+        this.lgcItemId3 = lgcItemId3;
+        this.lgcItemId4 = lgcItemId4;
+        this.lgcItemId5 = lgcItemId5;
+        this.lgcItemId6 = lgcItemId6;
+        this.lgcItemId7 = lgcItemId7;
+        this.lgcKillCount = lgcKillCount;
+        this.lgcDeathCount = lgcDeathCount;
+        this.lgcAssistCount = lgcAssistCount;
+        this.lgcDamageTotal = lgcDamageTotal;
+        this.lgcDamageTaken = lgcDamageTaken;
+        this.lgcMinionCount = lgcMinionCount;
+        this.lgcJungleCount = lgcJungleCount;
+        this.lgcVisionScore = lgcVisionScore;
+    }
 }
