@@ -18,9 +18,7 @@ public class MainController {
 
     @PostMapping("/insertData")
     public CommonResponseDto<?> insertData(@RequestBody CustomGameRequestDto requestDto) {
-        System.out.println(requestDto.getGameData().getGameCreation());
-        System.out.println(requestDto.getGameData().getParticipantIdentities().get(0).getPlayer().getSummonerName());
-        return mainService.GameDataOrganizeService(requestDto);
+        return mainService.LolCustomGameDataSave(requestDto);
     }
 
 }
