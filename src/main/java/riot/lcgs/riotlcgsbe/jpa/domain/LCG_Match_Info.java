@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,15 @@ public class LCG_Match_Info {
 
     @Column(name = "lcg_game_map")
     private int lgcGameMap;
+
+    @Builder
+    public LCG_Match_Info(Long lgcGameId, String lgcGameDate, String lgcGameMode,
+                          String lgcGameType, int lgcGameDuration, int lgcGameMap) {
+        this.lgcGameId = lgcGameId;
+        this.lgcGameDate = lgcGameDate;
+        this.lgcGameMode = lgcGameMode;
+        this.lgcGameType = lgcGameType;
+        this.lgcGameDuration = lgcGameDuration;
+        this.lgcGameMap = lgcGameMap;
+    }
 }
