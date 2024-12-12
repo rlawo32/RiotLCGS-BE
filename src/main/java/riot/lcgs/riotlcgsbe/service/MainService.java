@@ -14,6 +14,12 @@ import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -33,6 +39,7 @@ public class MainService {
 
         // 동일한 gameId로 insert 불가
 
+        /*
         lcgMatchInfoRepository.save(LCG_Match_Info.builder()
                 .lgcGameId(gameId)
                 .lgcGameDate(gameData.getGameCreationDate())
@@ -40,7 +47,7 @@ public class MainService {
                 .lgcGameType(gameData.getGameType())
                 .lgcGameDuration(gameData.getGameDuration())
                 .lgcGameMap(gameData.getMapId()).build());
-
+         */
         List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
         List<Participants> list2 = gameData.getParticipants();
         List<Teams> list3 = gameData.getTeams();
@@ -48,6 +55,8 @@ public class MainService {
         int matchLen = list1.size();
         int teamsLen = list3.size();
 
+        DataDragonAPIVersion();
+/*
         for(int i=0; i<matchLen; i++) {
             int gbnId = list1.get(i).getParticipantId();
 
@@ -98,6 +107,7 @@ public class MainService {
                     .lgcDamageTower(statsData.getDamageDealtToTurrets()).build());
         }
 
+
         for(int i=0; i<teamsLen; i++) {
             Teams teams = list3.get(i);
             List<Bans> bans = teams.getBans();
@@ -138,6 +148,44 @@ public class MainService {
                     .build());
 
         }
+
+ */
+
+        return CommonResponseDto.setSuccess("Success", "");
+    }
+
+    public CommonResponseDto<?> DataDragonAPIVersion() {
+
+        try {
+            URL url = new URL("https://ddragon.leagueoflegends.com/realms/na.json");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/json");
+            conn.setDoOutput(true);
+
+            BufferedReader br = null;
+            if(conn.getResponseCode() == 200) {
+                br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            } else {
+                br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
+            }
+
+            StringBuffer sb = new StringBuffer();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            br.close();
+            conn.disconnect();
+
+            System.out.println(sb.toString());
+        } catch (IOException ex1) {
+            ex1.printStackTrace();
+            return CommonResponseDto.setSuccess("Failed", ex1.getMessage());
+        }
+
 
         return CommonResponseDto.setSuccess("Success", "");
     }
