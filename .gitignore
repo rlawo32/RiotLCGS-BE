@@ -18,6 +18,7 @@ bin/
 !**/src/test/**/bin/
 application-apikey.properties
 application-supabase.properties
+*.sql
 
 ### IntelliJ IDEA ###
 .idea
