@@ -17,81 +17,81 @@ public class LCG_Match_Team {
     private Long rowNum;
 
     @Column(name = "lcg_game_id")
-    private Long lgcGameId;
+    private Long lcgGameId;
 
     @Column(name = "lcg_team_id")
-    private int lgcTeamId;
+    private int lcgTeamId;
 
     @Column(name = "lcg_team_win", length = 1)
-    private String lgcTeamWin;
+    private String lcgTeamWin;
 
     @Column(name = "lcg_first_dragon", length = 1)
-    private String lgcFirstDragon;
+    private String lcgFirstDragon;
 
     @Column(name = "lcg_first_baron", length = 1)
-    private String lgcFirstBaron;
+    private String lcgFirstBaron;
 
     @Column(name = "lcg_first_kill", length = 1)
-    private String lgcFirstKill;
+    private String lcgFirstKill;
 
     @Column(name = "lcg_first_tower", length = 1)
-    private String lgcFirstTower;
+    private String lcgFirstTower;
 
     @Column(name = "lcg_first_inhibitor", length = 1)
-    private String lgcFirstInhibitor;
+    private String lcgFirstInhibitor;
 
     @Column(name = "lcg_dragon_total")
-    private int lgcDragonTotal;
+    private int lcgDragonTotal;
 
     @Column(name = "lcg_baron_total")
-    private int lgcBaronTotal;
+    private int lcgBaronTotal;
 
     @Column(name = "lcg_tower_total")
-    private int lgcTowerTotal;
+    private int lcgTowerTotal;
 
     @Column(name = "lcg_horde_total")
-    private int lgcHordeTotal;
+    private int lcgHordeTotal;
 
     @Column(name = "lcg_herald_total")
-    private int lgcHeraldTotal;
+    private int lcgHeraldTotal;
 
     @Column(name = "lcg_bans_name_1")
-    private String lgcBansName1;
+    private String lcgBansName1;
 
     @Column(name = "lcg_bans_name_2")
-    private String lgcBansName2;
+    private String lcgBansName2;
 
     @Column(name = "lcg_bans_name_3")
-    private String lgcBansName3;
+    private String lcgBansName3;
 
     @Column(name = "lcg_bans_name_4")
-    private String lgcBansName4;
+    private String lcgBansName4;
 
     @Column(name = "lcg_bans_name_5")
-    private String lgcBansName5;
+    private String lcgBansName5;
 
     @Builder
-    public LCG_Match_Team(Long lgcGameId, int lgcTeamId, String lgcTeamWin, String lgcFirstDragon, String lgcFirstBaron,
-                          String lgcFirstKill, String lgcFirstTower, String lgcFirstInhibitor, int lgcDragonTotal,
-                          int lgcBaronTotal, int lgcTowerTotal, int lgcHordeTotal, int lgcHeraldTotal, String lgcBansName1,
-                          String lgcBansName2, String lgcBansName3, String lgcBansName4, String lgcBansName5) {
-        this.lgcGameId = lgcGameId;
-        this.lgcTeamId = lgcTeamId;
-        this.lgcTeamWin = lgcTeamWin;
-        this.lgcFirstDragon = lgcFirstDragon;
-        this.lgcFirstBaron = lgcFirstBaron;
-        this.lgcFirstKill = lgcFirstKill;
-        this.lgcFirstTower = lgcFirstTower;
-        this.lgcFirstInhibitor = lgcFirstInhibitor;
-        this.lgcDragonTotal = lgcDragonTotal;
-        this.lgcBaronTotal = lgcBaronTotal;
-        this.lgcTowerTotal = lgcTowerTotal;
-        this.lgcHordeTotal = lgcHordeTotal;
-        this.lgcHeraldTotal = lgcHeraldTotal;
-        this.lgcBansName1 = lgcBansName1;
-        this.lgcBansName2 = lgcBansName2;
-        this.lgcBansName3 = lgcBansName3;
-        this.lgcBansName4 = lgcBansName4;
-        this.lgcBansName5 = lgcBansName5;
+    public LCG_Match_Team(Long lcgGameId, int lcgTeamId, String lcgTeamWin, String lcgFirstDragon, String lcgFirstBaron,
+                          String lcgFirstKill, String lcgFirstTower, String lcgFirstInhibitor, int lcgDragonTotal,
+                          int lcgBaronTotal, int lcgTowerTotal, int lcgHordeTotal, int lcgHeraldTotal, String lcgBansName1,
+                          String lcgBansName2, String lcgBansName3, String lcgBansName4, String lcgBansName5) {
+        this.lcgGameId = lcgGameId;
+        this.lcgTeamId = lcgTeamId;
+        this.lcgTeamWin = lcgTeamWin;
+        this.lcgFirstDragon = lcgFirstDragon;
+        this.lcgFirstBaron = lcgFirstBaron;
+        this.lcgFirstKill = lcgFirstKill;
+        this.lcgFirstTower = lcgFirstTower;
+        this.lcgFirstInhibitor = lcgFirstInhibitor;
+        this.lcgDragonTotal = lcgDragonTotal;
+        this.lcgBaronTotal = lcgBaronTotal;
+        this.lcgTowerTotal = lcgTowerTotal;
+        this.lcgHordeTotal = lcgHordeTotal;
+        this.lcgHeraldTotal = lcgHeraldTotal;
+        this.lcgBansName1 = lcgBansName1;
+        this.lcgBansName2 = lcgBansName2;
+        this.lcgBansName3 = lcgBansName3;
+        this.lcgBansName4 = lcgBansName4;
+        this.lcgBansName5 = lcgBansName5;
     }
 }
