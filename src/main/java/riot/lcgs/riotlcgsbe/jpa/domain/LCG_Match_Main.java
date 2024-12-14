@@ -43,17 +43,17 @@ public class LCG_Match_Main {
     @Column(name = "lcg_champion_level")
     private int lgcChampionLevel;
 
-    @Column(name = "lcg_spell_id_1")
-    private int lgcSpellId1;
+    @Column(name = "lcg_spell_name_1")
+    private String lgcSpellName1;
 
-    @Column(name = "lcg_spell_id_2")
-    private int lgcSpellId2;
+    @Column(name = "lcg_spell_name_2")
+    private String lgcSpellName2;
 
-    @Column(name = "lcg_perk_id_1")
-    private int lgcPerkId1;
+    @Column(name = "lcg_perk_name_1")
+    private String lgcPerkName1;
 
-    @Column(name = "lcg_perk_id_2")
-    private int lgcPerkId2;
+    @Column(name = "lcg_perk_name_2")
+    private String lgcPerkName2;
 
     @Column(name = "lcg_item_id_1")
     private int lgcItemId1;
@@ -103,8 +103,8 @@ public class LCG_Match_Main {
     @Builder
     public LCG_Match_Main(Long lgcGameId, int lgcParticipantId, int lgcTeamId, Long lgcSummonerId,
                           String lgcSummonerName, String lgcSummonerTag, int lgcChampionId,
-                          String lgcChampionName, int lgcChampionLevel, int lgcSpellId1, int lgcSpellId2,
-                          int lgcPerkId1, int lgcPerkId2, int lgcItemId1, int lgcItemId2, int lgcItemId3,
+                          String lgcChampionName, int lgcChampionLevel, String lgcSpellName1, String lgcSpellName2,
+                          String lgcPerkName1, String lgcPerkName2, int lgcItemId1, int lgcItemId2, int lgcItemId3,
                           int lgcItemId4, int lgcItemId5, int lgcItemId6, int lgcItemId7, int lgcKillCount,
                           int lgcDeathCount, int lgcAssistCount, int lgcDamageTotal, int lgcDamageTaken,
                           int lgcMinionCount, int lgcJungleCount, int lgcVisionScore) {
@@ -117,10 +117,10 @@ public class LCG_Match_Main {
         this.lgcChampionId = lgcChampionId;
         this.lgcChampionName = lgcChampionName;
         this.lgcChampionLevel = lgcChampionLevel;
-        this.lgcSpellId1 = lgcSpellId1;
-        this.lgcSpellId2 = lgcSpellId2;
-        this.lgcPerkId1 = lgcPerkId1;
-        this.lgcPerkId2 = lgcPerkId2;
+        this.lgcSpellName1 = lgcSpellName1;
+        this.lgcSpellName2 = lgcSpellName2;
+        this.lgcPerkName1 = lgcPerkName1;
+        this.lgcPerkName2 = lgcPerkName2;
         this.lgcItemId1 = lgcItemId1;
         this.lgcItemId2 = lgcItemId2;
         this.lgcItemId3 = lgcItemId3;
