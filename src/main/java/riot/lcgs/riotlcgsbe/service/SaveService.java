@@ -17,7 +17,9 @@ import riot.lcgs.riotlcgsbe.web.dto.object.*;
 import java.util.List;
 import java.util.Map;
 
+import static riot.lcgs.riotlcgsbe.service.HttpService.DataDragonAPIChampion;
 import static riot.lcgs.riotlcgsbe.service.HttpService.DataDragonAPIVersion;
+import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
 
 @RequiredArgsConstructor
 @Service
@@ -29,18 +31,24 @@ public class SaveService {
     private final LCG_Match_Team_Repository lcgMatchTeamRepository;
 
     @Transactional
-    public CommonResponseDto<?> LCGMatchInfoSave(Long gameId, GameData gameData) {
+    public CommonResponseDto<?> LCGMatchInfoSave(Long gameId, GameData gameData, Map<String, String> version) {
 
         try {
-            CommonResponseDto<?> commonResponseDto = DataDragonAPIVersion();
-
             lcgMatchInfoRepository.save(LCG_Match_Info.builder()
                     .lgcGameId(gameId)
                     .lgcGameDate(gameData.getGameCreationDate())
                     .lgcGameMode(gameData.getGameMode())
                     .lgcGameType(gameData.getGameType())
                     .lgcGameDuration(gameData.getGameDuration())
-                    .lgcGameMap(gameData.getMapId()).build());
+                    .lgcGameMap(gameData.getMapId())
+                    .lgcVerMain(version.get("ver"))
+                    .lgcVerCdn(version.get("cdn"))
+                    .lgcVerLang(version.get("lang"))
+                    .lgcVerItem(version.get("item"))
+                    .lgcVerRune(version.get("rune"))
+                    .lgcVerMastery(version.get("mastery"))
+                    .lgcVerSummoner(version.get("summoner"))
+                    .lgcVerChampion(version.get("champion")).build());
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setSuccess("Failed", ex.getMessage());
@@ -62,6 +70,8 @@ public class SaveService {
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
 
+                String championName = ExtractionName(participants.getChampionId()).getData();
+
                 lcgMatchMainRepository.save(LCG_Match_Main.builder()
                         .lgcGameId(gameId)
                         .lgcParticipantId(participantIdentities.getParticipantId())
@@ -70,10 +80,12 @@ public class SaveService {
                         .lgcSummonerName(playerData.getSummonerName())
                         .lgcSummonerTag(playerData.getTagLine())
                         .lgcChampionId(participants.getChampionId())
-                        .lgcChampionName("NONE")
+                        .lgcChampionName(championName)
                         .lgcChampionLevel(statsData.getChampLevel())
-                        .lgcSpellId1(participants.getSpell1Id()).lgcSpellId2(participants.getSpell2Id())
-                        .lgcPerkId1(statsData.getPerk0()).lgcPerkId2(statsData.getPerkSubStyle())
+                        .lgcSpellName1(ExtractionSummoner(participants.getSpell1Id()).getData())
+                        .lgcSpellName2(ExtractionSummoner(participants.getSpell2Id()).getData())
+                        .lgcPerkName1(ExtractionPerk(statsData.getPerk0()).getData())
+                        .lgcPerkName2(ExtractionPerk(statsData.getPerkSubStyle()).getData())
                         .lgcItemId1(statsData.getItem0()).lgcItemId2(statsData.getItem1())
                         .lgcItemId3(statsData.getItem2()).lgcItemId4(statsData.getItem3())
                         .lgcItemId5(statsData.getItem4()).lgcItemId6(statsData.getItem5()).lgcItemId7(statsData.getItem6())
@@ -155,7 +167,7 @@ public class SaveService {
                         .lgcHordeTotal(teams.getHordeKills())
                         .lgcHeraldTotal(teams.getRiftHeraldKills())
                         .lgcBansChamp1(teams.getTeamId() == 100 ? bans.get(0).getChampionId() : 0)
-                        .lgcBansName1("")
+                        .lgcBansName1(ExtractionName(bans.get(0).getChampionId()).getData())
                         .lgcBansChamp2(teams.getTeamId() == 100 ? bans.get(1).getChampionId() : 0)
                         .lgcBansName2("")
                         .lgcBansChamp3(teams.getTeamId() == 100 ? bans.get(2).getChampionId() : 0)
