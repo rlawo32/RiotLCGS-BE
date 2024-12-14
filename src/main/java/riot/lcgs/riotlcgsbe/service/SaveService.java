@@ -3,22 +3,14 @@ package riot.lcgs.riotlcgsbe.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Info;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Main;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Sub;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Team;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Main_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Sub_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Team_Repository;
+import riot.lcgs.riotlcgsbe.jpa.domain.*;
+import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
 import java.util.List;
 import java.util.Map;
 
-import static riot.lcgs.riotlcgsbe.service.HttpService.DataDragonAPIChampion;
-import static riot.lcgs.riotlcgsbe.service.HttpService.DataDragonAPIVersion;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
 
 @RequiredArgsConstructor
@@ -29,29 +21,77 @@ public class SaveService {
     private final LCG_Match_Main_Repository lcgMatchMainRepository;
     private final LCG_Match_Sub_Repository lcgMatchSubRepository;
     private final LCG_Match_Team_Repository lcgMatchTeamRepository;
+    private final LCG_Team_Log_Repository lcgTeamLogRepository;
+
+    @Transactional
+    public CommonResponseDto<?> LCGTeamLogSave(Long gameId, GameData gameData, TeamData teamData, Map<String, String> version) {
+
+        try {
+            String[] extractionStep1 = gameData.getGameCreationDate().split("T");
+            String[] extractionStep2 = extractionStep1[1].split("\\.");
+            String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
+
+            List<Teams> list1 = gameData.getTeams();
+            int gameWin = 0;
+
+            for(int i=0; i<list1.size(); i++) {
+                Teams teams = list1.get(i);
+                if(teams.getWin().equals("Win")) {
+                    gameWin = teams.getTeamId();
+                }
+            }
+
+            lcgTeamLogRepository.save(LCG_Team_Log.builder()
+                    .lcgGameId(gameId)
+                    .lcgGameWin(gameWin)
+                    .lcgGameDate(extractionGameDate)
+                    .lcgGameVer(version.get("ver"))
+                    .lcgGameDuration(gameData.getGameDuration())
+                    .lcgGameDate(extractionGameDate)
+                    .teamAName1(teamData.getTeamA1())
+                    .teamAName2(teamData.getTeamA2())
+                    .teamAName3(teamData.getTeamA3())
+                    .teamAName4(teamData.getTeamA4())
+                    .teamAName5(teamData.getTeamA5())
+                    .teamBName1(teamData.getTeamB1())
+                    .teamBName2(teamData.getTeamB2())
+                    .teamBName3(teamData.getTeamB3())
+                    .teamBName4(teamData.getTeamB4())
+                    .teamBName5(teamData.getTeamB5()).build());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+
+        return CommonResponseDto.setSuccess("Success", "");
+    }
 
     @Transactional
     public CommonResponseDto<?> LCGMatchInfoSave(Long gameId, GameData gameData, Map<String, String> version) {
 
         try {
+            String[] extractionStep1 = gameData.getGameCreationDate().split("T");
+            String[] extractionStep2 = extractionStep1[1].split("\\.");
+            String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
+
             lcgMatchInfoRepository.save(LCG_Match_Info.builder()
-                    .lgcGameId(gameId)
-                    .lgcGameDate(gameData.getGameCreationDate())
-                    .lgcGameMode(gameData.getGameMode())
-                    .lgcGameType(gameData.getGameType())
-                    .lgcGameDuration(gameData.getGameDuration())
-                    .lgcGameMap(gameData.getMapId())
-                    .lgcVerMain(version.get("ver"))
-                    .lgcVerCdn(version.get("cdn"))
-                    .lgcVerLang(version.get("lang"))
-                    .lgcVerItem(version.get("item"))
-                    .lgcVerRune(version.get("rune"))
-                    .lgcVerMastery(version.get("mastery"))
-                    .lgcVerSummoner(version.get("summoner"))
-                    .lgcVerChampion(version.get("champion")).build());
+                    .lcgGameId(gameId)
+                    .lcgGameDate(extractionGameDate)
+                    .lcgGameMode(gameData.getGameMode())
+                    .lcgGameType(gameData.getGameType())
+                    .lcgGameDuration(gameData.getGameDuration())
+                    .lcgGameMap(gameData.getMapId())
+                    .lcgVerMain(version.get("ver"))
+                    .lcgVerCdn(version.get("cdn"))
+                    .lcgVerLang(version.get("lang"))
+                    .lcgVerItem(version.get("item"))
+                    .lcgVerRune(version.get("rune"))
+                    .lcgVerMastery(version.get("mastery"))
+                    .lcgVerSummoner(version.get("summoner"))
+                    .lcgVerChampion(version.get("champion")).build());
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", ex.getMessage());
+            return CommonResponseDto.setFailed("Database Insert Failed !");
         }
 
         return CommonResponseDto.setSuccess("Success", "");
@@ -73,34 +113,34 @@ public class SaveService {
                 String championName = ExtractionName(participants.getChampionId()).getData();
 
                 lcgMatchMainRepository.save(LCG_Match_Main.builder()
-                        .lgcGameId(gameId)
-                        .lgcParticipantId(participantIdentities.getParticipantId())
-                        .lgcTeamId(participants.getTeamId())
-                        .lgcSummonerId(playerData.getSummonerId())
-                        .lgcSummonerName(playerData.getSummonerName())
-                        .lgcSummonerTag(playerData.getTagLine())
-                        .lgcChampionId(participants.getChampionId())
-                        .lgcChampionName(championName)
-                        .lgcChampionLevel(statsData.getChampLevel())
-                        .lgcSpellName1(ExtractionSummoner(participants.getSpell1Id()).getData())
-                        .lgcSpellName2(ExtractionSummoner(participants.getSpell2Id()).getData())
-                        .lgcPerkName1(ExtractionPerk(statsData.getPerk0()).getData())
-                        .lgcPerkName2(ExtractionPerk(statsData.getPerkSubStyle()).getData())
-                        .lgcItemId1(statsData.getItem0()).lgcItemId2(statsData.getItem1())
-                        .lgcItemId3(statsData.getItem2()).lgcItemId4(statsData.getItem3())
-                        .lgcItemId5(statsData.getItem4()).lgcItemId6(statsData.getItem5()).lgcItemId7(statsData.getItem6())
-                        .lgcKillCount(statsData.getKills())
-                        .lgcAssistCount(statsData.getAssists())
-                        .lgcDeathCount(statsData.getDeaths())
-                        .lgcDamageTotal(statsData.getTotalDamageDealtToChampions())
-                        .lgcDamageTaken(statsData.getTotalDamageTaken())
-                        .lgcMinionCount(statsData.getTotalMinionsKilled())
-                        .lgcJungleCount(statsData.getNeutralMinionsKilled())
-                        .lgcVisionScore(statsData.getVisionScore()).build());
+                        .lcgGameId(gameId)
+                        .lcgParticipantId(participantIdentities.getParticipantId())
+                        .lcgTeamId(participants.getTeamId())
+                        .lcgSummonerId(playerData.getSummonerId())
+                        .lcgSummonerName(playerData.getSummonerName())
+                        .lcgSummonerTag(playerData.getTagLine())
+                        .lcgChampionId(participants.getChampionId())
+                        .lcgChampionName(championName)
+                        .lcgChampionLevel(statsData.getChampLevel())
+                        .lcgSpellName1(ExtractionSummoner(participants.getSpell1Id()).getData())
+                        .lcgSpellName2(ExtractionSummoner(participants.getSpell2Id()).getData())
+                        .lcgPerkName1(ExtractionPerk(statsData.getPerk0()).getData())
+                        .lcgPerkName2(ExtractionPerk(statsData.getPerkSubStyle()).getData())
+                        .lcgItemId1(statsData.getItem0()).lcgItemId2(statsData.getItem1())
+                        .lcgItemId3(statsData.getItem2()).lcgItemId4(statsData.getItem3())
+                        .lcgItemId5(statsData.getItem4()).lcgItemId6(statsData.getItem5()).lcgItemId7(statsData.getItem6())
+                        .lcgKillCount(statsData.getKills())
+                        .lcgAssistCount(statsData.getAssists())
+                        .lcgDeathCount(statsData.getDeaths())
+                        .lcgDamageTotal(statsData.getTotalDamageDealtToChampions())
+                        .lcgDamageTaken(statsData.getTotalDamageTaken())
+                        .lcgMinionCount(statsData.getTotalMinionsKilled())
+                        .lcgJungleCount(statsData.getNeutralMinionsKilled())
+                        .lcgVisionScore(statsData.getVisionScore()).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", "Database Insert Failed !");
+            return CommonResponseDto.setFailed("Database Insert Failed !");
         }
 
         return CommonResponseDto.setSuccess("Success", "");
@@ -119,25 +159,25 @@ public class SaveService {
                 Stats statsData = participants.getStats();
 
                 lcgMatchSubRepository.save(LCG_Match_Sub.builder()
-                        .lgcGameId(gameId)
-                        .lgcParticipantId(participantIdentities.getParticipantId())
-                        .lgcFirstKill(statsData.isFirstBloodKill() ? "Y" : "N")
-                        .lgcFirstTower(statsData.isFirstTowerKill() ? "Y" : "N")
-                        .lgcDoubleKill(statsData.getDoubleKills())
-                        .lgcTripleKill(statsData.getTripleKills())
-                        .lgcQuadraKill(statsData.getQuadraKills())
-                        .lgcPentaKill(statsData.getPentaKills())
-                        .lgcNormalWard(statsData.getWardsPlaced())
-                        .lgcVisionWard(statsData.getVisionWardsBoughtInGame())
-                        .lgcGoldTotal(statsData.getGoldEarned())
-                        .lgcHealTotal(statsData.getTotalHeal())
-                        .lgcCrowdTime(statsData.getTimeCCingOthers())
-                        .lgcDestroyTower(statsData.getTurretKills())
-                        .lgcDamageTower(statsData.getDamageDealtToTurrets()).build());
+                        .lcgGameId(gameId)
+                        .lcgParticipantId(participantIdentities.getParticipantId())
+                        .lcgFirstKill(statsData.isFirstBloodKill() ? "Y" : "N")
+                        .lcgFirstTower(statsData.isFirstTowerKill() ? "Y" : "N")
+                        .lcgDoubleKill(statsData.getDoubleKills())
+                        .lcgTripleKill(statsData.getTripleKills())
+                        .lcgQuadraKill(statsData.getQuadraKills())
+                        .lcgPentaKill(statsData.getPentaKills())
+                        .lcgNormalWard(statsData.getWardsPlaced())
+                        .lcgVisionWard(statsData.getVisionWardsBoughtInGame())
+                        .lcgGoldTotal(statsData.getGoldEarned())
+                        .lcgHealTotal(statsData.getTotalHeal())
+                        .lcgCrowdTime(statsData.getTimeCCingOthers())
+                        .lcgDestroyTower(statsData.getTurretKills())
+                        .lcgDamageTower(statsData.getDamageDealtToTurrets()).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", "Database Insert Failed !");
+            return CommonResponseDto.setFailed("Database Insert Failed !");
         }
 
         return CommonResponseDto.setSuccess("Success", "");
@@ -154,30 +194,30 @@ public class SaveService {
                 List<Bans> bans = teams.getBans();
 
                 lcgMatchTeamRepository.save(LCG_Match_Team.builder()
-                        .lgcGameId(gameId)
-                        .lgcTeamId(teams.getTeamId())
-                        .lgcTeamWin(teams.getWin().equals("Win") ? "Y" : "N")
-                        .lgcFirstDragon(teams.isFirstDargon() ? "Y" : "N")
-                        .lgcFirstBaron(teams.isFirstBaron() ? "Y" : "N")
-                        .lgcFirstKill(teams.isFirstBlood() ? "Y" : "N")
-                        .lgcFirstTower(teams.isFirstTower() ? "Y" : "N")
-                        .lgcFirstInhibitor(teams.isFirstInhibitor() ? "Y" : "N")
-                        .lgcDragonTotal(teams.getDragonKills())
-                        .lgcBaronTotal(teams.getBaronKills())
-                        .lgcTowerTotal(teams.getTowerKills())
-                        .lgcHordeTotal(teams.getHordeKills())
-                        .lgcHeraldTotal(teams.getRiftHeraldKills())
-                        .lgcBansName1(ExtractionName(bans.get(0).getChampionId()).getData())
-                        .lgcBansName2(ExtractionName(bans.get(1).getChampionId()).getData())
-                        .lgcBansName3(ExtractionName(bans.get(2).getChampionId()).getData())
-                        .lgcBansName4(ExtractionName(bans.get(3).getChampionId()).getData())
-                        .lgcBansName5(ExtractionName(bans.get(4).getChampionId()).getData())
+                        .lcgGameId(gameId)
+                        .lcgTeamId(teams.getTeamId())
+                        .lcgTeamWin(teams.getWin().equals("Win") ? "Y" : "N")
+                        .lcgFirstDragon(teams.isFirstDargon() ? "Y" : "N")
+                        .lcgFirstBaron(teams.isFirstBaron() ? "Y" : "N")
+                        .lcgFirstKill(teams.isFirstBlood() ? "Y" : "N")
+                        .lcgFirstTower(teams.isFirstTower() ? "Y" : "N")
+                        .lcgFirstInhibitor(teams.isFirstInhibitor() ? "Y" : "N")
+                        .lcgDragonTotal(teams.getDragonKills())
+                        .lcgBaronTotal(teams.getBaronKills())
+                        .lcgTowerTotal(teams.getTowerKills())
+                        .lcgHordeTotal(teams.getHordeKills())
+                        .lcgHeraldTotal(teams.getRiftHeraldKills())
+                        .lcgBansName1(ExtractionName(bans.get(0).getChampionId()).getData())
+                        .lcgBansName2(ExtractionName(bans.get(1).getChampionId()).getData())
+                        .lcgBansName3(ExtractionName(bans.get(2).getChampionId()).getData())
+                        .lcgBansName4(ExtractionName(bans.get(3).getChampionId()).getData())
+                        .lcgBansName5(ExtractionName(bans.get(4).getChampionId()).getData())
                         .build());
 
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", "Database Insert Failed !");
+            return CommonResponseDto.setFailed("Database Insert Failed !");
         }
 
         return CommonResponseDto.setSuccess("Success", "");
