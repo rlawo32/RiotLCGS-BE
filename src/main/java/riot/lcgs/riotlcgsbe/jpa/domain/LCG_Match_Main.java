@@ -17,124 +17,124 @@ public class LCG_Match_Main {
     private Long rowNum;
 
     @Column(name = "lcg_game_id")
-    private Long lgcGameId;
+    private Long lcgGameId;
 
     @Column(name = "lcg_participant_id")
-    private int lgcParticipantId;
+    private int lcgParticipantId;
 
     @Column(name = "lcg_team_id")
-    private int lgcTeamId;
+    private int lcgTeamId;
 
     @Column(name = "lcg_summoner_id")
-    private Long lgcSummonerId;
+    private Long lcgSummonerId;
 
     @Column(name = "lcg_summoner_name")
-    private String lgcSummonerName;
+    private String lcgSummonerName;
 
     @Column(name = "lcg_summoner_tag")
-    private String lgcSummonerTag;
+    private String lcgSummonerTag;
 
     @Column(name = "lcg_champion_id")
-    private int lgcChampionId;
+    private int lcgChampionId;
 
     @Column(name = "lcg_champion_name")
-    private String lgcChampionName;
+    private String lcgChampionName;
 
     @Column(name = "lcg_champion_level")
-    private int lgcChampionLevel;
+    private int lcgChampionLevel;
 
     @Column(name = "lcg_spell_name_1")
-    private String lgcSpellName1;
+    private String lcgSpellName1;
 
     @Column(name = "lcg_spell_name_2")
-    private String lgcSpellName2;
+    private String lcgSpellName2;
 
     @Column(name = "lcg_perk_name_1")
-    private String lgcPerkName1;
+    private String lcgPerkName1;
 
     @Column(name = "lcg_perk_name_2")
-    private String lgcPerkName2;
+    private String lcgPerkName2;
 
     @Column(name = "lcg_item_id_1")
-    private int lgcItemId1;
+    private int lcgItemId1;
 
     @Column(name = "lcg_item_id_2")
-    private int lgcItemId2;
+    private int lcgItemId2;
 
     @Column(name = "lcg_item_id_3")
-    private int lgcItemId3;
+    private int lcgItemId3;
 
     @Column(name = "lcg_item_id_4")
-    private int lgcItemId4;
+    private int lcgItemId4;
 
     @Column(name = "lcg_item_id_5")
-    private int lgcItemId5;
+    private int lcgItemId5;
 
     @Column(name = "lcg_item_id_6")
-    private int lgcItemId6;
+    private int lcgItemId6;
 
     @Column(name = "lcg_item_id_7")
-    private int lgcItemId7;
+    private int lcgItemId7;
 
     @Column(name = "lcg_kill_count")
-    private int lgcKillCount;
+    private int lcgKillCount;
 
     @Column(name = "lcg_death_count")
-    private int lgcDeathCount;
+    private int lcgDeathCount;
 
     @Column(name = "lcg_assist_count")
-    private int lgcAssistCount;
+    private int lcgAssistCount;
 
     @Column(name = "lcg_damage_total")
-    private int lgcDamageTotal;
+    private int lcgDamageTotal;
 
     @Column(name = "lcg_damage_taken")
-    private int lgcDamageTaken;
+    private int lcgDamageTaken;
 
     @Column(name = "lcg_minion_count")
-    private int lgcMinionCount;
+    private int lcgMinionCount;
 
     @Column(name = "lcg_jungle_count")
-    private int lgcJungleCount;
+    private int lcgJungleCount;
 
     @Column(name = "lcg_vision_score")
-    private int lgcVisionScore;
+    private int lcgVisionScore;
 
     @Builder
-    public LCG_Match_Main(Long lgcGameId, int lgcParticipantId, int lgcTeamId, Long lgcSummonerId,
-                          String lgcSummonerName, String lgcSummonerTag, int lgcChampionId,
-                          String lgcChampionName, int lgcChampionLevel, String lgcSpellName1, String lgcSpellName2,
-                          String lgcPerkName1, String lgcPerkName2, int lgcItemId1, int lgcItemId2, int lgcItemId3,
-                          int lgcItemId4, int lgcItemId5, int lgcItemId6, int lgcItemId7, int lgcKillCount,
-                          int lgcDeathCount, int lgcAssistCount, int lgcDamageTotal, int lgcDamageTaken,
-                          int lgcMinionCount, int lgcJungleCount, int lgcVisionScore) {
-        this.lgcGameId = lgcGameId;
-        this.lgcParticipantId = lgcParticipantId;
-        this.lgcTeamId = lgcTeamId;
-        this.lgcSummonerId = lgcSummonerId;
-        this.lgcSummonerName = lgcSummonerName;
-        this.lgcSummonerTag = lgcSummonerTag;
-        this.lgcChampionId = lgcChampionId;
-        this.lgcChampionName = lgcChampionName;
-        this.lgcChampionLevel = lgcChampionLevel;
-        this.lgcSpellName1 = lgcSpellName1;
-        this.lgcSpellName2 = lgcSpellName2;
-        this.lgcPerkName1 = lgcPerkName1;
-        this.lgcPerkName2 = lgcPerkName2;
-        this.lgcItemId1 = lgcItemId1;
-        this.lgcItemId2 = lgcItemId2;
-        this.lgcItemId3 = lgcItemId3;
-        this.lgcItemId4 = lgcItemId4;
-        this.lgcItemId5 = lgcItemId5;
-        this.lgcItemId6 = lgcItemId6;
-        this.lgcItemId7 = lgcItemId7;
-        this.lgcKillCount = lgcKillCount;
-        this.lgcDeathCount = lgcDeathCount;
-        this.lgcAssistCount = lgcAssistCount;
-        this.lgcDamageTotal = lgcDamageTotal;
-        this.lgcDamageTaken = lgcDamageTaken;
-        this.lgcMinionCount = lgcMinionCount;
-        this.lgcJungleCount = lgcJungleCount;
-        this.lgcVisionScore = lgcVisionScore;
+    public LCG_Match_Main(Long lcgGameId, int lcgParticipantId, int lcgTeamId, Long lcgSummonerId,
+                          String lcgSummonerName, String lcgSummonerTag, int lcgChampionId,
+                          String lcgChampionName, int lcgChampionLevel, String lcgSpellName1, String lcgSpellName2,
+                          String lcgPerkName1, String lcgPerkName2, int lcgItemId1, int lcgItemId2, int lcgItemId3,
+                          int lcgItemId4, int lcgItemId5, int lcgItemId6, int lcgItemId7, int lcgKillCount,
+                          int lcgDeathCount, int lcgAssistCount, int lcgDamageTotal, int lcgDamageTaken,
+                          int lcgMinionCount, int lcgJungleCount, int lcgVisionScore) {
+        this.lcgGameId = lcgGameId;
+        this.lcgParticipantId = lcgParticipantId;
+        this.lcgTeamId = lcgTeamId;
+        this.lcgSummonerId = lcgSummonerId;
+        this.lcgSummonerName = lcgSummonerName;
+        this.lcgSummonerTag = lcgSummonerTag;
+        this.lcgChampionId = lcgChampionId;
+        this.lcgChampionName = lcgChampionName;
+        this.lcgChampionLevel = lcgChampionLevel;
+        this.lcgSpellName1 = lcgSpellName1;
+        this.lcgSpellName2 = lcgSpellName2;
+        this.lcgPerkName1 = lcgPerkName1;
+        this.lcgPerkName2 = lcgPerkName2;
+        this.lcgItemId1 = lcgItemId1;
+        this.lcgItemId2 = lcgItemId2;
+        this.lcgItemId3 = lcgItemId3;
+        this.lcgItemId4 = lcgItemId4;
+        this.lcgItemId5 = lcgItemId5;
+        this.lcgItemId6 = lcgItemId6;
+        this.lcgItemId7 = lcgItemId7;
+        this.lcgKillCount = lcgKillCount;
+        this.lcgDeathCount = lcgDeathCount;
+        this.lcgAssistCount = lcgAssistCount;
+        this.lcgDamageTotal = lcgDamageTotal;
+        this.lcgDamageTaken = lcgDamageTaken;
+        this.lcgMinionCount = lcgMinionCount;
+        this.lcgJungleCount = lcgJungleCount;
+        this.lcgVisionScore = lcgVisionScore;
     }
 }
