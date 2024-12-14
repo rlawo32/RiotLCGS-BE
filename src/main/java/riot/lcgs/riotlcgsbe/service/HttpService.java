@@ -25,7 +25,6 @@ public class HttpService {
     private static String verMain;
     private static String verChampion;
     private static String verSummoner;
-    private static String verRune;
 
     public static CommonResponseDto<Map<String, String>> DataDragonAPIVersion() {
         Map<String, String> result = new HashMap<>();
@@ -70,11 +69,10 @@ public class HttpService {
             verMain = mainVersion.getV();
             verChampion = mainVersion.getN().getChampion();
             verSummoner = mainVersion.getN().getSummoner();
-            verRune = mainVersion.getN().getRune();
 
-        } catch (IOException ex1) {
-            ex1.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed(ex.getMessage());
         }
 
         return CommonResponseDto.setSuccess("Success", result);
@@ -106,9 +104,9 @@ public class HttpService {
             br.close();
             conn.disconnect();
 
-        } catch (IOException ex1) {
-            ex1.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed(ex.getMessage());
         }
 
         return CommonResponseDto.setSuccess("Success", sb.toString());
@@ -144,9 +142,9 @@ public class HttpService {
             JsonNode node1 = objectMapper.readTree(sb.toString());
             MainVersion mainVersion = objectMapper.treeToValue(node1, MainVersion.class);
 
-        } catch (IOException ex1) {
-            ex1.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed(ex.getMessage());
         }
 
         return CommonResponseDto.setSuccess("Success", "");
@@ -183,9 +181,9 @@ public class HttpService {
             JsonNode node1 = objectMapper.readTree(sb.toString());
             perk = List.of(objectMapper.treeToValue(node1, Perk[].class));
 
-        } catch (IOException ex1) {
-            ex1.printStackTrace();
-            return CommonResponseDto.setSuccess("Failed", null);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed(ex.getMessage());
         }
 
         return CommonResponseDto.setSuccess("Success", perk);
