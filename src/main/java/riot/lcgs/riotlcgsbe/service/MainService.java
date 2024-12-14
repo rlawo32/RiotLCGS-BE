@@ -2,6 +2,7 @@ package riot.lcgs.riotlcgsbe.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
@@ -16,6 +17,7 @@ import static riot.lcgs.riotlcgsbe.service.HttpService.*;
 public class MainService {
 
     private final SaveService saveService;
+    private final LCG_Match_Info_Repository lcgMatchInfoRepository;
 
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
 
@@ -23,17 +25,24 @@ public class MainService {
         TeamData teamData = requestDto.getTeamData();
         Long gameId = gameData.getGameId();
 
-        // 동일한 gameId로 insert 불가
+        // TeamId => 100 : Blue , 200 : Red
 
-        Map<String, String> version = DataDragonAPIVersion().getData();
-        ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
-        ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
+        boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
-        saveService.LCGMatchInfoSave(gameId, gameData, version);
-        saveService.LCGMatchMainSave(gameId, gameData);
-        saveService.LCGMatchSubSave(gameId, gameData);
-        saveService.LCGMatchTeamSave(gameId, gameData);
+        if(!duplicationCheck) {
+            Map<String, String> version = DataDragonAPIVersion().getData();
+            ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
+            ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
-        return CommonResponseDto.setSuccess("Success", "");
+            saveService.LCGMatchInfoSave(gameId, gameData, version);
+            saveService.LCGMatchMainSave(gameId, gameData);
+            saveService.LCGMatchSubSave(gameId, gameData);
+            saveService.LCGMatchTeamSave(gameId, gameData);
+            saveService.LCGTeamLogSave(gameId, gameData, teamData, version);
+
+            return CommonResponseDto.setSuccess("Success", "저장 완료");
+        } else {
+            return CommonResponseDto.setFailed("중복 저장");
+        }
     }
 }
