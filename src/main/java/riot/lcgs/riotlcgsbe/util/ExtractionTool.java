@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static riot.lcgs.riotlcgsbe.service.HttpService.DataDragonAPIChampion;
+
 
 public class ExtractionTool {
 
@@ -18,9 +20,9 @@ public class ExtractionTool {
     public static CommonResponseDto<String> ExtractionName(int championId) {
 
         int idx = jsonChampion.indexOf("\"" + championId + "\"");
-        String extractionStep1 = jsonChampion.substring(idx, idx+27);
+        String extractionStep1 = jsonChampion.substring(idx-30, idx);
         String[] extractionStep2 = extractionStep1.split(",");
-        String extractionResult = extractionStep2[1].replace("\"", "").substring(5);
+        String extractionResult = extractionStep2[1].replace("\"", "").substring(3);
 
         return CommonResponseDto.setSuccess("Success", extractionResult);
     }
