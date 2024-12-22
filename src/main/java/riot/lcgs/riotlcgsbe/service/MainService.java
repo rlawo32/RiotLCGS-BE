@@ -11,6 +11,7 @@ import riot.lcgs.riotlcgsbe.web.dto.object.*;
 import java.util.Map;
 
 import static riot.lcgs.riotlcgsbe.service.HttpService.*;
+import static riot.lcgs.riotlcgsbe.util.ExtractionTool.ExtractionName;
 
 @RequiredArgsConstructor
 @Service
@@ -30,17 +31,21 @@ public class MainService {
         boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
         if(!duplicationCheck) {
-            Map<String, String> version = DataDragonAPIVersion().getData();
-            ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
-            ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
+            if(DataDragonAPIVersion().isResult()) {
+                Map<String, String> version = DataDragonAPIVersion().getData();
+                ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
+                ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
-            saveService.LCGMatchInfoSave(gameId, gameData, version);
-            saveService.LCGMatchMainSave(gameId, gameData);
-            saveService.LCGMatchSubSave(gameId, gameData);
-            saveService.LCGMatchTeamSave(gameId, gameData);
-            saveService.LCGTeamLogSave(gameId, gameData, teamData, version);
+                saveService.LCGMatchInfoSave(gameId, gameData, version);
+                saveService.LCGMatchMainSave(gameId, gameData);
+                saveService.LCGMatchSubSave(gameId, gameData);
+                saveService.LCGMatchTeamSave(gameId, gameData);
+                saveService.LCGTeamLogSave(gameId, gameData, teamData, version);
 
-            return CommonResponseDto.setSuccess("Success", "저장 완료");
+                return CommonResponseDto.setSuccess("Success", "저장 완료");
+            } else {
+                return CommonResponseDto.setFailed("통신 실패");
+            }
         } else {
             return CommonResponseDto.setFailed("중복 저장");
         }
