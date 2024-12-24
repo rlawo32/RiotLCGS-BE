@@ -57,12 +57,19 @@ public class LCG_Match_Info {
     @Column(name = "lcg_ver_champion")
     private String lcgVerChampion;
 
+    @Column(name = "lcg_max_damage_total")
+    private int lcgMaxDamageTotal;
+
+    @Column(name = "lcg_max_damage_taken")
+    private int lcgMaxDamageTaken;
+
     @Builder
     public LCG_Match_Info(Long lcgGameId, String lcgGameDate, String lcgGameMode,
                           String lcgGameType, int lcgGameDuration, int lcgGameMap,
                           String lcgVerMain, String lcgVerCdn, String lcgVerLang,
                           String lcgVerItem, String lcgVerRune, String lcgVerMastery,
-                          String lcgVerSummoner, String lcgVerChampion) {
+                          String lcgVerSummoner, String lcgVerChampion,
+                          int lcgMaxDamageTotal, int lcgMaxDamageTaken) {
         this.lcgGameId = lcgGameId;
         this.lcgGameDate = lcgGameDate;
         this.lcgGameMode = lcgGameMode;
@@ -77,5 +84,7 @@ public class LCG_Match_Info {
         this.lcgVerMastery = lcgVerMastery;
         this.lcgVerSummoner = lcgVerSummoner;
         this.lcgVerChampion = lcgVerChampion;
+        this.lcgMaxDamageTotal = lcgMaxDamageTotal;
+        this.lcgMaxDamageTaken = lcgMaxDamageTaken;
     }
 }
