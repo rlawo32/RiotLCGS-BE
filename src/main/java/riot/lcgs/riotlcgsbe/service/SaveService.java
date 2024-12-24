@@ -8,6 +8,8 @@ import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +76,20 @@ public class SaveService {
             String[] extractionStep2 = extractionStep1[1].split("\\.");
             String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
 
+            List<Participants> list1 = gameData.getParticipants();
+            int[] maxDamageTotal = new int[10];
+            int[] maxDamageTaken = new int[10];
+            for(int i=0; i<list1.size(); i++) {
+                Participants participants = list1.get(i);
+                Stats statsData = participants.getStats();
+
+                maxDamageTotal[i] = statsData.getTotalDamageDealtToChampions();
+                maxDamageTaken[i] = statsData.getTotalDamageTaken();
+            }
+
+            Arrays.sort(maxDamageTotal);
+            Arrays.sort(maxDamageTaken);
+
             lcgMatchInfoRepository.save(LCG_Match_Info.builder()
                     .lcgGameId(gameId)
                     .lcgGameDate(extractionGameDate)
@@ -88,7 +104,9 @@ public class SaveService {
                     .lcgVerRune(version.get("rune"))
                     .lcgVerMastery(version.get("mastery"))
                     .lcgVerSummoner(version.get("summoner"))
-                    .lcgVerChampion(version.get("champion")).build());
+                    .lcgVerChampion(version.get("champion"))
+                    .lcgMaxDamageTotal(maxDamageTotal[9])
+                    .lcgMaxDamageTaken(maxDamageTaken[9]).build());
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
