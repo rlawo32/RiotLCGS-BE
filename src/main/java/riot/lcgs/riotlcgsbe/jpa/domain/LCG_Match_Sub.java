@@ -46,6 +46,9 @@ public class LCG_Match_Sub {
     @Column(name = "lcg_vision_ward")
     private int lcgVisionWard;
 
+    @Column(name = "lcg_destroy_ward")
+    private int lcgDestroyWard;
+
     @Column(name = "lcg_gold_total")
     private int lcgGoldTotal;
 
@@ -64,8 +67,8 @@ public class LCG_Match_Sub {
     @Builder
     public LCG_Match_Sub(Long lcgGameId, int lcgParticipantId, String lcgFirstKill, String lcgFirstTower,
                          int lcgDoubleKill, int lcgTripleKill, int lcgQuadraKill, int lcgPentaKill,
-                         int lcgNormalWard, int lcgVisionWard, int lcgGoldTotal, int lcgHealTotal,
-                         int lcgCrowdTime, int lcgDestroyTower, int lcgDamageTower) {
+                         int lcgNormalWard, int lcgVisionWard, int lcgDestroyWard, int lcgGoldTotal,
+                         int lcgHealTotal, int lcgCrowdTime, int lcgDestroyTower, int lcgDamageTower) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgFirstKill = lcgFirstKill;
@@ -76,6 +79,7 @@ public class LCG_Match_Sub {
         this.lcgPentaKill = lcgPentaKill;
         this.lcgNormalWard = lcgNormalWard;
         this.lcgVisionWard = lcgVisionWard;
+        this.lcgDestroyWard = lcgDestroyWard;
         this.lcgGoldTotal = lcgGoldTotal;
         this.lcgHealTotal = lcgHealTotal;
         this.lcgCrowdTime = lcgCrowdTime;
