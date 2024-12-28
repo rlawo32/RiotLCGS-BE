@@ -211,6 +211,7 @@ public class SaveService {
             for(int i=0; i<list1.size(); i++) {
                 Teams teams = list1.get(i);
                 List<Bans> bans = teams.getBans();
+                int bansLen = bans.size();
 
                 lcgMatchTeamRepository.save(LCG_Match_Team.builder()
                         .lcgGameId(gameId)
@@ -226,11 +227,11 @@ public class SaveService {
                         .lcgTowerTotal(teams.getTowerKills())
                         .lcgHordeTotal(teams.getHordeKills())
                         .lcgHeraldTotal(teams.getRiftHeraldKills())
-                        .lcgBansName1(ExtractionName(bans.get(0).getChampionId()).getData())
-                        .lcgBansName2(ExtractionName(bans.get(1).getChampionId()).getData())
-                        .lcgBansName3(ExtractionName(bans.get(2).getChampionId()).getData())
-                        .lcgBansName4(ExtractionName(bans.get(3).getChampionId()).getData())
-                        .lcgBansName5(ExtractionName(bans.get(4).getChampionId()).getData())
+                        .lcgBansName1(bansLen >= 1 ? ExtractionName(bans.get(0).getChampionId()).getData() : "Empty")
+                        .lcgBansName2(bansLen >= 2 ? ExtractionName(bans.get(1).getChampionId()).getData() : "Empty")
+                        .lcgBansName3(bansLen >= 3 ? ExtractionName(bans.get(2).getChampionId()).getData() : "Empty")
+                        .lcgBansName4(bansLen >= 4 ? ExtractionName(bans.get(3).getChampionId()).getData() : "Empty")
+                        .lcgBansName5(bansLen >= 5 ? ExtractionName(bans.get(4).getChampionId()).getData() : "Empty")
                         .build());
 
             }
