@@ -187,6 +187,7 @@ public class SaveService {
                         .lcgPentaKill(statsData.getPentaKills())
                         .lcgNormalWard(statsData.getWardsPlaced())
                         .lcgVisionWard(statsData.getVisionWardsBoughtInGame())
+                        .lcgDestroyWard(statsData.getWardsKilled())
                         .lcgGoldTotal(statsData.getGoldEarned())
                         .lcgHealTotal(statsData.getTotalHeal())
                         .lcgCrowdTime(statsData.getTimeCCingOthers())
