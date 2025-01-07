@@ -23,6 +23,7 @@ public class SaveService {
     private final LCG_Match_Sub_Repository lcgMatchSubRepository;
     private final LCG_Match_Team_Repository lcgMatchTeamRepository;
     private final LCG_Match_Log_Repository lcgMatchLogRepository;
+    private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
 
     @Transactional
     public CommonResponseDto<?> LCGTeamLogSave(Long gameId, GameData gameData, TeamData teamData, Map<String, String> version) {
@@ -255,6 +256,75 @@ public class SaveService {
                         .lcgBansName5(bansLen >= 5 ? ExtractionName(bans.get(4).getChampionId()).getData() : "Empty")
                         .build());
 
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+
+        return CommonResponseDto.setSuccess("Success", "");
+    }
+
+    @Transactional
+    public CommonResponseDto<?> LCGPlayerStatisticsSave(GameData gameData) {
+
+        try {
+            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+            List<Participants> list2 = gameData.getParticipants();
+            List<Teams> list3 = gameData.getTeams();
+
+            for(int i=0; i<list1.size(); i++) {
+                ParticipantIdentities participantIdentities = list1.get(i);
+                Participants participants = list2.get(i);
+                Stats statsData = participants.getStats();
+                Teams teams = new Teams();
+
+                for(int j=0; j<list3.size(); j++) {
+                    teams = list3.get(j);
+                    if(participants.getTeamId() == teams.getTeamId()) {
+                        break;
+                    }
+                }
+
+                String puuid = participantIdentities.getPlayer().getPuuid();
+                String nickname = participantIdentities.getPlayer().getGameName() + "#" + participantIdentities.getPlayer().getTagLine();
+                boolean existsCheck = lcgPlayerStatisticsRepository.existsLCG_Player_StatisticsByLcgPuuid(puuid);
+
+                if(existsCheck) {
+                    LCG_Player_Statistics lcgPlayerStatistics = lcgPlayerStatisticsRepository.findById(puuid)
+                            .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
+
+                    lcgPlayerStatistics.playerDataCounting(statsData, teams);
+                } else {
+                    lcgPlayerStatisticsRepository.save(LCG_Player_Statistics.builder()
+                            .lcgPuuid(puuid)
+                            .lcgPlayer("")
+                            .lcgNickname(nickname)
+                            .lcgCountKill((long)statsData.getKills())
+                            .lcgCountDeath((long)statsData.getDeaths())
+                            .lcgCountAssist((long)statsData.getAssists())
+                            .lcgCountTower((long)statsData.getTurretKills())
+                            .lcgCountInhibitor((long)statsData.getInhibitorKills())
+                            .lcgCountTowerDamage((long)statsData.getDamageDealtToTurrets())
+                            .lcgCountDamage((long)statsData.getTotalDamageDealtToChampions())
+                            .lcgCountTaken((long)statsData.getTotalDamageTaken())
+                            .lcgCountGold((long)statsData.getGoldEarned())
+                            .lcgCountCrowdTime((long)statsData.getTimeCCingOthers())
+                            .lcgCountMinion((long)statsData.getTotalMinionsKilled())
+                            .lcgCountJungle((long)statsData.getNeutralMinionsKilled())
+                            .lcgCountWardKill((long)statsData.getWardsKilled())
+                            .lcgCountWardPlaced((long)statsData.getWardsPlaced())
+                            .lcgCountVisionWard((long)statsData.getVisionWardsBoughtInGame())
+                            .lcgCountVisionScore((long)statsData.getVisionScore())
+                            .lcgCountDoubleKill((long)statsData.getDoubleKills())
+                            .lcgCountTripleKill((long)statsData.getTripleKills())
+                            .lcgCountQuadraKill((long)statsData.getQuadraKills())
+                            .lcgCountPentaKill((long)statsData.getPentaKills())
+                            .lcgCountDragon((long)teams.getDragonKills())
+                            .lcgCountBaron((long)teams.getBaronKills())
+                            .lcgCountHorde((long)teams.getHordeKills())
+                            .lcgCountHerald((long)teams.getRiftHeraldKills()).build());
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
