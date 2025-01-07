@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import riot.lcgs.riotlcgsbe.web.dto.object.Stats;
+import riot.lcgs.riotlcgsbe.web.dto.object.Teams;
 
 @NoArgsConstructor
 @Entity
@@ -48,13 +49,10 @@ public class LCG_Player_Statistics {
     @Column(name = "lcg_count_inhibitor")
     private Long lcgCountInhibitor;
 
-    @NotNull
-    @Column(name = "lcg_count_dragon")
-    private Long lcgCountDragon;
 
     @NotNull
-    @Column(name = "lcg_count_baron")
-    private Long lcgCountBaron;
+    @Column(name = "lcg_count_tower_damage")
+    private Long lcgCountTowerDamage;
 
     @NotNull
     @Column(name = "lcg_count_damage")
@@ -69,8 +67,8 @@ public class LCG_Player_Statistics {
     private Long lcgCountGold;
 
     @NotNull
-    @Column(name = "lcg_count_ccing")
-    private Long lcgCountCCing;
+    @Column(name = "lcg_count_crowd_time")
+    private Long lcgCountCrowdTime;
 
     @NotNull
     @Column(name = "lcg_count_minion")
@@ -112,18 +110,33 @@ public class LCG_Player_Statistics {
     @Column(name = "lcg_count_penta_kill")
     private Long lcgCountPentaKill;
 
-    public LCG_Player_Statistics playerDataCounting(Stats statsData) {
+    @NotNull
+    @Column(name = "lcg_count_dragon")
+    private Long lcgCountDragon;
+
+    @NotNull
+    @Column(name = "lcg_count_baron")
+    private Long lcgCountBaron;
+
+    @NotNull
+    @Column(name = "lcg_count_horde")
+    private Long lcgCountHorde;
+
+    @NotNull
+    @Column(name = "lcg_count_herald")
+    private Long lcgCountHerald;
+
+    public LCG_Player_Statistics playerDataCounting(Stats statsData, Teams teams) {
         this.lcgCountKill += (long) statsData.getKills();
         this.lcgCountDeath += (long) statsData.getDeaths();
         this.lcgCountAssist += (long) statsData.getAssists();
         this.lcgCountTower += (long) statsData.getTurretKills();
         this.lcgCountInhibitor += (long) statsData.getInhibitorKills();
-//        this.lcgCountDragon += (long) statsData.;
-//        this.lcgCountBaron += (long) statsData.;
+        this.lcgCountTowerDamage += (long) statsData.getDamageDealtToTurrets();
         this.lcgCountDamage += (long) statsData.getTotalDamageDealtToChampions();
         this.lcgCountTaken += (long) statsData.getTotalDamageTaken();
         this.lcgCountGold += (long) statsData.getGoldEarned();
-        this.lcgCountCCing += (long) statsData.getTimeCCingOthers();
+        this.lcgCountCrowdTime += (long) statsData.getTimeCCingOthers();
         this.lcgCountMinion += (long) statsData.getTotalMinionsKilled();
         this.lcgCountJungle += (long) statsData.getNeutralMinionsKilled();
         this.lcgCountWardKill += (long) statsData.getWardsKilled();
@@ -134,17 +147,21 @@ public class LCG_Player_Statistics {
         this.lcgCountTripleKill += (long) statsData.getTripleKills();
         this.lcgCountQuadraKill += (long) statsData.getQuadraKills();
         this.lcgCountPentaKill += (long) statsData.getPentaKills();
+        this.lcgCountDragon += (long) teams.getDragonKills();
+        this.lcgCountBaron += (long) teams.getBaronKills();
+        this.lcgCountHorde += (long) teams.getHordeKills();
+        this.lcgCountHerald += (long) teams.getRiftHeraldKills();
         return this;
     }
 
     @Builder
     public LCG_Player_Statistics(String lcgPuuid, String lcgPlayer, String lcgNickname, Long lcgCountKill,
                                  Long lcgCountDeath, Long lcgCountAssist, Long lcgCountTower, Long lcgCountInhibitor,
-                                 Long lcgCountDragon, Long lcgCountBaron, Long lcgCountDamage, Long lcgCountTaken,
-                                 Long lcgCountGold, Long lcgCountCCing, Long lcgCountMinion, Long lcgCountJungle,
-                                 Long lcgCountWardKill, Long lcgCountWardPlaced, Long lcgCountVisionWard,
-                                 Long lcgCountVisionScore, Long lcgCountDoubleKill, Long lcgCountTripleKill,
-                                 Long lcgCountQuadraKill, Long lcgCountPentaKill) {
+                                 Long lcgCountTowerDamage, Long lcgCountDamage, Long lcgCountTaken, Long lcgCountGold,
+                                 Long lcgCountCrowdTime, Long lcgCountMinion, Long lcgCountJungle, Long lcgCountWardKill,
+                                 Long lcgCountWardPlaced, Long lcgCountVisionWard, Long lcgCountVisionScore,
+                                 Long lcgCountDoubleKill, Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
+                                 Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, Long lcgCountHerald) {
         this.lcgPuuid = lcgPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
@@ -153,12 +170,11 @@ public class LCG_Player_Statistics {
         this.lcgCountAssist = lcgCountAssist;
         this.lcgCountTower = lcgCountTower;
         this.lcgCountInhibitor = lcgCountInhibitor;
-        this.lcgCountDragon = lcgCountDragon;
-        this.lcgCountBaron = lcgCountBaron;
+        this.lcgCountTowerDamage = lcgCountTowerDamage;
         this.lcgCountDamage = lcgCountDamage;
         this.lcgCountTaken = lcgCountTaken;
         this.lcgCountGold = lcgCountGold;
-        this.lcgCountCCing = lcgCountCCing;
+        this.lcgCountCrowdTime = lcgCountCrowdTime;
         this.lcgCountMinion = lcgCountMinion;
         this.lcgCountJungle = lcgCountJungle;
         this.lcgCountWardKill = lcgCountWardKill;
@@ -169,5 +185,9 @@ public class LCG_Player_Statistics {
         this.lcgCountTripleKill = lcgCountTripleKill;
         this.lcgCountQuadraKill = lcgCountQuadraKill;
         this.lcgCountPentaKill = lcgCountPentaKill;
+        this.lcgCountDragon = lcgCountDragon;
+        this.lcgCountBaron = lcgCountBaron;
+        this.lcgCountHorde = lcgCountHorde;
+        this.lcgCountHerald = lcgCountHerald;
     }
 }
