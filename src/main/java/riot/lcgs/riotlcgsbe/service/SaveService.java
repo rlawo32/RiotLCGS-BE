@@ -8,7 +8,6 @@ import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class SaveService {
     private final LCG_Match_Main_Repository lcgMatchMainRepository;
     private final LCG_Match_Sub_Repository lcgMatchSubRepository;
     private final LCG_Match_Team_Repository lcgMatchTeamRepository;
-    private final LCG_Team_Log_Repository lcgTeamLogRepository;
+    private final LCG_Match_Log_Repository lcgMatchLogRepository;
 
     @Transactional
     public CommonResponseDto<?> LCGTeamLogSave(Long gameId, GameData gameData, TeamData teamData, Map<String, String> version) {
@@ -43,7 +42,7 @@ public class SaveService {
                 }
             }
 
-            lcgTeamLogRepository.save(LCG_Team_Log.builder()
+            lcgMatchLogRepository.save(LCG_Match_Log.builder()
                     .lcgGameId(gameId)
                     .lcgGameWin(gameWin)
                     .lcgGameDate(extractionGameDate)
