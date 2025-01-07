@@ -11,7 +11,6 @@ import riot.lcgs.riotlcgsbe.web.dto.object.*;
 import java.util.Map;
 
 import static riot.lcgs.riotlcgsbe.service.HttpService.*;
-import static riot.lcgs.riotlcgsbe.util.ExtractionTool.ExtractionName;
 
 @RequiredArgsConstructor
 @Service
