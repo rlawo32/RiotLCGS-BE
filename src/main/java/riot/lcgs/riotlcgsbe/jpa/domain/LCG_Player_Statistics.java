@@ -30,6 +30,10 @@ public class LCG_Player_Statistics {
     private String lcgNickname;
 
     @NotNull
+    @Column(name = "lcg_count_play")
+    private Long lcgCountPlay;
+
+    @NotNull
     @Column(name = "lcg_count_kill")
     private Long lcgCountKill;
 
@@ -48,7 +52,6 @@ public class LCG_Player_Statistics {
     @NotNull
     @Column(name = "lcg_count_inhibitor")
     private Long lcgCountInhibitor;
-
 
     @NotNull
     @Column(name = "lcg_count_tower_damage")
@@ -127,6 +130,7 @@ public class LCG_Player_Statistics {
     private Long lcgCountHerald;
 
     public LCG_Player_Statistics playerDataCounting(Stats statsData, Teams teams) {
+        this.lcgCountPlay += 1;
         this.lcgCountKill += (long) statsData.getKills();
         this.lcgCountDeath += (long) statsData.getDeaths();
         this.lcgCountAssist += (long) statsData.getAssists();
@@ -162,6 +166,7 @@ public class LCG_Player_Statistics {
                                  Long lcgCountWardPlaced, Long lcgCountVisionWard, Long lcgCountVisionScore,
                                  Long lcgCountDoubleKill, Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
                                  Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, Long lcgCountHerald) {
+        this.lcgCountPlay = 1L;
         this.lcgPuuid = lcgPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
