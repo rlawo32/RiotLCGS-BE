@@ -206,11 +206,29 @@ public class SaveService {
 
         try {
             List<Teams> list1 = gameData.getTeams();
+            List<Participants> list2 = gameData.getParticipants();
 
             for(int i=0; i<list1.size(); i++) {
                 Teams teams = list1.get(i);
                 List<Bans> bans = teams.getBans();
                 int bansLen = bans.size();
+
+                int totalGold = 0;
+                int totalKill = 0;
+                int totalDeath = 0;
+                int totalAssist = 0;
+
+                for(int j=0; j<list2.size(); j++) {
+                    Participants participants = list2.get(j);
+                    Stats statsData = participants.getStats();
+
+                    if(teams.getTeamId() == participants.getTeamId()) {
+                        totalGold += statsData.getGoldEarned();
+                        totalKill += statsData.getKills();
+                        totalDeath += statsData.getDeaths();
+                        totalAssist += statsData.getAssists();
+                    }
+                }
 
                 lcgMatchTeamRepository.save(LCG_Match_Team.builder()
                         .lcgGameId(gameId)
@@ -221,6 +239,10 @@ public class SaveService {
                         .lcgFirstKill(teams.isFirstBlood() ? "Y" : "N")
                         .lcgFirstTower(teams.isFirstTower() ? "Y" : "N")
                         .lcgFirstInhibitor(teams.isFirstInhibitor() ? "Y" : "N")
+                        .lcgTotalGold(totalGold)
+                        .lcgTotalKill(totalKill)
+                        .lcgTotalDeath(totalDeath)
+                        .lcgTotalAssist(totalAssist)
                         .lcgTotalDragon(teams.getDragonKills())
                         .lcgTotalBaron(teams.getBaronKills())
                         .lcgTotalTower(teams.getTowerKills())
