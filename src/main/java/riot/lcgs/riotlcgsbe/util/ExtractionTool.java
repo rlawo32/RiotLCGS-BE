@@ -27,7 +27,7 @@ public class ExtractionTool {
         return CommonResponseDto.setSuccess("Success", extractionResult);
     }
 
-    public static CommonResponseDto<String> ExtractionSummoner(int summonerId) {
+    public static CommonResponseDto<String> ExtractionSummonerSpell(int summonerId) {
 
         String extractionResult = "";
 
