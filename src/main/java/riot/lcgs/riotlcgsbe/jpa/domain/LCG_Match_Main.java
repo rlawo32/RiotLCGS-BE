@@ -1,6 +1,7 @@
 package riot.lcgs.riotlcgsbe.jpa.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,87 +17,115 @@ public class LCG_Match_Main {
     @Column(name = "row_num")
     private Long rowNum;
 
+    @NotNull
     @Column(name = "lcg_game_id")
     private Long lcgGameId;
 
+    @NotNull
     @Column(name = "lcg_participant_id")
     private int lcgParticipantId;
 
+    @NotNull
     @Column(name = "lcg_team_id")
     private int lcgTeamId;
 
+    @NotNull
     @Column(name = "lcg_summoner_id")
     private Long lcgSummonerId;
 
+    @NotNull
     @Column(name = "lcg_summoner_name")
     private String lcgSummonerName;
 
+    @NotNull
     @Column(name = "lcg_summoner_tag")
     private String lcgSummonerTag;
 
+    @NotNull
     @Column(name = "lcg_champion_id")
     private int lcgChampionId;
 
+    @NotNull
     @Column(name = "lcg_champion_name")
     private String lcgChampionName;
 
+    @NotNull
     @Column(name = "lcg_champion_level")
     private int lcgChampionLevel;
 
+    @NotNull
     @Column(name = "lcg_spell_name_1")
     private String lcgSpellName1;
 
+    @NotNull
     @Column(name = "lcg_spell_name_2")
     private String lcgSpellName2;
 
+    @NotNull
     @Column(name = "lcg_perk_name_1")
     private String lcgPerkName1;
 
+    @NotNull
     @Column(name = "lcg_perk_name_2")
     private String lcgPerkName2;
 
+    @NotNull
     @Column(name = "lcg_item_id_1")
     private int lcgItemId1;
 
+    @NotNull
     @Column(name = "lcg_item_id_2")
     private int lcgItemId2;
 
+    @NotNull
     @Column(name = "lcg_item_id_3")
     private int lcgItemId3;
 
+    @NotNull
     @Column(name = "lcg_item_id_4")
     private int lcgItemId4;
 
+    @NotNull
     @Column(name = "lcg_item_id_5")
     private int lcgItemId5;
 
+    @NotNull
     @Column(name = "lcg_item_id_6")
     private int lcgItemId6;
 
+    @NotNull
     @Column(name = "lcg_item_id_7")
     private int lcgItemId7;
 
+    @NotNull
     @Column(name = "lcg_kill_count")
     private int lcgKillCount;
 
+    @NotNull
     @Column(name = "lcg_death_count")
     private int lcgDeathCount;
 
+    @NotNull
     @Column(name = "lcg_assist_count")
     private int lcgAssistCount;
 
+    @NotNull
     @Column(name = "lcg_damage_total")
     private int lcgDamageTotal;
 
+    @NotNull
     @Column(name = "lcg_damage_taken")
     private int lcgDamageTaken;
 
+    @NotNull
     @Column(name = "lcg_minion_count")
     private int lcgMinionCount;
 
+    @NotNull
     @Column(name = "lcg_jungle_count")
     private int lcgJungleCount;
 
+    @NotNull
     @Column(name = "lcg_vision_score")
     private int lcgVisionScore;
 

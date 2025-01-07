@@ -1,6 +1,7 @@
 package riot.lcgs.riotlcgsbe.jpa.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,51 +17,67 @@ public class LCG_Match_Sub {
     @Column(name = "row_num")
     private Long rowNum;
 
+    @NotNull
     @Column(name = "lcg_game_id")
     private Long lcgGameId;
 
+    @NotNull
     @Column(name = "lcg_participant_id")
     private int lcgParticipantId;
 
+    @NotNull
     @Column(name = "lcg_first_kill", length = 1)
     private String lcgFirstKill;
 
+    @NotNull
     @Column(name = "lcg_first_tower", length = 1)
     private String lcgFirstTower;
 
+    @NotNull
     @Column(name = "lcg_double_kill")
     private int lcgDoubleKill;
 
+    @NotNull
     @Column(name = "lcg_triple_kill")
     private int lcgTripleKill;
 
+    @NotNull
     @Column(name = "lcg_quadra_kill")
     private int lcgQuadraKill;
 
+    @NotNull
     @Column(name = "lcg_penta_kill")
     private int lcgPentaKill;
 
+    @NotNull
     @Column(name = "lcg_normal_ward")
     private int lcgNormalWard;
 
+    @NotNull
     @Column(name = "lcg_vision_ward")
     private int lcgVisionWard;
 
+    @NotNull
     @Column(name = "lcg_destroy_ward")
     private int lcgDestroyWard;
 
+    @NotNull
     @Column(name = "lcg_gold_total")
     private int lcgGoldTotal;
 
+    @NotNull
     @Column(name = "lcg_heal_total")
     private int lcgHealTotal;
 
+    @NotNull
     @Column(name = "lcg_crowd_time")
     private int lcgCrowdTime;
 
+    @NotNull
     @Column(name = "lcg_destroy_tower")
     private int lcgDestroyTower;
 
+    @NotNull
     @Column(name = "lcg_damage_tower")
     private int lcgDamageTower;
 
