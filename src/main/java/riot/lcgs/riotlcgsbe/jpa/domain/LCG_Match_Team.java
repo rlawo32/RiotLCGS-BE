@@ -1,6 +1,7 @@
 package riot.lcgs.riotlcgsbe.jpa.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,57 +17,75 @@ public class LCG_Match_Team {
     @Column(name = "row_num")
     private Long rowNum;
 
+    @NotNull
     @Column(name = "lcg_game_id")
     private Long lcgGameId;
 
+    @NotNull
     @Column(name = "lcg_team_id")
     private int lcgTeamId;
 
+    @NotNull
     @Column(name = "lcg_team_win", length = 1)
     private String lcgTeamWin;
 
+    @NotNull
     @Column(name = "lcg_first_dragon", length = 1)
     private String lcgFirstDragon;
 
+    @NotNull
     @Column(name = "lcg_first_baron", length = 1)
     private String lcgFirstBaron;
 
+    @NotNull
     @Column(name = "lcg_first_kill", length = 1)
     private String lcgFirstKill;
 
+    @NotNull
     @Column(name = "lcg_first_tower", length = 1)
     private String lcgFirstTower;
 
+    @NotNull
     @Column(name = "lcg_first_inhibitor", length = 1)
     private String lcgFirstInhibitor;
 
+    @NotNull
     @Column(name = "lcg_dragon_total")
     private int lcgDragonTotal;
 
+    @NotNull
     @Column(name = "lcg_baron_total")
     private int lcgBaronTotal;
 
+    @NotNull
     @Column(name = "lcg_tower_total")
     private int lcgTowerTotal;
 
+    @NotNull
     @Column(name = "lcg_horde_total")
     private int lcgHordeTotal;
 
+    @NotNull
     @Column(name = "lcg_herald_total")
     private int lcgHeraldTotal;
 
+    @NotNull
     @Column(name = "lcg_bans_name_1")
     private String lcgBansName1;
 
+    @NotNull
     @Column(name = "lcg_bans_name_2")
     private String lcgBansName2;
 
+    @NotNull
     @Column(name = "lcg_bans_name_3")
     private String lcgBansName3;
 
+    @NotNull
     @Column(name = "lcg_bans_name_4")
     private String lcgBansName4;
 
+    @NotNull
     @Column(name = "lcg_bans_name_5")
     private String lcgBansName5;
 
