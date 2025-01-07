@@ -51,6 +51,22 @@ public class LCG_Match_Team {
 
     @NotNull
     @Column(name = "lcg_dragon_total")
+    private int lcgTotalGold;
+
+    @NotNull
+    @Column(name = "lcg_dragon_total")
+    private int lcgTotalKill;
+
+    @NotNull
+    @Column(name = "lcg_dragon_total")
+    private int lcgTotalDeath;
+
+    @NotNull
+    @Column(name = "lcg_dragon_total")
+    private int lcgTotalAssist;
+
+    @NotNull
+    @Column(name = "lcg_dragon_total")
     private int lcgDragonTotal;
 
     @NotNull
@@ -90,7 +106,8 @@ public class LCG_Match_Team {
     private String lcgBansName5;
 
     @Builder
-    public LCG_Match_Team(Long lcgGameId, int lcgTeamId, String lcgTeamWin, String lcgFirstDragon, String lcgFirstBaron,
+    public LCG_Match_Team(Long lcgGameId, int lcgTeamId, String lcgTeamWin, int lcgTotalGold, int lcgTotalKill,
+                          int lcgTotalDeath, int lcgTotalAssist, String lcgFirstDragon, String lcgFirstBaron,
                           String lcgFirstKill, String lcgFirstTower, String lcgFirstInhibitor, int lcgDragonTotal,
                           int lcgBaronTotal, int lcgTowerTotal, int lcgHordeTotal, int lcgHeraldTotal, String lcgBansName1,
                           String lcgBansName2, String lcgBansName3, String lcgBansName4, String lcgBansName5) {
@@ -102,6 +119,10 @@ public class LCG_Match_Team {
         this.lcgFirstKill = lcgFirstKill;
         this.lcgFirstTower = lcgFirstTower;
         this.lcgFirstInhibitor = lcgFirstInhibitor;
+        this.lcgTotalGold = lcgTotalGold;
+        this.lcgTotalKill = lcgTotalKill;
+        this.lcgTotalDeath = lcgTotalDeath;
+        this.lcgTotalAssist = lcgTotalAssist;
         this.lcgDragonTotal = lcgDragonTotal;
         this.lcgBaronTotal = lcgBaronTotal;
         this.lcgTowerTotal = lcgTowerTotal;
