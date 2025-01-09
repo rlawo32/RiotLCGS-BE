@@ -34,6 +34,14 @@ public class LCG_Player_Statistics {
     private Long lcgCountPlay;
 
     @NotNull
+    @Column(name = "lcg_count_victory")
+    private Long lcgCountVictory;
+
+    @NotNull
+    @Column(name = "lcg_count_defeat")
+    private Long lcgCountDefeat;
+
+    @NotNull
     @Column(name = "lcg_count_kill")
     private Long lcgCountKill;
 
@@ -131,6 +139,8 @@ public class LCG_Player_Statistics {
 
     public LCG_Player_Statistics playerDataCounting(Stats statsData, Teams teams) {
         this.lcgCountPlay += 1;
+        this.lcgCountVictory = teams.getWin().equals("Win") ? 1 : 0;
+        this.lcgCountDefeat = teams.getWin().equals("Win") ? 1 : 0;
         this.lcgCountKill += (long) statsData.getKills();
         this.lcgCountDeath += (long) statsData.getDeaths();
         this.lcgCountAssist += (long) statsData.getAssists();
@@ -159,17 +169,20 @@ public class LCG_Player_Statistics {
     }
 
     @Builder
-    public LCG_Player_Statistics(String lcgPuuid, String lcgPlayer, String lcgNickname, Long lcgCountKill,
-                                 Long lcgCountDeath, Long lcgCountAssist, Long lcgCountTower, Long lcgCountInhibitor,
-                                 Long lcgCountTowerDamage, Long lcgCountDamage, Long lcgCountTaken, Long lcgCountGold,
-                                 Long lcgCountCrowdTime, Long lcgCountMinion, Long lcgCountJungle, Long lcgCountWardKill,
-                                 Long lcgCountWardPlaced, Long lcgCountVisionWard, Long lcgCountVisionScore,
-                                 Long lcgCountDoubleKill, Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
+    public LCG_Player_Statistics(String lcgPuuid, String lcgPlayer, String lcgNickname, Long lcgCountVictory, 
+                                 Long lcgCountDefeat, Long lcgCountKill, Long lcgCountDeath, Long lcgCountAssist, 
+                                 Long lcgCountTower, Long lcgCountInhibitor, Long lcgCountTowerDamage, 
+                                 Long lcgCountDamage, Long lcgCountTaken, Long lcgCountGold, Long lcgCountCrowdTime,
+                                 Long lcgCountMinion, Long lcgCountJungle, Long lcgCountWardKill, Long lcgCountWardPlaced, 
+                                 Long lcgCountVisionWard, Long lcgCountVisionScore, Long lcgCountDoubleKill, 
+                                 Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
                                  Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, Long lcgCountHerald) {
-        this.lcgCountPlay = 1L;
         this.lcgPuuid = lcgPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
+        this.lcgCountPlay = 1L;
+        this.lcgCountVictory = lcgCountVictory;
+        this.lcgCountDefeat = lcgCountDefeat;
         this.lcgCountKill = lcgCountKill;
         this.lcgCountDeath = lcgCountDeath;
         this.lcgCountAssist = lcgCountAssist;
