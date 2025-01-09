@@ -139,8 +139,8 @@ public class LCG_Player_Statistics {
 
     public LCG_Player_Statistics playerDataCounting(Stats statsData, Teams teams) {
         this.lcgCountPlay += 1;
-        this.lcgCountVictory = teams.getWin().equals("Win") ? 1 : 0;
-        this.lcgCountDefeat = teams.getWin().equals("Win") ? 1 : 0;
+        this.lcgCountVictory += teams.getWin().equals("Win") ? 1 : 0;
+        this.lcgCountDefeat += teams.getWin().equals("Win") ? 1 : 0;
         this.lcgCountKill += (long) statsData.getKills();
         this.lcgCountDeath += (long) statsData.getDeaths();
         this.lcgCountAssist += (long) statsData.getAssists();
