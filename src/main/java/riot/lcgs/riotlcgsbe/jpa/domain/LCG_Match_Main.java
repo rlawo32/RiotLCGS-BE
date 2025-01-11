@@ -30,8 +30,8 @@ public class LCG_Match_Main {
     private int lcgTeamId;
 
     @NotNull
-    @Column(name = "lcg_summoner_id")
-    private Long lcgSummonerId;
+    @Column(name = "lcg_summoner_puuid")
+    private String lcgSummonerPuuid;
 
     @NotNull
     @Column(name = "lcg_summoner_name")
@@ -130,7 +130,7 @@ public class LCG_Match_Main {
     private int lcgVisionScore;
 
     @Builder
-    public LCG_Match_Main(Long lcgGameId, int lcgParticipantId, int lcgTeamId, Long lcgSummonerId,
+    public LCG_Match_Main(Long lcgGameId, int lcgParticipantId, int lcgTeamId, String lcgSummonerPuuid,
                           String lcgSummonerName, String lcgSummonerTag, int lcgChampionId,
                           String lcgChampionName, int lcgChampionLevel, String lcgSpellName1, String lcgSpellName2,
                           String lcgPerkName1, String lcgPerkName2, int lcgItemId1, int lcgItemId2, int lcgItemId3,
@@ -140,7 +140,7 @@ public class LCG_Match_Main {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgTeamId = lcgTeamId;
-        this.lcgSummonerId = lcgSummonerId;
+        this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgSummonerName = lcgSummonerName;
         this.lcgSummonerTag = lcgSummonerTag;
         this.lcgChampionId = lcgChampionId;
