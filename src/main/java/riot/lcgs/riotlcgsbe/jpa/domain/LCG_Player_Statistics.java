@@ -18,8 +18,8 @@ import riot.lcgs.riotlcgsbe.web.dto.object.Teams;
 public class LCG_Player_Statistics {
 
     @Id
-    @Column(name = "lcg_puuid")
-    private String lcgPuuid;
+    @Column(name = "lcg_summoner_puuid")
+    private String lcgSummonerPuuid;
 
     @NotNull
     @Column(name = "lcg_player")
@@ -169,7 +169,7 @@ public class LCG_Player_Statistics {
     }
 
     @Builder
-    public LCG_Player_Statistics(String lcgPuuid, String lcgPlayer, String lcgNickname, Long lcgCountVictory, 
+    public LCG_Player_Statistics(String lcgSummonerPuuid, String lcgPlayer, String lcgNickname, Long lcgCountVictory,
                                  Long lcgCountDefeat, Long lcgCountKill, Long lcgCountDeath, Long lcgCountAssist, 
                                  Long lcgCountTower, Long lcgCountInhibitor, Long lcgCountTowerDamage, 
                                  Long lcgCountDamage, Long lcgCountTaken, Long lcgCountGold, Long lcgCountCrowdTime,
@@ -177,7 +177,7 @@ public class LCG_Player_Statistics {
                                  Long lcgCountVisionWard, Long lcgCountVisionScore, Long lcgCountDoubleKill, 
                                  Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
                                  Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, Long lcgCountHerald) {
-        this.lcgPuuid = lcgPuuid;
+        this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
         this.lcgCountPlay = 1L;
