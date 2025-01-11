@@ -30,14 +30,6 @@ public class LCG_Match_Sub {
     private String lcgSummonerPuuid;
 
     @NotNull
-    @Column(name = "lcg_summoner_name")
-    private String lcgSummonerName;
-
-    @NotNull
-    @Column(name = "lcg_summoner_tag")
-    private String lcgSummonerTag;
-
-    @NotNull
     @Column(name = "lcg_first_kill", length = 1)
     private String lcgFirstKill;
 
@@ -94,16 +86,13 @@ public class LCG_Match_Sub {
     private int lcgDamageTower;
 
     @Builder
-    public LCG_Match_Sub(Long lcgGameId, int lcgParticipantId, String lcgSummonerPuuid,
-                         String lcgSummonerName, String lcgSummonerTag, String lcgFirstKill, String lcgFirstTower,
+    public LCG_Match_Sub(Long lcgGameId, int lcgParticipantId, String lcgSummonerPuuid, String lcgFirstKill, String lcgFirstTower,
                          int lcgDoubleKill, int lcgTripleKill, int lcgQuadraKill, int lcgPentaKill,
                          int lcgNormalWard, int lcgVisionWard, int lcgDestroyWard, int lcgGoldTotal,
                          int lcgHealTotal, int lcgCrowdTime, int lcgDestroyTower, int lcgDamageTower) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
-        this.lcgSummonerName = lcgSummonerName;
-        this.lcgSummonerTag = lcgSummonerTag;
         this.lcgFirstKill = lcgFirstKill;
         this.lcgFirstTower = lcgFirstTower;
         this.lcgDoubleKill = lcgDoubleKill;
