@@ -134,7 +134,7 @@ public class SaveService {
                         .lcgGameId(gameId)
                         .lcgParticipantId(participantIdentities.getParticipantId())
                         .lcgTeamId(participants.getTeamId())
-                        .lcgSummonerId(playerData.getSummonerId())
+                        .lcgSummonerPuuid(playerData.getPuuid())
                         .lcgSummonerName(playerData.getSummonerName())
                         .lcgSummonerTag(playerData.getTagLine())
                         .lcgChampionId(participants.getChampionId())
@@ -174,11 +174,15 @@ public class SaveService {
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
                 Participants participants = list2.get(i);
+                Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
 
                 lcgMatchSubRepository.save(LCG_Match_Sub.builder()
                         .lcgGameId(gameId)
                         .lcgParticipantId(participantIdentities.getParticipantId())
+                        .lcgSummonerPuuid(playerData.getPuuid())
+                        .lcgSummonerName(playerData.getSummonerName())
+                        .lcgSummonerTag(playerData.getTagLine())
                         .lcgFirstKill(statsData.isFirstBloodKill() ? "Y" : "N")
                         .lcgFirstTower(statsData.isFirstTowerKill() ? "Y" : "N")
                         .lcgDoubleKill(statsData.getDoubleKills())
