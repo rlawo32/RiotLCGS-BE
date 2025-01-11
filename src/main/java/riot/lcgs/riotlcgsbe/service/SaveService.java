@@ -24,6 +24,7 @@ public class SaveService {
     private final LCG_Match_Team_Repository lcgMatchTeamRepository;
     private final LCG_Match_Log_Repository lcgMatchLogRepository;
     private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
+    private final LCG_Player_Data_Repository lcgPlayerDataRepository;
 
     @Transactional
     public CommonResponseDto<?> LCGTeamLogSave(Long gameId, GameData gameData, TeamData teamData, Map<String, String> version) {
@@ -181,8 +182,6 @@ public class SaveService {
                         .lcgGameId(gameId)
                         .lcgParticipantId(participantIdentities.getParticipantId())
                         .lcgSummonerPuuid(playerData.getPuuid())
-                        .lcgSummonerName(playerData.getSummonerName())
-                        .lcgSummonerTag(playerData.getTagLine())
                         .lcgFirstKill(statsData.isFirstBloodKill() ? "Y" : "N")
                         .lcgFirstTower(statsData.isFirstTowerKill() ? "Y" : "N")
                         .lcgDoubleKill(statsData.getDoubleKills())
@@ -292,7 +291,7 @@ public class SaveService {
 
                 String puuid = participantIdentities.getPlayer().getPuuid();
                 String nickname = participantIdentities.getPlayer().getGameName() + "#" + participantIdentities.getPlayer().getTagLine();
-                boolean existsCheck = lcgPlayerStatisticsRepository.existsLCG_Player_StatisticsByLcgPuuid(puuid);
+                boolean existsCheck = lcgPlayerStatisticsRepository.existsLCG_Player_StatisticsByLcgSummonerPuuid(puuid);
 
                 if(existsCheck) {
                     LCG_Player_Statistics lcgPlayerStatistics = lcgPlayerStatisticsRepository.findById(puuid)
@@ -301,7 +300,7 @@ public class SaveService {
                     lcgPlayerStatistics.playerDataCounting(statsData, teams);
                 } else {
                     lcgPlayerStatisticsRepository.save(LCG_Player_Statistics.builder()
-                            .lcgPuuid(puuid)
+                            .lcgSummonerPuuid(puuid)
                             .lcgPlayer("")
                             .lcgNickname(nickname)
                             .lcgCountVictory(teams.getWin().equals("Win") ? 1L : 0L)
@@ -330,6 +329,44 @@ public class SaveService {
                             .lcgCountBaron((long)teams.getBaronKills())
                             .lcgCountHorde((long)teams.getHordeKills())
                             .lcgCountHerald((long)teams.getRiftHeraldKills()).build());
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+
+        return CommonResponseDto.setSuccess("Success", "");
+    }
+
+    @Transactional
+    public CommonResponseDto<?> LCGPlayerDataSave(GameData gameData) {
+
+        try {
+            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+
+            for(int i=0; i<list1.size(); i++) {
+                ParticipantIdentities participantIdentities = list1.get(i);
+                Player playerData = participantIdentities.getPlayer();
+
+                String puuid = playerData.getPuuid();
+                String nickname = playerData.getGameName() + "#" + playerData.getTagLine();
+                boolean existsCheck = lcgPlayerDataRepository.existsLCG_Player_DataByLcgSummonerPuuid(puuid);
+
+                if(existsCheck) {
+                    LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
+                            .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
+
+                    lcgPlayerData.playerDataUpdate(playerData, "");
+                } else {
+                    lcgPlayerDataRepository.save(LCG_Player_Data.builder()
+                            .lcgSummonerPuuid(puuid)
+                            .lcgPlayer("")
+                            .lcgSummonerNickname(nickname)
+                            .lcgSummonerId(playerData.getSummonerId())
+                            .lcgSummonerName(playerData.getSummonerName())
+                            .lcgSummonerTag(playerData.getTagLine())
+                            .build());
                 }
             }
         } catch (Exception ex) {
