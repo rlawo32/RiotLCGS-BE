@@ -301,7 +301,7 @@ public class SaveService {
                             .lcgPlayer("")
                             .lcgNickname(nickname)
                             .lcgCountVictory(teams.getWin().equals("Win") ? 1L : 0L)
-                            .lcgCountDefeat(teams.getWin().equals("Win") ? 1L : 0L)
+                            .lcgCountDefeat(teams.getWin().equals("Fail") ? 1L : 0L)
                             .lcgCountKill((long)statsData.getKills())
                             .lcgCountDeath((long)statsData.getDeaths())
                             .lcgCountAssist((long)statsData.getAssists())
