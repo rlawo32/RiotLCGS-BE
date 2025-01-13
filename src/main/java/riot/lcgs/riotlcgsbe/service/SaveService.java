@@ -195,7 +195,8 @@ public class SaveService {
                         .lcgHealTotal(statsData.getTotalHeal())
                         .lcgCrowdTime(statsData.getTimeCCingOthers())
                         .lcgDestroyTower(statsData.getTurretKills())
-                        .lcgDamageTower(statsData.getDamageDealtToTurrets()).build());
+                        .lcgDamageTower(statsData.getDamageDealtToTurrets())
+                        .lcgDestroyInhibitor(statsData.getInhibitorKills()).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -249,9 +250,10 @@ public class SaveService {
                         .lcgTotalAssist(totalAssist)
                         .lcgTotalDragon(teams.getDragonKills())
                         .lcgTotalBaron(teams.getBaronKills())
-                        .lcgTotalTower(teams.getTowerKills())
                         .lcgTotalHorde(teams.getHordeKills())
                         .lcgTotalHerald(teams.getRiftHeraldKills())
+                        .lcgTotalTower(teams.getTowerKills())
+                        .lcgTotalInhibitor(teams.getInhibitorKills())
                         .lcgBansName1(bansLen >= 1 ? ExtractionName(bans.get(0).getChampionId()).getData() : "Empty")
                         .lcgBansName2(bansLen >= 2 ? ExtractionName(bans.get(1).getChampionId()).getData() : "Empty")
                         .lcgBansName3(bansLen >= 3 ? ExtractionName(bans.get(2).getChampionId()).getData() : "Empty")
