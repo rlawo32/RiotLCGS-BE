@@ -120,6 +120,10 @@ public class LCG_Player_Statistics {
     @NotNull
     @Column(name = "lcg_count_penta_kill")
     private Long lcgCountPentaKill;
+    
+    @NotNull
+    @Column(name = "lcg_multi_kill_score") // double kill = 1, triple kill = 3, quadra kill = 10, penta kill = 50
+    private Long lcgMultiKillScore; 
 
     @NotNull
     @Column(name = "lcg_count_dragon")
@@ -137,7 +141,11 @@ public class LCG_Player_Statistics {
     @Column(name = "lcg_count_herald")
     private Long lcgCountHerald;
 
-    public LCG_Player_Statistics playerDataCounting(Stats statsData, Teams teams) {
+    @NotNull
+    @Column(name = "lcg_jungle_object_score") // horde = 1, dragon = 2, herald = 4, baron = 7
+    private Long lcgJungleObjectScore;
+
+    public LCG_Player_Statistics playerDataCounting(Stats statsData, Teams teams, Long multiKillScore, Long jungleObjectScore) {
         this.lcgCountPlay += 1;
         this.lcgCountVictory += teams.getWin().equals("Win") ? 1 : 0;
         this.lcgCountDefeat += teams.getWin().equals("Fail") ? 1 : 0;
@@ -161,10 +169,12 @@ public class LCG_Player_Statistics {
         this.lcgCountTripleKill += (long) statsData.getTripleKills();
         this.lcgCountQuadraKill += (long) statsData.getQuadraKills();
         this.lcgCountPentaKill += (long) statsData.getPentaKills();
+        this.lcgMultiKillScore += multiKillScore;
         this.lcgCountDragon += (long) teams.getDragonKills();
         this.lcgCountBaron += (long) teams.getBaronKills();
         this.lcgCountHorde += (long) teams.getHordeKills();
         this.lcgCountHerald += (long) teams.getRiftHeraldKills();
+        this.lcgJungleObjectScore += jungleObjectScore;
         return this;
     }
 
@@ -176,7 +186,8 @@ public class LCG_Player_Statistics {
                                  Long lcgCountMinion, Long lcgCountJungle, Long lcgCountWardKill, Long lcgCountWardPlaced, 
                                  Long lcgCountVisionWard, Long lcgCountVisionScore, Long lcgCountDoubleKill, 
                                  Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
-                                 Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, Long lcgCountHerald) {
+                                 Long lcgMultiKillScore, Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, 
+                                 Long lcgCountHerald, Long lcgJungleObjectScore) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
@@ -203,9 +214,11 @@ public class LCG_Player_Statistics {
         this.lcgCountTripleKill = lcgCountTripleKill;
         this.lcgCountQuadraKill = lcgCountQuadraKill;
         this.lcgCountPentaKill = lcgCountPentaKill;
+        this.lcgMultiKillScore = multiKillScore;
         this.lcgCountDragon = lcgCountDragon;
         this.lcgCountBaron = lcgCountBaron;
         this.lcgCountHorde = lcgCountHorde;
         this.lcgCountHerald = lcgCountHerald;
+        this.lcgJungleObjectScore = jungleObjectScore;
     }
 }
