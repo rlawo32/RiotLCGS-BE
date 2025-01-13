@@ -289,15 +289,21 @@ public class SaveService {
                     }
                 }
 
+                // 사용자 정보
                 String puuid = participantIdentities.getPlayer().getPuuid();
                 String nickname = participantIdentities.getPlayer().getGameName() + "#" + participantIdentities.getPlayer().getTagLine();
+
+                // Score 연산
+                Long multiKillScore = statsData.getDoubleKills() + (statsData.getTripleKills() * 3) + (statsData.getQuadraKills() * 10) + (statsData.getPentaKills() * 50);
+                Long jungleObjectScore = teams.getHordeKills() + (teams.getDragonKills() * 2) + (teams.getRiftHeraldKills() * 4) + (teams.getBaronKills() * 7);
+
                 boolean existsCheck = lcgPlayerStatisticsRepository.existsLCG_Player_StatisticsByLcgSummonerPuuid(puuid);
 
                 if(existsCheck) {
                     LCG_Player_Statistics lcgPlayerStatistics = lcgPlayerStatisticsRepository.findById(puuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerStatistics.playerDataCounting(statsData, teams);
+                    lcgPlayerStatistics.playerDataCounting(statsData, teams, multiKillScore, jungleObjectScore);
                 } else {
                     lcgPlayerStatisticsRepository.save(LCG_Player_Statistics.builder()
                             .lcgSummonerPuuid(puuid)
@@ -325,10 +331,12 @@ public class SaveService {
                             .lcgCountTripleKill((long)statsData.getTripleKills())
                             .lcgCountQuadraKill((long)statsData.getQuadraKills())
                             .lcgCountPentaKill((long)statsData.getPentaKills())
+                            .lcgMultiKillScore(multiKillScore)
                             .lcgCountDragon((long)teams.getDragonKills())
                             .lcgCountBaron((long)teams.getBaronKills())
                             .lcgCountHorde((long)teams.getHordeKills())
-                            .lcgCountHerald((long)teams.getRiftHeraldKills()).build());
+                            .lcgCountHerald((long)teams.getRiftHeraldKills())
+                            .lcgJungleObjectScore(jungleObjectScore).build());
                 }
             }
         } catch (Exception ex) {
