@@ -303,7 +303,7 @@ public class SaveService {
                     LCG_Player_Statistics lcgPlayerStatistics = lcgPlayerStatisticsRepository.findById(puuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerStatistics.playerDataCounting(statsData, teams, multiKillScore, jungleObjectScore);
+                    lcgPlayerStatistics.playerDataCounting(nickname, statsData, teams, multiKillScore, jungleObjectScore);
                 } else {
                     lcgPlayerStatisticsRepository.save(LCG_Player_Statistics.builder()
                             .lcgSummonerPuuid(puuid)
