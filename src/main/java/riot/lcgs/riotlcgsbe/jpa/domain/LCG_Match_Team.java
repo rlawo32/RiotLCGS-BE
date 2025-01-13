@@ -74,16 +74,20 @@ public class LCG_Match_Team {
     private int lcgTotalBaron;
 
     @NotNull
-    @Column(name = "lcg_total_tower")
-    private int lcgTotalTower;
-
-    @NotNull
     @Column(name = "lcg_total_horde")
     private int lcgTotalHorde;
 
     @NotNull
     @Column(name = "lcg_total_herald")
     private int lcgTotalHerald;
+
+    @NotNull
+    @Column(name = "lcg_total_tower")
+    private int lcgTotalTower;
+
+    @NotNull
+    @Column(name = "lcg_total_inhibitor")
+    private int lcgTotalInhibitor;
 
     @NotNull
     @Column(name = "lcg_bans_name_1")
@@ -109,8 +113,8 @@ public class LCG_Match_Team {
     public LCG_Match_Team(Long lcgGameId, int lcgTeamId, String lcgTeamWin, String lcgFirstDragon, String lcgFirstBaron,
                           String lcgFirstKill, String lcgFirstTower, String lcgFirstInhibitor, int lcgTotalGold,
                           int lcgTotalKill, int lcgTotalDeath, int lcgTotalAssist, int lcgTotalDragon, int lcgTotalBaron,
-                          int lcgTotalTower, int lcgTotalHorde, int lcgTotalHerald, String lcgBansName1,
-                          String lcgBansName2, String lcgBansName3, String lcgBansName4, String lcgBansName5) {
+                          int lcgTotalHorde, int lcgTotalHerald, int lcgTotalTower, int lcgTotalInhibitor, 
+                          String lcgBansName1, String lcgBansName2, String lcgBansName3, String lcgBansName4, String lcgBansName5) {
         this.lcgGameId = lcgGameId;
         this.lcgTeamId = lcgTeamId;
         this.lcgTeamWin = lcgTeamWin;
@@ -125,9 +129,10 @@ public class LCG_Match_Team {
         this.lcgTotalAssist = lcgTotalAssist;
         this.lcgTotalDragon = lcgTotalDragon;
         this.lcgTotalBaron = lcgTotalBaron;
-        this.lcgTotalTower = lcgTotalTower;
         this.lcgTotalHorde = lcgTotalHorde;
         this.lcgTotalHerald = lcgTotalHerald;
+        this.lcgTotalTower = lcgTotalTower;
+        this.lcgTotalInhibitor = lcgTotalInhibitor;
         this.lcgBansName1 = lcgBansName1;
         this.lcgBansName2 = lcgBansName2;
         this.lcgBansName3 = lcgBansName3;
