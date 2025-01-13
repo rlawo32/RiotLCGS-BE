@@ -85,11 +85,15 @@ public class LCG_Match_Sub {
     @Column(name = "lcg_damage_tower")
     private int lcgDamageTower;
 
+    @NotNull
+    @Column(name = "lcg_destroy_inhibitor")
+    private int lcgDestroyInhibitor;
+    
     @Builder
     public LCG_Match_Sub(Long lcgGameId, int lcgParticipantId, String lcgSummonerPuuid, String lcgFirstKill, String lcgFirstTower,
                          int lcgDoubleKill, int lcgTripleKill, int lcgQuadraKill, int lcgPentaKill,
                          int lcgNormalWard, int lcgVisionWard, int lcgDestroyWard, int lcgGoldTotal,
-                         int lcgHealTotal, int lcgCrowdTime, int lcgDestroyTower, int lcgDamageTower) {
+                         int lcgHealTotal, int lcgCrowdTime, int lcgDestroyTower, int lcgDamageTower, int lcgDestroyInhibitor) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
@@ -107,5 +111,6 @@ public class LCG_Match_Sub {
         this.lcgCrowdTime = lcgCrowdTime;
         this.lcgDestroyTower = lcgDestroyTower;
         this.lcgDamageTower = lcgDamageTower;
+        this.lcgDestroyInhibitor = lcgDestroyInhibitor;
     }
 }
