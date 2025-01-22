@@ -182,14 +182,14 @@ public class SaveService {
                 Stats statsData = participants.getStats();
 
                 // DPM, GPM, DPG Calculator
-                Long damage = statsData.getTotalDamageDealtToChampions();
-                Long gold = statsData.getGoldEarned();
-                float convertMinute = Math.floor(duration / 60);
-                int minusDPS = Math.floor(damage / duration) * (duration % 60);
-                int minusGPS = Math.floor(gold / duration) * (duration % 60);
+                int damage = statsData.getTotalDamageDealtToChampions();
+                int gold = statsData.getGoldEarned();
+                double convertMinute = Math.floor(duration / 60);
+                int minusDPS = (int) (Math.floor(damage / duration) * (duration % 60));
+                int minusGPS = (int) (Math.floor(gold / duration) * (duration % 60));
 
-                float DPM = (damage-minusDPS) / convertMinute;
-                float GPM = (gold-minusGPS) / convertMinute;
+                double DPM = (damage-minusDPS) / convertMinute;
+                double GPM = (gold-minusGPS) / convertMinute;
 
                 lcgMatchSubRepository.save(LCG_Match_Sub.builder()
                         .lcgGameId(gameId)
@@ -268,7 +268,7 @@ public class SaveService {
                         .lcgTotalBaron(teams.getBaronKills())
                         .lcgTotalHorde(teams.getHordeKills())
                         .lcgTotalHerald(teams.getRiftHeraldKills())
-                        .lcgTotalAtakhan(0L)
+                        .lcgTotalAtakhan(0)
                         .lcgTotalTower(teams.getTowerKills())
                         .lcgTotalInhibitor(teams.getInhibitorKills())
                         .lcgBansName1(bansLen >= 1 ? ExtractionName(bans.get(0).getChampionId()).getData() : "Empty")
@@ -313,8 +313,8 @@ public class SaveService {
                 String nickname = participantIdentities.getPlayer().getGameName() + "#" + participantIdentities.getPlayer().getTagLine();
 
                 // Score 연산
-                Long multiKillScore = statsData.getDoubleKills() + (statsData.getTripleKills() * 3) + (statsData.getQuadraKills() * 10) + (statsData.getPentaKills() * 50);
-                Long jungleObjectScore = teams.getHordeKills() + (teams.getDragonKills() * 2) + (teams.getRiftHeraldKills() * 4) + (teams.getBaronKills() * 7) + (0 * 7);
+                Long multiKillScore = statsData.getDoubleKills() + (statsData.getTripleKills() * 3L) + (statsData.getQuadraKills() * 10L) + (statsData.getPentaKills() * 50L);
+                Long jungleObjectScore = teams.getHordeKills() + (teams.getDragonKills() * 2L) + (teams.getRiftHeraldKills() * 4L) + (teams.getBaronKills() * 7L);
 
                 boolean existsCheck = lcgPlayerStatisticsRepository.existsLCG_Player_StatisticsByLcgSummonerPuuid(puuid);
 
