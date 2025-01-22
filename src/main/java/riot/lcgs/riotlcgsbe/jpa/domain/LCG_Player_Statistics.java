@@ -220,12 +220,12 @@ public class LCG_Player_Statistics {
         this.lcgCountTripleKill = lcgCountTripleKill;
         this.lcgCountQuadraKill = lcgCountQuadraKill;
         this.lcgCountPentaKill = lcgCountPentaKill;
-        this.lcgMultiKillScore = multiKillScore;
+        this.lcgMultiKillScore = lcgMultiKillScore;
         this.lcgCountDragon = lcgCountDragon;
         this.lcgCountBaron = lcgCountBaron;
         this.lcgCountHorde = lcgCountHorde;
         this.lcgCountHerald = lcgCountHerald;
         this.lcgCountAtakhan = lcgCountAtakhan;
-        this.lcgJungleObjectScore = jungleObjectScore;
+        this.lcgJungleObjectScore = lcgJungleObjectScore;
     }
 }
