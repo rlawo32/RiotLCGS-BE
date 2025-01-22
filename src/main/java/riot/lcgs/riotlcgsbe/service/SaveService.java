@@ -11,6 +11,7 @@ import riot.lcgs.riotlcgsbe.web.dto.object.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.lang.Math;
 
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
 
@@ -172,11 +173,23 @@ public class SaveService {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
 
+            int duration = gameData.getGameDuration();
+
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
                 Participants participants = list2.get(i);
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
+
+                // DPM, GPM, DPG Calculator
+                Long damage = statsData.getTotalDamageDealtToChampions();
+                Long gold = statsData.getGoldEarned();
+                float convertMinute = Math.floor(duration/60);
+                int minusDPS = Math.floor(damage/duration) * (duration%60);
+                int minusGPS = Math.floor(gold/duration) * (duration%60);
+
+                float DPM = (damage-minusDPS)/convertMinute;
+                float GPM = (gold-minusGPS)/convertMinute;
 
                 lcgMatchSubRepository.save(LCG_Match_Sub.builder()
                         .lcgGameId(gameId)
@@ -196,7 +209,10 @@ public class SaveService {
                         .lcgCrowdTime(statsData.getTimeCCingOthers())
                         .lcgDestroyTower(statsData.getTurretKills())
                         .lcgDamageTower(statsData.getDamageDealtToTurrets())
-                        .lcgDestroyInhibitor(statsData.getInhibitorKills()).build());
+                        .lcgDestroyInhibitor(statsData.getInhibitorKills())
+                        .lcgDamagePerMinute(DPM)
+                        .lcgGoldPerMinute(GPM)
+                        .lcgDamagePerGold(DPM/GPM).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
