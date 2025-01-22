@@ -88,12 +88,25 @@ public class LCG_Match_Sub {
     @NotNull
     @Column(name = "lcg_destroy_inhibitor")
     private int lcgDestroyInhibitor;
+
+    @NotNull
+    @Column(name = "lcg_damage_per_minute")
+    private float lcgDamagePerMinute;
+
+    @NotNull
+    @Column(name = "lcg_gold_per_minute")
+    private float lcgGoldPerMinute;
+
+    @NotNull
+    @Column(name = "lcg_damage_per_gold")
+    private float lcgDamagePerGold;
     
     @Builder
     public LCG_Match_Sub(Long lcgGameId, int lcgParticipantId, String lcgSummonerPuuid, String lcgFirstKill, String lcgFirstTower,
-                         int lcgDoubleKill, int lcgTripleKill, int lcgQuadraKill, int lcgPentaKill,
-                         int lcgNormalWard, int lcgVisionWard, int lcgDestroyWard, int lcgGoldTotal,
-                         int lcgHealTotal, int lcgCrowdTime, int lcgDestroyTower, int lcgDamageTower, int lcgDestroyInhibitor) {
+                         int lcgDoubleKill, int lcgTripleKill, int lcgQuadraKill, int lcgPentaKill, int lcgNormalWard, 
+                         int lcgVisionWard, int lcgDestroyWard, int lcgGoldTotal, int lcgHealTotal, int lcgCrowdTime, 
+                         int lcgDestroyTower, int lcgDamageTower, int lcgDestroyInhibitor, float lcgDamagePerMinute,
+                         float lcgGoldPerMinute, float lcgDamagePerGold) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
@@ -112,5 +125,8 @@ public class LCG_Match_Sub {
         this.lcgDestroyTower = lcgDestroyTower;
         this.lcgDamageTower = lcgDamageTower;
         this.lcgDestroyInhibitor = lcgDestroyInhibitor;
+        this.lcgDamagePerMinute = lcgDamagePerMinute;
+        this.lcgGoldPerMinute = lcgGoldPerMinute;
+        this.lcgDamagePerGold = lcgDamagePerGold;
     }
 }
