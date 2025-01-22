@@ -184,12 +184,12 @@ public class SaveService {
                 // DPM, GPM, DPG Calculator
                 Long damage = statsData.getTotalDamageDealtToChampions();
                 Long gold = statsData.getGoldEarned();
-                float convertMinute = Math.floor(duration/60);
-                int minusDPS = Math.floor(damage/duration) * (duration%60);
-                int minusGPS = Math.floor(gold/duration) * (duration%60);
+                float convertMinute = Math.floor(duration / 60);
+                int minusDPS = Math.floor(damage / duration) * (duration % 60);
+                int minusGPS = Math.floor(gold / duration) * (duration % 60);
 
-                float DPM = (damage-minusDPS)/convertMinute;
-                float GPM = (gold-minusGPS)/convertMinute;
+                float DPM = (damage-minusDPS) / convertMinute;
+                float GPM = (gold-minusGPS) / convertMinute;
 
                 lcgMatchSubRepository.save(LCG_Match_Sub.builder()
                         .lcgGameId(gameId)
@@ -212,7 +212,7 @@ public class SaveService {
                         .lcgDestroyInhibitor(statsData.getInhibitorKills())
                         .lcgDamagePerMinute(DPM)
                         .lcgGoldPerMinute(GPM)
-                        .lcgDamagePerGold(DPM/GPM).build());
+                        .lcgDamagePerGold(DPM / GPM).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
