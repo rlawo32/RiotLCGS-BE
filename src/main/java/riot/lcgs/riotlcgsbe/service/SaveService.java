@@ -268,6 +268,7 @@ public class SaveService {
                         .lcgTotalBaron(teams.getBaronKills())
                         .lcgTotalHorde(teams.getHordeKills())
                         .lcgTotalHerald(teams.getRiftHeraldKills())
+                        .lcgTotalAtakhan(0L)
                         .lcgTotalTower(teams.getTowerKills())
                         .lcgTotalInhibitor(teams.getInhibitorKills())
                         .lcgBansName1(bansLen >= 1 ? ExtractionName(bans.get(0).getChampionId()).getData() : "Empty")
@@ -313,7 +314,7 @@ public class SaveService {
 
                 // Score 연산
                 Long multiKillScore = statsData.getDoubleKills() + (statsData.getTripleKills() * 3) + (statsData.getQuadraKills() * 10) + (statsData.getPentaKills() * 50);
-                Long jungleObjectScore = teams.getHordeKills() + (teams.getDragonKills() * 2) + (teams.getRiftHeraldKills() * 4) + (teams.getBaronKills() * 7);
+                Long jungleObjectScore = teams.getHordeKills() + (teams.getDragonKills() * 2) + (teams.getRiftHeraldKills() * 4) + (teams.getBaronKills() * 7) + (0 * 7);
 
                 boolean existsCheck = lcgPlayerStatisticsRepository.existsLCG_Player_StatisticsByLcgSummonerPuuid(puuid);
 
@@ -354,6 +355,7 @@ public class SaveService {
                             .lcgCountBaron((long)teams.getBaronKills())
                             .lcgCountHorde((long)teams.getHordeKills())
                             .lcgCountHerald((long)teams.getRiftHeraldKills())
+                            .lcgCountAtakhan(0L)
                             .lcgJungleObjectScore(jungleObjectScore).build());
                 }
             }
