@@ -142,6 +142,10 @@ public class LCG_Player_Statistics {
     private Long lcgCountHerald;
 
     @NotNull
+    @Column(name = "lcg_count_atakhan")
+    private Long lcgCountAtakhan;
+    
+    @NotNull
     @Column(name = "lcg_jungle_object_score") // horde = 1, dragon = 2, herald = 4, baron = 7
     private Long lcgJungleObjectScore;
 
@@ -175,6 +179,7 @@ public class LCG_Player_Statistics {
         this.lcgCountBaron += (long) teams.getBaronKills();
         this.lcgCountHorde += (long) teams.getHordeKills();
         this.lcgCountHerald += (long) teams.getRiftHeraldKills();
+        this.lcgCountAtakhan += 0;
         this.lcgJungleObjectScore += jungleObjectScore;
         return this;
     }
@@ -188,7 +193,7 @@ public class LCG_Player_Statistics {
                                  Long lcgCountVisionWard, Long lcgCountVisionScore, Long lcgCountDoubleKill, 
                                  Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
                                  Long lcgMultiKillScore, Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, 
-                                 Long lcgCountHerald, Long lcgJungleObjectScore) {
+                                 Long lcgCountHerald, Long lcgCountAtakhan, Long lcgJungleObjectScore) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
@@ -220,6 +225,7 @@ public class LCG_Player_Statistics {
         this.lcgCountBaron = lcgCountBaron;
         this.lcgCountHorde = lcgCountHorde;
         this.lcgCountHerald = lcgCountHerald;
+        this.lcgCountAtakhan = lcgCountAtakhan;
         this.lcgJungleObjectScore = jungleObjectScore;
     }
 }
