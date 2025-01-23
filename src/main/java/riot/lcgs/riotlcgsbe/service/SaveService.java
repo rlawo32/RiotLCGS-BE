@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.lang.Math;
 
+import static riot.lcgs.riotlcgsbe.util.CalculatorTool.CalculatorJungleObjectScore;
+import static riot.lcgs.riotlcgsbe.util.CalculatorTool.CalculatorMultiKillScore;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
 
 @RequiredArgsConstructor
@@ -312,17 +314,14 @@ public class SaveService {
                 String puuid = participantIdentities.getPlayer().getPuuid();
                 String nickname = participantIdentities.getPlayer().getGameName() + "#" + participantIdentities.getPlayer().getTagLine();
 
-                // Score 연산
-                Long multiKillScore = statsData.getDoubleKills() + (statsData.getTripleKills() * 3L) + (statsData.getQuadraKills() * 10L) + (statsData.getPentaKills() * 50L);
-                Long jungleObjectScore = teams.getHordeKills() + (teams.getDragonKills() * 2L) + (teams.getRiftHeraldKills() * 4L) + (teams.getBaronKills() * 7L);
-
                 boolean existsCheck = lcgPlayerStatisticsRepository.existsLCG_Player_StatisticsByLcgSummonerPuuid(puuid);
 
                 if(existsCheck) {
                     LCG_Player_Statistics lcgPlayerStatistics = lcgPlayerStatisticsRepository.findById(puuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerStatistics.playerDataCounting(nickname, statsData, teams, multiKillScore, jungleObjectScore);
+                    lcgPlayerStatistics.playerDataCounting(nickname, statsData, teams,
+                            CalculatorMultiKillScore(statsData).getData(), CalculatorJungleObjectScore(teams).getData());
                 } else {
                     lcgPlayerStatisticsRepository.save(LCG_Player_Statistics.builder()
                             .lcgSummonerPuuid(puuid)
@@ -350,13 +349,13 @@ public class SaveService {
                             .lcgCountTripleKill((long)statsData.getTripleKills())
                             .lcgCountQuadraKill((long)statsData.getQuadraKills())
                             .lcgCountPentaKill((long)statsData.getPentaKills())
-                            .lcgMultiKillScore(multiKillScore)
+                            .lcgMultiKillScore(CalculatorJungleObjectScore(teams).getData())
                             .lcgCountDragon((long)teams.getDragonKills())
                             .lcgCountBaron((long)teams.getBaronKills())
                             .lcgCountHorde((long)teams.getHordeKills())
                             .lcgCountHerald((long)teams.getRiftHeraldKills())
                             .lcgCountAtakhan(0L)
-                            .lcgJungleObjectScore(jungleObjectScore).build());
+                            .lcgJungleObjectScore(CalculatorMultiKillScore(statsData).getData()).build());
                 }
             }
         } catch (Exception ex) {
