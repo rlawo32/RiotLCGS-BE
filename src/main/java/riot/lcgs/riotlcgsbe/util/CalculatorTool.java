@@ -1,11 +1,9 @@
 package riot.lcgs.riotlcgsbe.util;
 
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
-import riot.lcgs.riotlcgsbe.web.dto.object.PerkSlot;
-import riot.lcgs.riotlcgsbe.web.dto.object.Rune;
-import riot.lcgs.riotlcgsbe.web.dto.object.Stats;
-import riot.lcgs.riotlcgsbe.web.dto.object.Teams;
+import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +12,12 @@ public class CalculatorTool {
 
     public static CommonResponseDto<Long> CalculatorJungleObjectScore(Teams teams) {
 
-        Long calculatorResult = 0L;
-        Long pointHorde = 1L;
-        Long pointDragon = 2L;
-        Long pointHerald = 4L;
-        Long pointBaron = 7L;
-        Long pointAtakhan = 7L;
+        long calculatorResult   = 0L;
+        long pointHorde         = 1L; // 유충
+        long pointDragon        = 2L; // 드래곤
+        long pointHerald        = 4L; // 전령
+        long pointBaron         = 7L; // 바론
+        long pointAtakhan       = 7L; // 아타칸
 
         calculatorResult = (teams.getHordeKills() * pointHorde) + (teams.getDragonKills() * pointDragon) + (teams.getRiftHeraldKills() * pointHerald) + (teams.getBaronKills() * pointBaron);
 
@@ -28,11 +26,11 @@ public class CalculatorTool {
 
     public static CommonResponseDto<Long> CalculatorMultiKillScore(Stats stats) {
 
-        Long calculatorResult = 0L;
-        Long pointDoubleKill = 1L;
-        Long pointTripleKill = 3L;
-        Long pointQuadraKill = 10L;
-        Long pointPentaKill = 50L;
+        long calculatorResult   = 0L;
+        long pointDoubleKill    = 1L;   // 더블킬
+        long pointTripleKill    = 3L;   // 트리플킬
+        long pointQuadraKill    = 10L;  // 쿼드라킬
+        long pointPentaKill     = 50L;  // 펜타킬
         
         calculatorResult = (stats.getDoubleKills() * pointDoubleKill) + (stats.getTripleKills() * pointTripleKill) + (stats.getQuadraKills() * pointQuadraKill) + (stats.getPentaKills() * pointPentaKill);
 
