@@ -38,4 +38,27 @@ public class CalculatorTool {
 
         return CommonResponseDto.setSuccess("Success", calculatorResult);
     }
+    
+    public static CommonResponseDto<Metrics[]> CalculatorMvpScore(Metrics[] metrics, String flag) {
+
+        int initialScore = 0;
+        int subtractScore = 0;
+        
+		switch (flag) {
+			case "A" : initialScore = 5; subtractScore = 1; break;
+			case "B" : initialScore = 10; subtractScore = 2; break;
+			case "C" : initialScore = 20; subtractScore = 3; break;
+			case "D" : initialScore = 30; subtractScore = 3; break;
+			default: break;
+		}
+
+        if(flag.equals("A")) {
+            for (int i=0; i<metrics.length; i++) {
+    			metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+    			initialScore -= subtractScore;
+    		}
+        }
+        
+        return CommonResponseDto.setSuccess("Success", metrics);
+    }
 }
