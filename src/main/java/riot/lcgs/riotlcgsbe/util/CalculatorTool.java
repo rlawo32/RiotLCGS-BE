@@ -14,14 +14,27 @@ public class CalculatorTool {
 
     public static CommonResponseDto<Long> CalculatorJungleObjectScore(Teams teams) {
 
-        Long calculatorResult = teams.getHordeKills() + (teams.getDragonKills() * 2L) + (teams.getRiftHeraldKills() * 4L) + (teams.getBaronKills() * 7L);
+        Long calculatorResult = 0L;
+        Long pointHorde = 1L;
+        Long pointDragon = 2L;
+        Long pointHerald = 4L;
+        Long pointBaron = 7L;
+        Long pointAtakhan = 7L;
+
+        calculatorResult = (teams.getHordeKills() * pointHorde) + (teams.getDragonKills() * pointDragon) + (teams.getRiftHeraldKills() * pointHerald) + (teams.getBaronKills() * pointBaron);
 
         return CommonResponseDto.setSuccess("Success", calculatorResult);
     }
 
     public static CommonResponseDto<Long> CalculatorMultiKillScore(Stats stats) {
 
-        Long calculatorResult = stats.getDoubleKills() + (stats.getTripleKills() * 3L) + (stats.getQuadraKills() * 10L) + (stats.getPentaKills() * 50L);
+        Long calculatorResult = 0L;
+        Long pointDoubleKill = 1L;
+        Long pointTripleKill = 3L;
+        Long pointQuadraKill = 10L;
+        Long pointPentaKill = 50L;
+        
+        calculatorResult = (stats.getDoubleKills() * pointDoubleKill) + (stats.getTripleKills() * pointTripleKill) + (stats.getQuadraKills() * pointQuadraKill) + (stats.getPentaKills() * pointPentaKill);
 
         return CommonResponseDto.setSuccess("Success", calculatorResult);
     }
