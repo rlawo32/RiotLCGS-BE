@@ -58,6 +58,8 @@ public class CalculatorTool {
     			initialScore -= subtractScore;
     		}
         }
+
+	    Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getKill(),m1.getKill()));
         
         return CommonResponseDto.setSuccess("Success", metrics);
     }
