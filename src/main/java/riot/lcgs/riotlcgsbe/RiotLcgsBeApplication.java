@@ -2,11 +2,17 @@ package riot.lcgs.riotlcgsbe;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import riot.lcgs.riotlcgsbe.web.dto.object.Metrics;
 
-// @SpringBootApplication(exclude={DataSourceAutoConfiguration.class}) // DB 연결 확인 무시
-@SpringBootApplication
+import java.util.Arrays;
+import java.util.List;
+
+@SpringBootApplication(scanBasePackages = {"riot.lcgs.riotlcgsbe.jpa.repository"} ,exclude={ JpaRepositoriesAutoConfiguration.class, DataSourceAutoConfiguration.class }) // DB 연결 확인 무시
+//@SpringBootApplication
 public class RiotLcgsBeApplication {
 
 	public static void main(String[] args) {
@@ -34,6 +40,14 @@ public class RiotLcgsBeApplication {
 				10, 31, 0, false, false, false, false, false, true);
 		metrics[9] = new Metrics("Hello10", 7, 4, 8, 11674, 206, 16430, 19, 11, 2,
 				5, 31, 0, false, true, false, false, false, true);
+
+		List<Metrics> list = Arrays.asList(metrics);
+
+		Arrays.sort(metrics, (m1, m2) -> Integer.compare(m1.getKill(),m2.getKill()));
+
+		for (Metrics m : metrics) {
+			System.out.println(m.toString());
+		}
 	}
 
 }
