@@ -186,9 +186,9 @@ public class SaveService {
                 // DPM, GPM, DPG Calculator
                 int damage = statsData.getTotalDamageDealtToChampions();
                 int gold = statsData.getGoldEarned();
-                double convertMinute = Math.floor(duration / 60);
-                int minusDPS = (int) (Math.floor(damage / duration) * (duration % 60));
-                int minusGPS = (int) (Math.floor(gold / duration) * (duration % 60));
+                double convertMinute = Math.floor((double) duration / 60);
+                int minusDPS = (int) (Math.floor((double) damage / duration) * (duration % 60));
+                int minusGPS = (int) (Math.floor((double) gold / duration) * (duration % 60));
 
                 double DPM = (damage-minusDPS) / convertMinute;
                 double GPM = (gold-minusGPS) / convertMinute;
