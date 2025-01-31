@@ -19,7 +19,8 @@ public class CalculatorTool {
         long pointBaron         = 7L; // 바론
         long pointAtakhan       = 7L; // 아타칸
 
-        calculatorResult = (teams.getHordeKills() * pointHorde) + (teams.getDragonKills() * pointDragon) + (teams.getRiftHeraldKills() * pointHerald) + (teams.getBaronKills() * pointBaron);
+        calculatorResult = (teams.getHordeKills() * pointHorde) + (teams.getDragonKills() * pointDragon)
+                + (teams.getRiftHeraldKills() * pointHerald) + (teams.getBaronKills() * pointBaron);
 
         return CommonResponseDto.setSuccess("Success", calculatorResult);
     }
@@ -32,18 +33,14 @@ public class CalculatorTool {
         long pointQuadraKill    = 10L;  // 쿼드라킬
         long pointPentaKill     = 50L;  // 펜타킬
         
-        calculatorResult = (stats.getDoubleKills() * pointDoubleKill) + (stats.getTripleKills() * pointTripleKill) + (stats.getQuadraKills() * pointQuadraKill) + (stats.getPentaKills() * pointPentaKill);
+        calculatorResult = (stats.getDoubleKills() * pointDoubleKill) + (stats.getTripleKills() * pointTripleKill)
+                + (stats.getQuadraKills() * pointQuadraKill) + (stats.getPentaKills() * pointPentaKill);
 
         return CommonResponseDto.setSuccess("Success", calculatorResult);
     }
 
     public static CommonResponseDto<Long> CalculatorDemolisherScore(Stats stats) {
-
-        long calculatorResult   = 0L;
-
-        calculatorResult = stats.getTurretKills() * 2L;
-
-        return CommonResponseDto.setSuccess("Success", calculatorResult);
+        return CommonResponseDto.setSuccess("Success", stats.getTurretKills() * 2L);
     }
 
     public static CommonResponseDto<Map<String, Double>> CalculatorCharacteristic(int duration, Stats stats) {
