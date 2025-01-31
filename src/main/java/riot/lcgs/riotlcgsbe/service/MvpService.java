@@ -63,9 +63,9 @@ public class MvpService {
 
                 int engagementRate = Math.round((float) (statsData.getKills() + statsData.getAssists()) / (participants.getTeamId() == 100 ? team1TotalKill : team2TotalKill) * 100);
 
-                metrics[i] = new Metrics(playerData.getPuuid(), playerData.getSummonerName(), 0, statsData.getKills(), statsData.getDeaths(),
-                        statsData.getAssists(), kda, engagementRate, statsData.getGoldEarned(), statsData.getTotalDamageDealtToChampions(),
-                        (statsData.getTotalMinionsKilled() + statsData.getNeutralMinionsKilled()),
+                metrics[i] = new Metrics(playerData.getPuuid(), playerData.getSummonerName(), 0, participants.getTeamId(),
+                        statsData.getKills(), statsData.getDeaths(), statsData.getAssists(), kda, engagementRate, statsData.getGoldEarned(),
+                        statsData.getTotalDamageDealtToChampions(), (statsData.getTotalMinionsKilled() + statsData.getNeutralMinionsKilled()),
                         CalculatorCharacteristic(duration, statsData).getData().get("DPM"),
                         CalculatorCharacteristic(duration, statsData).getData().get("GPM"),
                         CalculatorCharacteristic(duration, statsData).getData().get("DPG"),
@@ -126,9 +126,9 @@ public class MvpService {
             // TotalScore
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getTotalScore(),m1.getTotalScore()));
 
-            for(Metrics m : metrics) {
-                System.out.println(m.toString());
-            }
+//            for(Metrics m : metrics) {
+//                System.out.println(m.toString());
+//            }
 
             List<Metrics> list = Arrays.asList(metrics);
 
