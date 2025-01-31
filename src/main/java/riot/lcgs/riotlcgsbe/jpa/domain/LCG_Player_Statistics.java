@@ -42,6 +42,14 @@ public class LCG_Player_Statistics {
     private Long lcgCountDefeat;
 
     @NotNull
+    @Column(name = "lcg_count_mvp")
+    private Long lcgCountMvp;
+
+    @NotNull
+    @Column(name = "lcg_count_ace")
+    private Long lcgCountAce;
+
+    @NotNull
     @Column(name = "lcg_count_kill")
     private Long lcgCountKill;
 
@@ -149,11 +157,14 @@ public class LCG_Player_Statistics {
     @Column(name = "lcg_jungle_object_score") // horde = 1, dragon = 2, herald = 4, baron = 7
     private Long lcgJungleObjectScore;
 
-    public LCG_Player_Statistics playerDataCounting(String nickname, Stats statsData, Teams teams, Long multiKillScore, Long jungleObjectScore) {
+    public LCG_Player_Statistics playerDataCounting(String nickname, Stats statsData, Teams teams, Long lcgCountMvp,
+                                                    Long lcgCountAce, Long multiKillScore, Long jungleObjectScore) {
         this.lcgNickname = nickname;
         this.lcgCountPlay += 1;
         this.lcgCountVictory += teams.getWin().equals("Win") ? 1 : 0;
         this.lcgCountDefeat += teams.getWin().equals("Fail") ? 1 : 0;
+        this.lcgCountMvp += lcgCountMvp;
+        this.lcgCountAce += lcgCountAce;
         this.lcgCountKill += (long) statsData.getKills();
         this.lcgCountDeath += (long) statsData.getDeaths();
         this.lcgCountAssist += (long) statsData.getAssists();
@@ -186,20 +197,22 @@ public class LCG_Player_Statistics {
 
     @Builder
     public LCG_Player_Statistics(String lcgSummonerPuuid, String lcgPlayer, String lcgNickname, Long lcgCountVictory,
-                                 Long lcgCountDefeat, Long lcgCountKill, Long lcgCountDeath, Long lcgCountAssist, 
-                                 Long lcgCountTower, Long lcgCountInhibitor, Long lcgCountTowerDamage, 
-                                 Long lcgCountDamage, Long lcgCountTaken, Long lcgCountGold, Long lcgCountCrowdTime,
-                                 Long lcgCountMinion, Long lcgCountJungle, Long lcgCountWardKill, Long lcgCountWardPlaced, 
-                                 Long lcgCountVisionWard, Long lcgCountVisionScore, Long lcgCountDoubleKill, 
-                                 Long lcgCountTripleKill, Long lcgCountQuadraKill, Long lcgCountPentaKill,
-                                 Long lcgMultiKillScore, Long lcgCountDragon, Long lcgCountBaron, Long lcgCountHorde, 
-                                 Long lcgCountHerald, Long lcgCountAtakhan, Long lcgJungleObjectScore) {
+                                 Long lcgCountDefeat, Long lcgCountMvp, Long lcgCountAce, Long lcgCountKill,
+                                 Long lcgCountDeath, Long lcgCountAssist, Long lcgCountTower, Long lcgCountInhibitor,
+                                 Long lcgCountTowerDamage, Long lcgCountDamage, Long lcgCountTaken, Long lcgCountGold,
+                                 Long lcgCountCrowdTime, Long lcgCountMinion, Long lcgCountJungle, Long lcgCountWardKill,
+                                 Long lcgCountWardPlaced, Long lcgCountVisionWard, Long lcgCountVisionScore,
+                                 Long lcgCountDoubleKill, Long lcgCountTripleKill, Long lcgCountQuadraKill,
+                                 Long lcgCountPentaKill, Long lcgMultiKillScore, Long lcgCountDragon, Long lcgCountBaron,
+                                 Long lcgCountHorde, Long lcgCountHerald, Long lcgCountAtakhan, Long lcgJungleObjectScore) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
         this.lcgCountPlay = 1L;
         this.lcgCountVictory = lcgCountVictory;
         this.lcgCountDefeat = lcgCountDefeat;
+        this.lcgCountMvp = lcgCountMvp;
+        this.lcgCountAce = lcgCountAce;
         this.lcgCountKill = lcgCountKill;
         this.lcgCountDeath = lcgCountDeath;
         this.lcgCountAssist = lcgCountAssist;
