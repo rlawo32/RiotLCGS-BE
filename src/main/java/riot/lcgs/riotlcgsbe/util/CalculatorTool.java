@@ -93,11 +93,12 @@ public class CalculatorTool {
             }
             case "C" -> {
                 initialScore = 15;
-                subtractScore = 3;
+                subtractScore = 2;
                 for(int i = 0; i < metrics.length; i++) {
                     metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+                    initialScore -= subtractScore ;
                     if(i % 2 == 1) {
-                        initialScore -= subtractScore;
+                        initialScore -= (subtractScore - 1);
                     }
                 }
             }
