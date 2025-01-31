@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.lang.Math;
 
-import static riot.lcgs.riotlcgsbe.util.CalculatorTool.CalculatorJungleObjectScore;
-import static riot.lcgs.riotlcgsbe.util.CalculatorTool.CalculatorMultiKillScore;
+import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
 
 @RequiredArgsConstructor
@@ -183,16 +182,6 @@ public class SaveService {
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
 
-                // DPM, GPM, DPG Calculator
-                int damage = statsData.getTotalDamageDealtToChampions();
-                int gold = statsData.getGoldEarned();
-                double convertMinute = Math.floor((double) duration / 60);
-                int minusDPS = (int) (Math.floor((double) damage / duration) * (duration % 60));
-                int minusGPS = (int) (Math.floor((double) gold / duration) * (duration % 60));
-
-                double DPM = (damage-minusDPS) / convertMinute;
-                double GPM = (gold-minusGPS) / convertMinute;
-
                 lcgMatchSubRepository.save(LCG_Match_Sub.builder()
                         .lcgGameId(gameId)
                         .lcgParticipantId(participantIdentities.getParticipantId())
@@ -212,9 +201,9 @@ public class SaveService {
                         .lcgDestroyTower(statsData.getTurretKills())
                         .lcgDamageTower(statsData.getDamageDealtToTurrets())
                         .lcgDestroyInhibitor(statsData.getInhibitorKills())
-                        .lcgDamagePerMinute(DPM)
-                        .lcgGoldPerMinute(GPM)
-                        .lcgDamagePerGold(DPM / GPM).build());
+                        .lcgDamagePerMinute(CalculatorCharacteristic(duration, statsData).getData().get("DPM"))
+                        .lcgGoldPerMinute(CalculatorCharacteristic(duration, statsData).getData().get("GPM"))
+                        .lcgDamagePerGold(CalculatorCharacteristic(duration, statsData).getData().get("DPG")).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
