@@ -51,49 +51,73 @@ public class CalculatorTool {
         int initialScore = 0;
         int subtractScore = 0;
 
-		switch (flag) {
-			case "A" : initialScore = 5; subtractScore = 1; break;
-			case "B" : initialScore = 10; subtractScore = 1; break;
-			case "C" : initialScore = 20; subtractScore = 1; break;
-			case "D" : initialScore = 5; break;
-            case "E" : initialScore = 7; break;
-			default: break;
-		}
-
-        if(flag.equals("A")) {
-            for (int i=0; i<metrics.length; i++) {
-    			metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
-                if(i % 2 == 1) {
+        switch (flag) {
+            case "A" -> {
+                initialScore = 5;
+                subtractScore = 1;
+                for(int i = 0; i < metrics.length; i++) {
+                    metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+                    if(i % 2 == 1) {
+                        initialScore -= subtractScore;
+                    }
+                }
+            }
+            case "B" -> {
+                initialScore = 10;
+                subtractScore = 1;
+                for(Metrics metric : metrics) {
+                    metric.setTotalScore(metric.getTotalScore() + initialScore);
                     initialScore -= subtractScore;
                 }
-    		}
-        } else if(flag.equals("B") || flag.equals("C")) {
-            for (int i=0; i<metrics.length; i++) {
-                metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
-                initialScore -= subtractScore;
             }
-        } else if(flag.equals("D")) {
-            for (int i=0; i<metrics.length; i++) {
-                if(metrics[i].isFirstDragon()) {
+            case "C" -> {
+                initialScore = 15;
+                subtractScore = 3;
+                for(int i = 0; i < metrics.length; i++) {
                     metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
-                }
-                if(metrics[i].isFirstBaron()) {
-                    metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
-                }
-                if(metrics[i].isWin()) {
-                    metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+                    if(i % 2 == 1) {
+                        initialScore -= subtractScore;
+                    }
                 }
             }
-        } else if(flag.equals("E")) {
-            for (int i=0; i<metrics.length; i++) {
-                if(metrics[i].isFirstKill()) {
-                    metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+            case "D" -> {
+                initialScore = 5;
+                for(Metrics metric : metrics) {
+                    if(metric.isFirstDragon()) {
+                        metric.setTotalScore(metric.getTotalScore() + initialScore);
+                    }
+                    if(metric.isFirstBaron()) {
+                        metric.setTotalScore(metric.getTotalScore() + initialScore);
+                    }
+                    if(metric.isWin()) {
+                        metric.setTotalScore(metric.getTotalScore() + initialScore);
+                    }
+                    if(metric.isFirstKill()) {
+                        metric.setTotalScore(metric.getTotalScore() + initialScore);
+                    }
+                    if(metric.isFirstTower()) {
+                        metric.setTotalScore(metric.getTotalScore() + initialScore);
+                    }
+                    if(metric.isFirstInhibitor()) {
+                        metric.setTotalScore(metric.getTotalScore() + initialScore);
+                    }
                 }
-                if(metrics[i].isFirstTower()) {
-                    metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+            }
+            case "E" -> {
+                for(int i = 0; i < metrics.length; i++) {
+                    if(i < 5) {
+                        initialScore = 5;
+                        metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+                    } else {
+                        initialScore = 2;
+                        metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+                    }
                 }
-                if(metrics[i].isFirstInhibitor()) {
-                    metrics[i].setTotalScore(metrics[i].getTotalScore() + initialScore);
+            }
+            default -> {
+                for(Metrics metric : metrics) {
+                    metric.setTotalScore((int) (metric.getTotalScore() + metric.getDemolisherScore()));
+                    metric.setTotalScore((int) (metric.getTotalScore() + metric.getMultiKillScore()));
                 }
             }
         }
