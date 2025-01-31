@@ -28,6 +28,7 @@ public class MvpService {
             Teams teams2 = new Teams();
             int team1TotalKill = 0;
             int team2TotalKill = 0;
+            int duration = gameData.getGameDuration();
 
             for(Teams teams : list3) {
                 if(teams.getTeamId() == 100) {
@@ -53,48 +54,72 @@ public class MvpService {
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
 
-                metrics[i] = new Metrics(playerData.getPuuid(), statsData.getKills(),
-                        statsData.getDeaths(), statsData.getAssists(), statsData.getGoldEarned(),
+                double kda = Math.round(((double) (statsData.getKills() + statsData.getAssists()) / statsData.getDeaths()) * 100) / 100.0;
+                int engagementRate = Math.round((float) (statsData.getKills() + statsData.getAssists()) / (participants.getTeamId() == 100 ? team1TotalKill : team2TotalKill) * 100);
+
+                metrics[i] = new Metrics(playerData.getPuuid(), playerData.getSummonerName(), 0, statsData.getKills(), statsData.getDeaths(),
+                        statsData.getAssists(), kda, engagementRate, statsData.getGoldEarned(), statsData.getTotalDamageDealtToChampions(),
                         (statsData.getTotalMinionsKilled() + statsData.getNeutralMinionsKilled()),
-                        statsData.getTotalDamageDealtToChampions(), statsData.getVisionScore(), statsData.getTimeCCingOthers(),
+                        CalculatorCharacteristic(duration, statsData).getData().get("DPM"),
+                        CalculatorCharacteristic(duration, statsData).getData().get("GPM"),
+                        CalculatorCharacteristic(duration, statsData).getData().get("DPG"),
+                        statsData.getVisionScore(), statsData.getTimeCCingOthers(),
                         CalculatorMultiKillScore(statsData).getData(), CalculatorDemolisherScore(statsData).getData(),
-                        CalculatorJungleObjectScore(participants.getTeamId() == 100 ? teams1 : teams2).getData(),
-                        (participants.getTeamId() == 100 ? team1TotalKill : team2TotalKill), 0, statsData.isWin(),
+                        CalculatorJungleObjectScore(participants.getTeamId() == 100 ? teams1 : teams2).getData(), statsData.isWin(),
                         statsData.isFirstBloodKill(), statsData.isFirstTowerKill(), statsData.isFirstInhibitorKill(),
                         (participants.getTeamId() == 100 ? teams1.isFirstDargon() : teams2.isFirstDargon()),
                         (participants.getTeamId() == 100 ? teams1.isFirstBaron() : teams2.isFirstBaron()));
             }
 
 //            List<Metrics> list = Arrays.asList(metrics);
+
+            // MultiKillScore, DemolisherScore
             CalculatorMvpScore(metrics, "");
+
+            // FirstKill, FirstTower, FirstInhibitor, FirstDragon, FirstBaron, Win
             CalculatorMvpScore(metrics, "D");
-            Arrays.sort(metrics, (m1, m2) -> Integer.compare((int) m2.getObjectScore(), (int) m1.getObjectScore()));
+
+            // JungleObjectScore
+            Arrays.sort(metrics, (m1, m2) -> Long.compare(m2.getObjectScore(),m1.getObjectScore()));
             CalculatorMvpScore(metrics, "E");
 
+            // Kill, Death, Assist, KDA
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getKill(),m1.getKill()));
             CalculatorMvpScore(metrics, "A");
-
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m1.getDeath(),m2.getDeath()));
             CalculatorMvpScore(metrics, "A");
-
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getAssist(),m1.getAssist()));
             CalculatorMvpScore(metrics, "B");
-
-            Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getGold(),m1.getGold()));
+            Arrays.sort(metrics, (m1, m2) -> Double.compare(m2.getKda(),m1.getKda()));
             CalculatorMvpScore(metrics, "A");
 
+            // EngagementRate
+            Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getEngagementRate(),m1.getEngagementRate()));
+            CalculatorMvpScore(metrics, "C");
+
+            // Gold, Damage, CS
+            Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getGold(),m1.getGold()));
+            CalculatorMvpScore(metrics, "A");
+            Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getDamage(),m1.getDamage()));
+            CalculatorMvpScore(metrics, "A");
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getCs(),m1.getCs()));
             CalculatorMvpScore(metrics, "A");
 
-            Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getDamage(),m1.getDamage()));
-            CalculatorMvpScore(metrics, "A");
+            // DPM, GPM
+            Arrays.sort(metrics, (m1, m2) -> Double.compare(m2.getDpm(),m1.getDpm()));
+            CalculatorMvpScore(metrics, "B");
+            Arrays.sort(metrics, (m1, m2) -> Double.compare(m2.getGpm(),m1.getGpm()));
+            CalculatorMvpScore(metrics, "B");
 
+            // VisionScore
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getVisionScore(),m1.getVisionScore()));
             CalculatorMvpScore(metrics, "C");
 
+            // CrowdScore
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getCrowdScore(),m1.getCrowdScore()));
             CalculatorMvpScore(metrics, "C");
 
+            // TotalScore
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getTotalScore(),m1.getTotalScore()));
 
             for(Metrics m : metrics) {
