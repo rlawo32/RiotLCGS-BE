@@ -45,6 +45,27 @@ public class CalculatorTool {
 
         return CommonResponseDto.setSuccess("Success", calculatorResult);
     }
+
+    public static CommonResponseDto<Map<String, Double>> CalculatorCharacteristic(int duration, Stats stats) {
+
+        Map<String, Double> calculatorResult = new HashMap<>();
+
+        int damage = stats.getTotalDamageDealtToChampions();
+        int gold = stats.getGoldEarned();
+        double convertMinute = Math.floor((double) duration / 60);
+        int minusDPS = (int) (Math.floor((double) damage / duration) * (duration % 60));
+        int minusGPS = (int) (Math.floor((double) gold / duration) * (duration % 60));
+
+        double DPM = Math.round(((damage-minusDPS) / convertMinute) * 100) / 100.0;
+        double GPM = Math.round(((gold-minusGPS) / convertMinute) * 100) / 100.0;
+        double DPG = Math.round((DPM / GPM) * 100) / 100.0;
+
+        calculatorResult.put("DPM", DPM);
+        calculatorResult.put("GPM", GPM);
+        calculatorResult.put("DPG", DPG);
+
+        return CommonResponseDto.setSuccess("Success", calculatorResult);
+    }
     
     public static CommonResponseDto<Metrics[]> CalculatorMvpScore(Metrics[] metrics, String flag) {
 
