@@ -36,12 +36,21 @@ public class CalculatorTool {
 
         return CommonResponseDto.setSuccess("Success", calculatorResult);
     }
+
+    public static CommonResponseDto<Long> CalculatorDemolisherScore(Stats stats) {
+
+        long calculatorResult   = 0L;
+
+        calculatorResult = stats.getTurretKills() * 2L;
+
+        return CommonResponseDto.setSuccess("Success", calculatorResult);
+    }
     
     public static CommonResponseDto<Metrics[]> CalculatorMvpScore(Metrics[] metrics, String flag) {
 
         int initialScore = 0;
         int subtractScore = 0;
-        
+
 		switch (flag) {
 			case "A" : initialScore = 5; subtractScore = 1; break;
 			case "B" : initialScore = 10; subtractScore = 1; break;
