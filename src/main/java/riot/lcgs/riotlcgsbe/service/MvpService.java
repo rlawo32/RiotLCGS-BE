@@ -16,7 +16,7 @@ import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 public class MvpService {
 
     @Transactional
-    public CommonResponseDto<?> LCGMvpSelection(GameData gameData) {
+    public CommonResponseDto<List<Metrics>> LCGMvpSelection(GameData gameData) {
 
         try {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
@@ -54,7 +54,13 @@ public class MvpService {
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
 
-                double kda = Math.round(((double) (statsData.getKills() + statsData.getAssists()) / statsData.getDeaths()) * 100) / 100.0;
+                double kda = 0;
+                if(statsData.getDeaths() == 0 && (statsData.getKills() > 0 || statsData.getAssists() > 0)) {
+                    kda = statsData.getKills() + statsData.getAssists();
+                } else {
+                    kda = Math.round(((double) (statsData.getKills() + statsData.getAssists()) / statsData.getDeaths()) * 100) / 100.0;
+                }
+
                 int engagementRate = Math.round((float) (statsData.getKills() + statsData.getAssists()) / (participants.getTeamId() == 100 ? team1TotalKill : team2TotalKill) * 100);
 
                 metrics[i] = new Metrics(playerData.getPuuid(), playerData.getSummonerName(), 0, statsData.getKills(), statsData.getDeaths(),
@@ -71,8 +77,6 @@ public class MvpService {
                         (participants.getTeamId() == 100 ? teams1.isFirstBaron() : teams2.isFirstBaron()));
             }
 
-//            List<Metrics> list = Arrays.asList(metrics);
-
             // MultiKillScore, DemolisherScore
             CalculatorMvpScore(metrics, "");
 
@@ -87,11 +91,11 @@ public class MvpService {
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getKill(),m1.getKill()));
             CalculatorMvpScore(metrics, "A");
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m1.getDeath(),m2.getDeath()));
-            CalculatorMvpScore(metrics, "A");
+            CalculatorMvpScore(metrics, "B");
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getAssist(),m1.getAssist()));
             CalculatorMvpScore(metrics, "B");
             Arrays.sort(metrics, (m1, m2) -> Double.compare(m2.getKda(),m1.getKda()));
-            CalculatorMvpScore(metrics, "A");
+            CalculatorMvpScore(metrics, "C");
 
             // EngagementRate
             Arrays.sort(metrics, (m1, m2) -> Integer.compare(m2.getEngagementRate(),m1.getEngagementRate()));
@@ -107,7 +111,7 @@ public class MvpService {
 
             // DPM, GPM
             Arrays.sort(metrics, (m1, m2) -> Double.compare(m2.getDpm(),m1.getDpm()));
-            CalculatorMvpScore(metrics, "B");
+            CalculatorMvpScore(metrics, "C");
             Arrays.sort(metrics, (m1, m2) -> Double.compare(m2.getGpm(),m1.getGpm()));
             CalculatorMvpScore(metrics, "B");
 
@@ -125,11 +129,13 @@ public class MvpService {
             for(Metrics m : metrics) {
                 System.out.println(m.toString());
             }
+
+            List<Metrics> list = Arrays.asList(metrics);
+
+            return CommonResponseDto.setSuccess("Success", list);
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
-
-        return CommonResponseDto.setSuccess("Success", "");
     }
 }
