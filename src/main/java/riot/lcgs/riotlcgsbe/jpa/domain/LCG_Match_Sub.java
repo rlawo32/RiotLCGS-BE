@@ -100,13 +100,17 @@ public class LCG_Match_Sub {
     @NotNull
     @Column(name = "lcg_damage_per_gold")
     private double lcgDamagePerGold;
-    
+
+    @NotNull
+    @Column(name = "lcg_mvp_rank")
+    private int lcgMvpRank;
+
     @Builder
     public LCG_Match_Sub(Long lcgGameId, int lcgParticipantId, String lcgSummonerPuuid, String lcgFirstKill, String lcgFirstTower,
                          int lcgDoubleKill, int lcgTripleKill, int lcgQuadraKill, int lcgPentaKill, int lcgNormalWard, 
                          int lcgVisionWard, int lcgDestroyWard, int lcgGoldTotal, int lcgHealTotal, int lcgCrowdTime, 
                          int lcgDestroyTower, int lcgDamageTower, int lcgDestroyInhibitor, double lcgDamagePerMinute,
-                         double lcgGoldPerMinute, double lcgDamagePerGold) {
+                         double lcgGoldPerMinute, double lcgDamagePerGold, int lcgMvpRank) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
@@ -128,5 +132,6 @@ public class LCG_Match_Sub {
         this.lcgDamagePerMinute = lcgDamagePerMinute;
         this.lcgGoldPerMinute = lcgGoldPerMinute;
         this.lcgDamagePerGold = lcgDamagePerGold;
+        this.lcgMvpRank = lcgMvpRank;
     }
 }
