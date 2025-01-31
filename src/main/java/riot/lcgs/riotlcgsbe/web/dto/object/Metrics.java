@@ -12,6 +12,7 @@ public class Metrics {
     private int cs;
     private int damage;
     private int visionScore;
+    private int crowdScore;
     private long multiKillScore;
     private long demolisherScore;
     private long objectScore;
@@ -26,9 +27,9 @@ public class Metrics {
 
 
     public Metrics(String puuid, int kill, int death, int assist, int gold, int cs, int damage,
-                   int visionScore, long multiKillScore, long demolisherScore, long objectScore,
-                   int totalKill, int totalScore, boolean win, boolean firstKill, boolean firstTower,
-                   boolean firstInhibitor, boolean firstDragon, boolean firstBaron) {
+                   int visionScore, int crowdScore, long multiKillScore, long demolisherScore,
+                   long objectScore, int totalKill, int totalScore, boolean win, boolean firstKill,
+                   boolean firstTower, boolean firstInhibitor, boolean firstDragon, boolean firstBaron) {
         this.puuid = puuid;
         this.kill = kill;
         this.death = death;
@@ -37,6 +38,7 @@ public class Metrics {
         this.cs = cs;
         this.damage = damage;
         this.visionScore = visionScore;
+        this.crowdScore = crowdScore;
         this.multiKillScore = multiKillScore;
         this.demolisherScore = demolisherScore;
         this.objectScore = objectScore;
