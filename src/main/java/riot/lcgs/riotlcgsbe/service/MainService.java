@@ -17,6 +17,7 @@ import static riot.lcgs.riotlcgsbe.service.HttpService.*;
 public class MainService {
 
     private final SaveService saveService;
+    private final MvpService mvpService;
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
 
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
@@ -35,6 +36,7 @@ public class MainService {
                 ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
                 ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
+                mvpService.LCGMvpSelection(gameData);
                 saveService.LCGMatchInfoSave(gameId, gameData, version);
                 saveService.LCGMatchMainSave(gameId, gameData);
                 saveService.LCGMatchSubSave(gameId, gameData);
