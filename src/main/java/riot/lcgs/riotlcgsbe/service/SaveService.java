@@ -140,7 +140,7 @@ public class SaveService {
                         .lcgParticipantId(participantIdentities.getParticipantId())
                         .lcgTeamId(participants.getTeamId())
                         .lcgSummonerPuuid(playerData.getPuuid())
-                        .lcgSummonerName(playerData.getSummonerName())
+                        .lcgSummonerName(playerData.getGameName())
                         .lcgSummonerTag(playerData.getTagLine())
                         .lcgChampionId(participants.getChampionId())
                         .lcgChampionName(championName)
@@ -412,7 +412,7 @@ public class SaveService {
                             .lcgPlayer("")
                             .lcgSummonerNickname(nickname)
                             .lcgSummonerId(playerData.getSummonerId())
-                            .lcgSummonerName(playerData.getSummonerName())
+                            .lcgSummonerName(playerData.getGameName())
                             .lcgSummonerTag(playerData.getTagLine())
                             .build());
                 }
