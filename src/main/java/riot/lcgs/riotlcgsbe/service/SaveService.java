@@ -370,13 +370,13 @@ public class SaveService {
                             .lcgCountTripleKill((long)statsData.getTripleKills())
                             .lcgCountQuadraKill((long)statsData.getQuadraKills())
                             .lcgCountPentaKill((long)statsData.getPentaKills())
-                            .lcgMultiKillScore(CalculatorJungleObjectScore(teams).getData())
+                            .lcgMultiKillScore(CalculatorMultiKillScore(statsData).getData())
                             .lcgCountDragon((long)teams.getDragonKills())
                             .lcgCountBaron((long)teams.getBaronKills())
                             .lcgCountHorde((long)teams.getHordeKills())
                             .lcgCountHerald((long)teams.getRiftHeraldKills())
                             .lcgCountAtakhan(0L)
-                            .lcgJungleObjectScore(CalculatorMultiKillScore(statsData).getData()).build());
+                            .lcgJungleObjectScore(CalculatorJungleObjectScore(teams).getData()).build());
                 }
             }
         } catch (Exception ex) {
