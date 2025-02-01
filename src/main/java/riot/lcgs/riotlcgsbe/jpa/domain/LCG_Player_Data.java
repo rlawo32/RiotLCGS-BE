@@ -44,9 +44,9 @@ public class LCG_Player_Data {
 
     public LCG_Player_Data playerDataUpdate(Player playerData, String player) {
         this.lcgPlayer = player;
-        this.lcgSummonerNickname = playerData.getSummonerName() + "#" + playerData.getTagLine();
+        this.lcgSummonerNickname = playerData.getGameName() + "#" + playerData.getTagLine();
         this.lcgSummonerId = playerData.getSummonerId();
-        this.lcgSummonerName = playerData.getSummonerName();
+        this.lcgSummonerName = playerData.getGameName();
         this.lcgSummonerTag = playerData.getTagLine();
         return this;
     }
