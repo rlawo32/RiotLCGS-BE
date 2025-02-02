@@ -11,7 +11,6 @@ import riot.lcgs.riotlcgsbe.web.dto.object.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.lang.Math;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
@@ -126,12 +125,56 @@ public class SaveService {
         try {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
+            List<Teams> list3 = gameData.getTeams();
+            List<Metrics> list4 = mvpService.LCGMvpSelection(gameData).getData();
+
+            String mvpPuuid = "";
+            String acePuuid = "";
+            int winTeam = 0;
+            int failTeam = 0;
+
+            for(Teams teams : list3) {
+                if(teams.getWin().equals("Win")) {
+                    winTeam = teams.getTeamId();
+                } else {
+                    failTeam = teams.getTeamId();
+                }
+            }
+
+            for(Metrics metrics : list4) {
+                if(winTeam == metrics.getTeam()) {
+                    mvpPuuid = metrics.getPuuid();
+                    break;
+                }
+            }
+
+            for(Metrics metrics : list4) {
+                if(failTeam == metrics.getTeam()) {
+                    acePuuid = metrics.getPuuid();
+                    break;
+                }
+            }
 
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
                 Participants participants = list2.get(i);
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
+
+                String mvpRank = "";
+
+                for(int j=0; j<list4.size(); j++) {
+                    int rank = j+1;
+                    if(list4.get(j).getPuuid().equals(playerData.getPuuid())) {
+                        if(mvpPuuid.equals(list4.get(j).getPuuid())) {
+                            mvpRank = "M" + rank;
+                        } else if (acePuuid.equals(list4.get(j).getPuuid())) {
+                            mvpRank = "A" + rank;
+                        } else {
+                            mvpRank = "D" + rank;
+                        }
+                    }
+                }
 
                 String championName = ExtractionName(participants.getChampionId()).getData();
 
@@ -142,6 +185,7 @@ public class SaveService {
                         .lcgSummonerPuuid(playerData.getPuuid())
                         .lcgSummonerName(playerData.getGameName())
                         .lcgSummonerTag(playerData.getTagLine())
+                        .lcgMvpRank(mvpRank)
                         .lcgChampionId(participants.getChampionId())
                         .lcgChampionName(championName)
                         .lcgChampionLevel(statsData.getChampLevel())
@@ -158,8 +202,7 @@ public class SaveService {
                         .lcgDamageTotal(statsData.getTotalDamageDealtToChampions())
                         .lcgDamageTaken(statsData.getTotalDamageTaken())
                         .lcgMinionCount(statsData.getTotalMinionsKilled())
-                        .lcgJungleCount(statsData.getNeutralMinionsKilled())
-                        .lcgVisionScore(statsData.getVisionScore()).build());
+                        .lcgJungleCount(statsData.getNeutralMinionsKilled()).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -175,7 +218,6 @@ public class SaveService {
         try {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
-            List<Metrics> list3 = mvpService.LCGMvpSelection(gameData).getData();
 
             int duration = gameData.getGameDuration();
 
@@ -184,14 +226,6 @@ public class SaveService {
                 Participants participants = list2.get(i);
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
-
-                int mvpRank = 0;
-
-                for(int j=0; j<list3.size(); j++) {
-                    if(list3.get(j).getPuuid().equals(playerData.getPuuid())) {
-                        mvpRank = j+1;
-                    }
-                }
 
                 lcgMatchSubRepository.save(LCG_Match_Sub.builder()
                         .lcgGameId(gameId)
@@ -206,6 +240,7 @@ public class SaveService {
                         .lcgNormalWard(statsData.getWardsPlaced())
                         .lcgVisionWard(statsData.getVisionWardsBoughtInGame())
                         .lcgDestroyWard(statsData.getWardsKilled())
+                        .lcgVisionScore(statsData.getVisionScore())
                         .lcgGoldTotal(statsData.getGoldEarned())
                         .lcgHealTotal(statsData.getTotalHeal())
                         .lcgCrowdTime(statsData.getTimeCCingOthers())
@@ -214,8 +249,7 @@ public class SaveService {
                         .lcgDestroyInhibitor(statsData.getInhibitorKills())
                         .lcgDamagePerMinute(CalculatorCharacteristic(duration, statsData).getData().get("DPM"))
                         .lcgGoldPerMinute(CalculatorCharacteristic(duration, statsData).getData().get("GPM"))
-                        .lcgDamagePerGold(CalculatorCharacteristic(duration, statsData).getData().get("DPG"))
-                        .lcgMvpRank(mvpRank).build());
+                        .lcgDamagePerGold(CalculatorCharacteristic(duration, statsData).getData().get("DPG")).build());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
