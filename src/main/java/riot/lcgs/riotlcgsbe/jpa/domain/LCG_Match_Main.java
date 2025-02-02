@@ -42,6 +42,10 @@ public class LCG_Match_Main {
     private String lcgSummonerTag;
 
     @NotNull
+    @Column(name = "lcg_mvp_rank")
+    private String lcgMvpRank;
+
+    @NotNull
     @Column(name = "lcg_champion_id")
     private int lcgChampionId;
 
@@ -125,24 +129,21 @@ public class LCG_Match_Main {
     @Column(name = "lcg_jungle_count")
     private int lcgJungleCount;
 
-    @NotNull
-    @Column(name = "lcg_vision_score")
-    private int lcgVisionScore;
-
     @Builder
     public LCG_Match_Main(Long lcgGameId, int lcgParticipantId, int lcgTeamId, String lcgSummonerPuuid,
-                          String lcgSummonerName, String lcgSummonerTag, int lcgChampionId,
+                          String lcgSummonerName, String lcgSummonerTag, String lcgMvpRank, int lcgChampionId,
                           String lcgChampionName, int lcgChampionLevel, String lcgSpellName1, String lcgSpellName2,
                           String lcgPerkName1, String lcgPerkName2, int lcgItemId1, int lcgItemId2, int lcgItemId3,
                           int lcgItemId4, int lcgItemId5, int lcgItemId6, int lcgItemId7, int lcgKillCount,
                           int lcgDeathCount, int lcgAssistCount, int lcgDamageTotal, int lcgDamageTaken,
-                          int lcgMinionCount, int lcgJungleCount, int lcgVisionScore) {
+                          int lcgMinionCount, int lcgJungleCount) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgTeamId = lcgTeamId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgSummonerName = lcgSummonerName;
         this.lcgSummonerTag = lcgSummonerTag;
+        this.lcgMvpRank = lcgMvpRank;
         this.lcgChampionId = lcgChampionId;
         this.lcgChampionName = lcgChampionName;
         this.lcgChampionLevel = lcgChampionLevel;
@@ -164,6 +165,5 @@ public class LCG_Match_Main {
         this.lcgDamageTaken = lcgDamageTaken;
         this.lcgMinionCount = lcgMinionCount;
         this.lcgJungleCount = lcgJungleCount;
-        this.lcgVisionScore = lcgVisionScore;
     }
 }
