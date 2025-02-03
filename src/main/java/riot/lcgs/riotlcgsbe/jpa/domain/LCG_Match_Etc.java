@@ -66,8 +66,8 @@ public class LCG_Match_Etc {
     private String lcgSubImage;
 
     @Builder
-    public LCG_Match_Etc(Long lcgVersion, String lcgUpdateDate, String lcgCdn, String lcgLang, 
-                         int lcgMainVer, int lcgItemVer, String lcgRuneVer, String lcgMasteryVer, 
+    public LCG_Match_Etc(String lcgVersion, String lcgUpdateDate, String lcgCdn, String lcgLang,
+                         String lcgMainVer, String lcgItemVer, String lcgRuneVer, String lcgMasteryVer,
                          String lcgSummonerVer, String lcgChampionVer, String lcgMainImage, String lcgSubImage) {
         this.lcgVersion = lcgVersion;
         this.lcgUpdateDate = lcgUpdateDate;
