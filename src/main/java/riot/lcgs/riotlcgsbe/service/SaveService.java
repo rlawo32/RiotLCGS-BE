@@ -116,11 +116,13 @@ public class SaveService {
             boolean existsCheck = lcgMatchEtcRepository.existsLCG_Player_EtcByLcgMainVer(version.get("ver"));
 
             if(!existsCheck) {
+                List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
+                
                 String imageMain = version.get("cdn") + "/" + version.get("ver") + "/img/";
                 String imageSub = version.get("cdn") + "/img/";
                 
                 lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
-                        .lcgVersion("LcgVer" + 0001)
+                        .lcgVersion("LcgVer" + String.format("%04d", list.size()+1))
                         .lcgUpdateDate()
                         .lcgCdn(version.get("cdn"))
                         .lcgLang(version.get("lang"))
