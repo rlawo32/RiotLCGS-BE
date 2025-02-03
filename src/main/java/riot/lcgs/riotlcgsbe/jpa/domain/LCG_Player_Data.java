@@ -42,8 +42,7 @@ public class LCG_Player_Data {
     @Column(name = "lcg_summoner_tag")
     private String lcgSummonerTag;
 
-    public LCG_Player_Data playerDataUpdate(Player playerData, String player) {
-        this.lcgPlayer = player;
+    public LCG_Player_Data playerDataUpdate(Player playerData) {
         this.lcgSummonerNickname = playerData.getGameName() + "#" + playerData.getTagLine();
         this.lcgSummonerId = playerData.getSummonerId();
         this.lcgSummonerName = playerData.getGameName();
