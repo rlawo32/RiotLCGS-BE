@@ -113,19 +113,27 @@ public class SaveService {
                     .lcgMaxDamageTotal(maxDamageTotal[9])
                     .lcgMaxDamageTaken(maxDamageTaken[9]).build());
 
-            lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
-                    .lcgVersion("LcgVer" + 0001)
-                    .lcgUpdateDate()
-                    .lcgCdn(version.get("cdn"))
-                    .lcgLang(version.get("lang"))
-                    .lcgMainVer(version.get("ver"))
-                    .lcgItemVer(version.get("item"))
-                    .lcgRuneVer(version.get("rune"))
-                    .lcgMasteryVer(version.get("mastery"))
-                    .lcgSummonerVer(version.get("summoner"))
-                    .lcgChampionVer(version.get("champion"))
-                    .lcgMainImage("")
-                    .lcgSubImage("").build());
+            boolean existsCheck = lcgMatchEtcRepository.existsLCG_Player_EtcByLcgMainVer(version.get("ver"));
+
+            if(!existsCheck) {
+                String imageMain = version.get("cdn") + "/" + version.get("ver") + "/img/";
+                String imageSub = version.get("cdn") + "/img/";
+                
+                lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
+                        .lcgVersion("LcgVer" + 0001)
+                        .lcgUpdateDate()
+                        .lcgCdn(version.get("cdn"))
+                        .lcgLang(version.get("lang"))
+                        .lcgMainVer(version.get("ver"))
+                        .lcgItemVer(version.get("item"))
+                        .lcgRuneVer(version.get("rune"))
+                        .lcgMasteryVer(version.get("mastery"))
+                        .lcgSummonerVer(version.get("summoner"))
+                        .lcgChampionVer(version.get("champion"))
+                        .lcgMainImage(imageMain)
+                        .lcgSubImage(imageSub).build());
+            } 
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
