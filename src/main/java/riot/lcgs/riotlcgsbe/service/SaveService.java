@@ -21,6 +21,7 @@ public class SaveService {
 
     private final MvpService mvpService;
 
+    private final LCG_Match_Etc_Repository lcgMatchEtcRepository;
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
     private final LCG_Match_Main_Repository lcgMatchMainRepository;
     private final LCG_Match_Sub_Repository lcgMatchSubRepository;
@@ -111,6 +112,20 @@ public class SaveService {
                     .lcgVerChampion(version.get("champion"))
                     .lcgMaxDamageTotal(maxDamageTotal[9])
                     .lcgMaxDamageTaken(maxDamageTaken[9]).build());
+
+            lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
+                    .lcgVersion("LcgVer" + 0001)
+                    .lcgUpdateDate()
+                    .lcgCdn(version.get("cdn"))
+                    .lcgLang(version.get("lang"))
+                    .lcgMainVer(version.get("ver"))
+                    .lcgItemVer(version.get("item"))
+                    .lcgRuneVer(version.get("rune"))
+                    .lcgMasteryVer(version.get("mastery"))
+                    .lcgSummonerVer(version.get("summoner"))
+                    .lcgChampionVer(version.get("champion"))
+                    .lcgMainImage("")
+                    .lcgSubImage("").build());
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
