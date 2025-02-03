@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.*;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
+import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
 import java.util.Arrays;
@@ -47,16 +48,15 @@ public class SaveService {
             for(int i=0; i<list1.size(); i++) {
             	ParticipantIdentities participantIdentities = list1.get(i);
                 Player playerData = participantIdentities.getPlayer();
-            
-            	for(int j=0; j<list2.size(); j++) {
-            		if(list2.get(j).equals(playerData.getPuuid())) {
-            			arr[i] = list2.get(j).lcgPlayer();
-            		}
-            	}
+
+                for(LCG_Player_Data lcgPlayerData : list2) {
+                    if(lcgPlayerData.getLcgSummonerPuuid().equals(playerData.getPuuid())) {
+                        arr[i] = lcgPlayerData.getLcgPlayer();
+                    }
+                }
             }
 
-            for(int i=0; i<list3.size(); i++) {
-                Teams teams = list3.get(i);
+            for(Teams teams : list3) {
                 if(teams.getWin().equals("Win")) {
                     gameWin = teams.getTeamId();
                 }
@@ -122,7 +122,7 @@ public class SaveService {
                     .lcgMaxDamageTotal(maxDamageTotal[9])
                     .lcgMaxDamageTaken(maxDamageTaken[9]).build());
 
-            boolean existsCheck = lcgMatchEtcRepository.existsLCG_Player_EtcByLcgMainVer(version.get("ver"));
+            boolean existsCheck = lcgMatchEtcRepository.existsLCG_Match_EtcByLcgMainVer(version.get("ver"));
 
             if(!existsCheck) {
                 List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
@@ -132,7 +132,7 @@ public class SaveService {
                 
                 lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
                         .lcgVersion("LcgVer" + String.format("%04d", list.size()+1))
-                        .lcgUpdateDate()
+                        .lcgUpdateDate(gameData.getGameCreationDate())
                         .lcgCdn(version.get("cdn"))
                         .lcgLang(version.get("lang"))
                         .lcgMainVer(version.get("ver"))
@@ -456,9 +456,10 @@ public class SaveService {
     }
 
     @Transactional
-    public CommonResponseDto<?> LCGPlayerDataSave(GameData gameData) {
+    public CommonResponseDto<?> LCGPlayerDataSave(CustomGameRequestDto requestDto) {
 
         try {
+            GameData gameData = requestDto.getGameData();
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
 
             for(int i=0; i<list1.size(); i++) {
@@ -473,7 +474,7 @@ public class SaveService {
                     LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerData.playerDataUpdate(playerData, "");
+                    lcgPlayerData.playerDataUpdate(playerData);
                 } else {
                     lcgPlayerDataRepository.save(LCG_Player_Data.builder()
                             .lcgSummonerPuuid(puuid)
@@ -490,6 +491,6 @@ public class SaveService {
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
 
-        return CommonResponseDto.setSuccess("Success", "");
+        return CommonResponseDto.setSuccess("Success", "플레이어 저장 완료!");
     }
 }
