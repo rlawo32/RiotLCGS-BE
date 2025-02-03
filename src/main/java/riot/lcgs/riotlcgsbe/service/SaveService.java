@@ -38,11 +38,25 @@ public class SaveService {
             String[] extractionStep2 = extractionStep1[1].split("\\.");
             String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
 
-            List<Teams> list1 = gameData.getTeams();
+            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+            List<LCG_Player_Data> list2 = lcgPlayerDataRepository.findAll();
+            List<Teams> list3 = gameData.getTeams();
+            String[] arr = new String[10];
             int gameWin = 0;
 
             for(int i=0; i<list1.size(); i++) {
-                Teams teams = list1.get(i);
+            	ParticipantIdentities participantIdentities = list1.get(i);
+                Player playerData = participantIdentities.getPlayer();
+            
+            	for(int j=0; j<list2.size(); j++) {
+            		if(list2.get(j).equals(playerData.getPuuid())) {
+            			arr[i] = list2.get(j).lcgPlayer();
+            		}
+            	}
+            }
+
+            for(int i=0; i<list3.size(); i++) {
+                Teams teams = list3.get(i);
                 if(teams.getWin().equals("Win")) {
                     gameWin = teams.getTeamId();
                 }
@@ -55,16 +69,11 @@ public class SaveService {
                     .lcgGameVer(version.get("ver"))
                     .lcgGameDuration(gameData.getGameDuration())
                     .lcgGameDate(extractionGameDate)
-                    .teamAName1(teamData.getTeamA1())
-                    .teamAName2(teamData.getTeamA2())
-                    .teamAName3(teamData.getTeamA3())
-                    .teamAName4(teamData.getTeamA4())
-                    .teamAName5(teamData.getTeamA5())
-                    .teamBName1(teamData.getTeamB1())
-                    .teamBName2(teamData.getTeamB2())
-                    .teamBName3(teamData.getTeamB3())
-                    .teamBName4(teamData.getTeamB4())
-                    .teamBName5(teamData.getTeamB5()).build());
+                    .teamAName1(arr[0]).teamAName2(arr[1])
+                    .teamAName3(arr[2]).teamAName4(arr[3])
+                    .teamAName5(arr[4]).teamBName1(arr[5])
+                    .teamBName2(arr[6]).teamBName3(arr[7])
+                    .teamBName4(arr[8]).teamBName5(arr[9]).build());
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
