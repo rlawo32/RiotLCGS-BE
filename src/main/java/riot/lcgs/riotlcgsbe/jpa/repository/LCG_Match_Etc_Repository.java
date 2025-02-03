@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Etc;
 
 public interface LCG_Match_Etc_Repository extends JpaRepository<LCG_Match_Etc, String> {
-    boolean existsLCG_Player_EtcByLcgMainVer(String ver);
+    boolean existsLCG_Match_EtcByLcgMainVer(String ver);
 }
