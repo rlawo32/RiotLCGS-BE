@@ -58,17 +58,17 @@ public class LCG_Match_Etc {
     private String lcgChampionVer;
 
     @NotNull
-    @Column(name = "lcg_image_main")
-    private String lcgImageMain;
+    @Column(name = "lcg_main_image")
+    private String lcgMainImage;
 
     @NotNull
-    @Column(name = "lcg_image_sub")
-    private String lcgImageSub;
+    @Column(name = "lcg_sub_image")
+    private String lcgSubImage;
 
     @Builder
     public LCG_Match_Etc(Long lcgVersion, String lcgUpdateDate, String lcgCdn, String lcgLang, 
                          int lcgMainVer, int lcgItemVer, String lcgRuneVer, String lcgMasteryVer, 
-                         String lcgSummonerVer, String lcgChampionVer, String lcgImageMain, String lcgImageSub) {
+                         String lcgSummonerVer, String lcgChampionVer, String lcgMainImage, String lcgSubImage) {
         this.lcgVersion = lcgVersion;
         this.lcgUpdateDate = lcgUpdateDate;
         this.lcgCdn = lcgCdn;
@@ -79,8 +79,7 @@ public class LCG_Match_Etc {
         this.lcgMasteryVer = lcgMasteryVer;
         this.lcgSummonerVer = lcgSummonerVer;
         this.lcgChampionVer = lcgChampionVer;
-        this.lcgImageMain = lcgImageMain;
-        this.lcgVerMastery = lcgVerMastery;
-        this.lcgImageSub = lcgImageSub;
+        this.lcgMainImage = lcgMainImage;
+        this.lcgSubImage = lcgSubImage;
     }
 }
