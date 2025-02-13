@@ -9,8 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import riot.lcgs.riotlcgsbe.web.dto.object.Player;
-import riot.lcgs.riotlcgsbe.web.dto.object.Stats;
-import riot.lcgs.riotlcgsbe.web.dto.object.Teams;
 
 @NoArgsConstructor
 @Entity
@@ -42,22 +40,61 @@ public class LCG_Player_Data {
     @Column(name = "lcg_summoner_tag")
     private String lcgSummonerTag;
 
+    @NotNull
+    @Column(name = "lcg_summoner_icon")
+    private int lcgSummonerIcon;
+
+    @NotNull
+    @Column(name = "lcg_rank_play")
+    private String lcgRankPlay;
+
+    @NotNull
+    @Column(name = "lcg_rank_tier")
+    private String lcgRankTier;
+
+    @NotNull
+    @Column(name = "lcg_rank_point")
+    private int lcgRankPoint;
+
+    @NotNull
+    @Column(name = "lcg_rank_win")
+    private int lcgRankWin;
+
+    @NotNull
+    @Column(name = "lcg_rank_fail")
+    private int lcgRankFail;
+
+
     public LCG_Player_Data playerDataUpdate(Player playerData) {
         this.lcgSummonerNickname = playerData.getGameName() + "#" + playerData.getTagLine();
         this.lcgSummonerId = playerData.getSummonerId();
         this.lcgSummonerName = playerData.getGameName();
         this.lcgSummonerTag = playerData.getTagLine();
+        this.lcgSummonerIcon = playerData.getProfileIcon();
+        this.lcgRankPlay = "";
+        this.lcgRankTier = "";
+        this.lcgRankPoint = 0;
+        this.lcgRankWin = 0;
+        this.lcgRankFail = 0;
         return this;
     }
 
     @Builder
     public LCG_Player_Data(String lcgSummonerPuuid, String lcgPlayer, String lcgSummonerNickname,
-                           Long lcgSummonerId, String lcgSummonerName, String lcgSummonerTag) {
+                           Long lcgSummonerId, String lcgSummonerName, String lcgSummonerTag,
+                           int lcgSummonerIcon, String lcgRankPlay, String lcgRankTier,
+                           int lcgRankPoint, int lcgRankWin, int lcgRankFail) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgSummonerNickname = lcgSummonerNickname;
         this.lcgSummonerId = lcgSummonerId;
         this.lcgSummonerName = lcgSummonerName;
         this.lcgSummonerTag = lcgSummonerTag;
+        this.lcgSummonerIcon = lcgSummonerIcon;
+        this.lcgRankPlay = lcgRankPlay;
+        this.lcgRankTier = lcgRankTier;
+        this.lcgRankPoint = lcgRankPoint;
+        this.lcgRankWin = lcgRankWin;
+        this.lcgRankFail = lcgRankFail;
     }
 }
