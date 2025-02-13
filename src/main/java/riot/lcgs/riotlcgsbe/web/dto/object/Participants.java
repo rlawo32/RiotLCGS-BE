@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class Participants {
-    private int championId;
+    private Integer championId;
     private String highestAchievedSeasonTier;
-    private int participantId;
-    private int spell1Id;
-    private int spell2Id;
+    private Integer participantId;
+    private Integer spell1Id;
+    private Integer spell2Id;
     private Stats stats;
-    private int teamId;
+    private Integer teamId;
     private Object timeline;
 }

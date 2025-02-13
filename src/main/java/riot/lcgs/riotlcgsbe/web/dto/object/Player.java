@@ -4,13 +4,13 @@ import lombok.Data;
 
 @Data
 public class Player {
-    private int accountId;
-    private int currentAccountId;
+    private Integer accountId;
+    private Integer currentAccountId;
     private String currentPlatformId;
     private String gameName;
     private String matchHistoryUri;
     private String platformId;
-    private int profileIcon;
+    private Integer profileIcon;
     private String puuid;
     private Long summonerId;
     private String summonerName;

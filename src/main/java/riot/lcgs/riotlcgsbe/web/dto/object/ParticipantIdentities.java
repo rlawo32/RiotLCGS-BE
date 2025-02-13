@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ParticipantIdentities {
-    private int participantId;
+    private Integer participantId;
     private Player player;
 }
