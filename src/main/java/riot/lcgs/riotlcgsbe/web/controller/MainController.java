@@ -9,6 +9,7 @@ import riot.lcgs.riotlcgsbe.service.MainService;
 import riot.lcgs.riotlcgsbe.service.SaveService;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
+import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,7 +20,7 @@ public class MainController {
     private final SaveService saveService;
 
     @PostMapping("/insertPlayerData")
-    public CommonResponseDto<?> insertPlayerData(@RequestBody CustomGameRequestDto requestDto) {
+    public CommonResponseDto<?> insertPlayerData(@RequestBody PlayerDataRequestDto requestDto) {
         return saveService.LCGPlayerDataSave(requestDto);
     }
 

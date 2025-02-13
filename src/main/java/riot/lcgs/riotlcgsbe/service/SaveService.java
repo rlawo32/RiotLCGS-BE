@@ -7,6 +7,7 @@ import riot.lcgs.riotlcgsbe.jpa.domain.*;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
+import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
 import java.util.Arrays;
@@ -473,10 +474,11 @@ public class SaveService {
     }
 
     @Transactional
-    public CommonResponseDto<?> LCGPlayerDataSave(CustomGameRequestDto requestDto) {
+    public CommonResponseDto<?> LCGPlayerDataSave(PlayerDataRequestDto requestDto) {
 
         try {
             GameData gameData = requestDto.getGameData();
+            RankData rankData = requestDto.getRankData();
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
 
             for(int i=0; i<list1.size(); i++) {
@@ -501,11 +503,6 @@ public class SaveService {
                             .lcgSummonerName(playerData.getGameName())
                             .lcgSummonerTag(playerData.getTagLine())
                             .lcgSummonerIcon(playerData.getProfileIcon())
-                            .lcgRankPlay("")
-                            .lcgRankTier("")
-                            .lcgRankPoint(0)
-                            .lcgRankWin(0)
-                            .lcgRankFail(0)
                             .build());
                 }
             }
