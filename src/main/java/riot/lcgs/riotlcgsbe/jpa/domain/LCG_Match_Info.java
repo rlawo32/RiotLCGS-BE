@@ -1,6 +1,5 @@
 package riot.lcgs.riotlcgsbe.jpa.domain;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -46,32 +45,32 @@ public class LCG_Match_Info {
     private String lcgVerMain;
 
     @NotNull
-    @Column(name = "lcg_ver_cdn")
-    private String lcgVerCdn;
+    @Column(name = "lcg_max_gold")
+    private int lcgMaxGold;
 
     @NotNull
-    @Column(name = "lcg_ver_lang")
-    private String lcgVerLang;
+    @Column(name = "lcg_max_crowd")
+    private int lcgMaxCrowd;
 
     @NotNull
-    @Column(name = "lcg_ver_item")
-    private String lcgVerItem;
+    @Column(name = "lcg_max_dpm")
+    private int lcgMaxDpm;
 
     @NotNull
-    @Column(name = "lcg_ver_rune")
-    private String lcgVerRune;
+    @Column(name = "lcg_max_gpm")
+    private int lcgMaxGpm;
 
     @NotNull
-    @Column(name = "lcg_ver_mastery")
-    private String lcgVerMastery;
+    @Column(name = "lcg_max_dpg")
+    private int lcgMaxDpg;
 
     @NotNull
-    @Column(name = "lcg_ver_summoner")
-    private String lcgVerSummoner;
+    @Column(name = "lcg_max_dpd")
+    private int lcgMaxDpd;
 
     @NotNull
-    @Column(name = "lcg_ver_champion")
-    private String lcgVerChampion;
+    @Column(name = "lcg_max_tpd")
+    private int lcgMaxTpd;
 
     @NotNull
     @Column(name = "lcg_max_damage_total")
@@ -84,9 +83,8 @@ public class LCG_Match_Info {
     @Builder
     public LCG_Match_Info(Long lcgGameId, String lcgGameDate, String lcgGameMode,
                           String lcgGameType, int lcgGameDuration, int lcgGameMap,
-                          String lcgVerMain, String lcgVerCdn, String lcgVerLang,
-                          String lcgVerItem, String lcgVerRune, String lcgVerMastery,
-                          String lcgVerSummoner, String lcgVerChampion,
+                          String lcgVerMain, int lcgMaxGold, int lcgMaxCrowd, int lcgMaxDpm,
+                          int lcgMaxGpm, int lcgMaxDpg, int lcgMaxDpd, int lcgMaxTpd,
                           int lcgMaxDamageTotal, int lcgMaxDamageTaken) {
         this.lcgGameId = lcgGameId;
         this.lcgGameDate = lcgGameDate;
@@ -95,13 +93,13 @@ public class LCG_Match_Info {
         this.lcgGameDuration = lcgGameDuration;
         this.lcgGameMap = lcgGameMap;
         this.lcgVerMain = lcgVerMain;
-        this.lcgVerCdn = lcgVerCdn;
-        this.lcgVerLang = lcgVerLang;
-        this.lcgVerItem = lcgVerItem;
-        this.lcgVerRune = lcgVerRune;
-        this.lcgVerMastery = lcgVerMastery;
-        this.lcgVerSummoner = lcgVerSummoner;
-        this.lcgVerChampion = lcgVerChampion;
+        this.lcgMaxGold = lcgMaxGold;
+        this.lcgMaxCrowd = lcgMaxCrowd;
+        this.lcgMaxDpm = lcgMaxDpm;
+        this.lcgMaxGpm = lcgMaxGpm;
+        this.lcgMaxDpg = lcgMaxDpg;
+        this.lcgMaxDpd = lcgMaxDpd;
+        this.lcgMaxTpd = lcgMaxTpd;
         this.lcgMaxDamageTotal = lcgMaxDamageTotal;
         this.lcgMaxDamageTaken = lcgMaxDamageTaken;
     }
