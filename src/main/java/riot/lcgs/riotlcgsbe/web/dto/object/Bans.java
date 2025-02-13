@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class Bans {
-    private int championId;
-    private int pickTurn;
+    private Integer championId;
+    private Integer pickTurn;
 }
