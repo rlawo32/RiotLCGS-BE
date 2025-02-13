@@ -9,7 +9,7 @@ import java.util.List;
 public class Rune {
 
     @JsonProperty("id")
-    private int id;
+    private Integer id;
 
     @JsonProperty("key")
     private String key;
