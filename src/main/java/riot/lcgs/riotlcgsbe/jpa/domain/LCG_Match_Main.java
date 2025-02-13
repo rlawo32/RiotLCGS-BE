@@ -34,14 +34,6 @@ public class LCG_Match_Main {
     private String lcgSummonerPuuid;
 
     @NotNull
-    @Column(name = "lcg_summoner_name")
-    private String lcgSummonerName;
-
-    @NotNull
-    @Column(name = "lcg_summoner_tag")
-    private String lcgSummonerTag;
-
-    @NotNull
     @Column(name = "lcg_mvp_rank")
     private String lcgMvpRank;
 
@@ -131,18 +123,15 @@ public class LCG_Match_Main {
 
     @Builder
     public LCG_Match_Main(Long lcgGameId, int lcgParticipantId, int lcgTeamId, String lcgSummonerPuuid,
-                          String lcgSummonerName, String lcgSummonerTag, String lcgMvpRank, int lcgChampionId,
-                          String lcgChampionName, int lcgChampionLevel, String lcgSpellName1, String lcgSpellName2,
-                          String lcgPerkName1, String lcgPerkName2, int lcgItemId1, int lcgItemId2, int lcgItemId3,
-                          int lcgItemId4, int lcgItemId5, int lcgItemId6, int lcgItemId7, int lcgKillCount,
-                          int lcgDeathCount, int lcgAssistCount, int lcgDamageTotal, int lcgDamageTaken,
-                          int lcgMinionCount, int lcgJungleCount) {
+                          String lcgMvpRank, int lcgChampionId, String lcgChampionName, int lcgChampionLevel,
+                          String lcgSpellName1, String lcgSpellName2, String lcgPerkName1, String lcgPerkName2,
+                          int lcgItemId1, int lcgItemId2, int lcgItemId3, int lcgItemId4, int lcgItemId5,
+                          int lcgItemId6, int lcgItemId7, int lcgKillCount, int lcgDeathCount, int lcgAssistCount,
+                          int lcgDamageTotal, int lcgDamageTaken, int lcgMinionCount, int lcgJungleCount) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgTeamId = lcgTeamId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
-        this.lcgSummonerName = lcgSummonerName;
-        this.lcgSummonerTag = lcgSummonerTag;
         this.lcgMvpRank = lcgMvpRank;
         this.lcgChampionId = lcgChampionId;
         this.lcgChampionName = lcgChampionName;
