@@ -71,10 +71,10 @@ public class MvpService {
                         CalculatorCharacteristic(duration, statsData).getData().get("DPG"),
                         statsData.getVisionScore(), statsData.getTimeCCingOthers(),
                         CalculatorMultiKillScore(statsData).getData(), CalculatorDemolisherScore(statsData).getData(),
-                        CalculatorJungleObjectScore(participants.getTeamId() == 100 ? teams1 : teams2).getData(), statsData.isWin(),
-                        statsData.isFirstBloodKill(), statsData.isFirstTowerKill(), statsData.isFirstInhibitorKill(),
-                        (participants.getTeamId() == 100 ? teams1.isFirstDargon() : teams2.isFirstDargon()),
-                        (participants.getTeamId() == 100 ? teams1.isFirstBaron() : teams2.isFirstBaron()));
+                        CalculatorJungleObjectScore(participants.getTeamId() == 100 ? teams1 : teams2).getData(), statsData.getWin(),
+                        statsData.getFirstBloodKill(), statsData.getFirstTowerKill(), statsData.getFirstInhibitorKill(),
+                        (participants.getTeamId() == 100 ? teams1.getFirstDargon() : teams2.getFirstDargon()),
+                        (participants.getTeamId() == 100 ? teams1.getFirstBaron() : teams2.getFirstBaron()));
             }
 
             // MultiKillScore, DemolisherScore

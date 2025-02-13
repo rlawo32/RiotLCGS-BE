@@ -90,17 +90,36 @@ public class SaveService {
             String[] extractionStep2 = extractionStep1[1].split("\\.");
             String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
 
+            int duration = gameData.getGameDuration();
+
             List<Participants> list1 = gameData.getParticipants();
+            int[] maxGold = new int[10];
+            int[] maxCrowd = new int[10];
+            int[] maxDpm = new int[10];
+            int[] maxGpm = new int[10];
+            int[] maxDpg = new int[10];
+//            int[] maxDpd = new int[10];
+//            int[] maxTpd = new int[10];
             int[] maxDamageTotal = new int[10];
             int[] maxDamageTaken = new int[10];
             for(int i=0; i<list1.size(); i++) {
                 Participants participants = list1.get(i);
                 Stats statsData = participants.getStats();
 
+                maxGold[i] = statsData.getGoldEarned();
+                maxCrowd[i] = statsData.getTimeCCingOthers();
+                maxDpm[i] = (int) (CalculatorCharacteristic(duration, statsData).getData().get("DPM") * 100);
+                maxGpm[i] = (int) (CalculatorCharacteristic(duration, statsData).getData().get("GPM") * 100);
+                maxDpg[i] = (int) (CalculatorCharacteristic(duration, statsData).getData().get("DPG") * 100);
                 maxDamageTotal[i] = statsData.getTotalDamageDealtToChampions();
                 maxDamageTaken[i] = statsData.getTotalDamageTaken();
             }
 
+            Arrays.sort(maxGold);
+            Arrays.sort(maxCrowd);
+            Arrays.sort(maxDpm);
+            Arrays.sort(maxGpm);
+            Arrays.sort(maxDpg);
             Arrays.sort(maxDamageTotal);
             Arrays.sort(maxDamageTaken);
 
@@ -112,13 +131,13 @@ public class SaveService {
                     .lcgGameDuration(gameData.getGameDuration())
                     .lcgGameMap(gameData.getMapId())
                     .lcgVerMain(version.get("ver"))
-                    .lcgVerCdn(version.get("cdn"))
-                    .lcgVerLang(version.get("lang"))
-                    .lcgVerItem(version.get("item"))
-                    .lcgVerRune(version.get("rune"))
-                    .lcgVerMastery(version.get("mastery"))
-                    .lcgVerSummoner(version.get("summoner"))
-                    .lcgVerChampion(version.get("champion"))
+                    .lcgMaxGold(maxGold[9])
+                    .lcgMaxCrowd(maxCrowd[9])
+                    .lcgMaxDpm(maxDpm[9])
+                    .lcgMaxGpm(maxGpm[9])
+                    .lcgMaxDpg(maxDpg[9])
+                    .lcgMaxDpd(0)
+                    .lcgMaxTpd(0)
                     .lcgMaxDamageTotal(maxDamageTotal[9])
                     .lcgMaxDamageTaken(maxDamageTaken[9]).build());
 
@@ -217,8 +236,6 @@ public class SaveService {
                         .lcgParticipantId(participantIdentities.getParticipantId())
                         .lcgTeamId(participants.getTeamId())
                         .lcgSummonerPuuid(playerData.getPuuid())
-                        .lcgSummonerName(playerData.getGameName())
-                        .lcgSummonerTag(playerData.getTagLine())
                         .lcgMvpRank(mvpRank)
                         .lcgChampionId(participants.getChampionId())
                         .lcgChampionName(championName)
@@ -265,8 +282,8 @@ public class SaveService {
                         .lcgGameId(gameId)
                         .lcgParticipantId(participantIdentities.getParticipantId())
                         .lcgSummonerPuuid(playerData.getPuuid())
-                        .lcgFirstKill(statsData.isFirstBloodKill() ? "Y" : "N")
-                        .lcgFirstTower(statsData.isFirstTowerKill() ? "Y" : "N")
+                        .lcgFirstKill(statsData.getFirstBloodKill() ? "Y" : "N")
+                        .lcgFirstTower(statsData.getFirstTowerKill() ? "Y" : "N")
                         .lcgDoubleKill(statsData.getDoubleKills())
                         .lcgTripleKill(statsData.getTripleKills())
                         .lcgQuadraKill(statsData.getQuadraKills())
@@ -326,11 +343,11 @@ public class SaveService {
                         .lcgGameId(gameId)
                         .lcgTeamId(teams.getTeamId())
                         .lcgTeamWin(teams.getWin().equals("Win") ? "Y" : "N")
-                        .lcgFirstDragon(teams.isFirstDargon() ? "Y" : "N")
-                        .lcgFirstBaron(teams.isFirstBaron() ? "Y" : "N")
-                        .lcgFirstKill(teams.isFirstBlood() ? "Y" : "N")
-                        .lcgFirstTower(teams.isFirstTower() ? "Y" : "N")
-                        .lcgFirstInhibitor(teams.isFirstInhibitor() ? "Y" : "N")
+                        .lcgFirstDragon(teams.getFirstDargon() ? "Y" : "N")
+                        .lcgFirstBaron(teams.getFirstBaron() ? "Y" : "N")
+                        .lcgFirstKill(teams.getFirstBlood() ? "Y" : "N")
+                        .lcgFirstTower(teams.getFirstTower() ? "Y" : "N")
+                        .lcgFirstInhibitor(teams.getFirstInhibitor() ? "Y" : "N")
                         .lcgTotalGold(totalGold)
                         .lcgTotalKill(totalKill)
                         .lcgTotalDeath(totalDeath)
@@ -483,6 +500,12 @@ public class SaveService {
                             .lcgSummonerId(playerData.getSummonerId())
                             .lcgSummonerName(playerData.getGameName())
                             .lcgSummonerTag(playerData.getTagLine())
+                            .lcgSummonerIcon(playerData.getProfileIcon())
+                            .lcgRankPlay("")
+                            .lcgRankTier("")
+                            .lcgRankPoint(0)
+                            .lcgRankWin(0)
+                            .lcgRankFail(0)
                             .build());
                 }
             }
