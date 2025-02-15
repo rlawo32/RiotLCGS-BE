@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.*;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
-import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
@@ -16,6 +15,7 @@ import java.util.Map;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
+import static riot.lcgs.riotlcgsbe.util.ValidationTool.*;
 
 @RequiredArgsConstructor
 @Service
@@ -478,31 +478,43 @@ public class SaveService {
 
         try {
             GameData gameData = requestDto.getGameData();
-            RankData rankData = requestDto.getRankData();
-            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+            List<RankData> list1 = requestDto.getRankData();
+            List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
 
-            for(int i=0; i<list1.size(); i++) {
-                ParticipantIdentities participantIdentities = list1.get(i);
+            for(int i=0; i<list2.size(); i++) {
+                ParticipantIdentities participantIdentities = list2.get(i);
                 Player playerData = participantIdentities.getPlayer();
 
                 String puuid = playerData.getPuuid();
                 String nickname = playerData.getGameName() + "#" + playerData.getTagLine();
                 boolean existsCheck = lcgPlayerDataRepository.existsLCG_Player_DataByLcgSummonerPuuid(puuid);
 
+                RankData rankData = list1.stream().filter(rank -> rank.getPuuid().equals(puuid)).findAny().orElse(null);
+
                 if(existsCheck) {
                     LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerData.playerDataUpdate(playerData);
+                    lcgPlayerData.playerDataUpdate(playerData, rankData);
                 } else {
                     lcgPlayerDataRepository.save(LCG_Player_Data.builder()
-                            .lcgSummonerPuuid(puuid)
+                            .lcgSummonerPuuid(validationChkString(puuid))
                             .lcgPlayer("")
-                            .lcgSummonerNickname(nickname)
-                            .lcgSummonerId(playerData.getSummonerId())
-                            .lcgSummonerName(playerData.getGameName())
-                            .lcgSummonerTag(playerData.getTagLine())
-                            .lcgSummonerIcon(playerData.getProfileIcon())
+                            .lcgSummonerNickname(validationChkString(nickname))
+                            .lcgSummonerId(validationChkLong(playerData.getSummonerId()))
+                            .lcgSummonerName(validationChkString(playerData.getGameName()))
+                            .lcgSummonerTag(validationChkString(playerData.getTagLine()))
+                            .lcgSummonerIcon(validationChkInteger(playerData.getProfileIcon()))
+                            .lcgRankWin(validationChkInteger(rankData.getWins()))
+                            .lcgRankPoint(validationChkInteger(rankData.getPoints()))
+                            .lcgPresentTier(validationChkString(rankData.getPresentTier()))
+                            .lcgPresentDivision(validationChkString(rankData.getPresentDivision()))
+                            .lcgPresentHighTier(validationChkString(rankData.getPresentHighestTier()))
+                            .lcgPresentHighDivision(validationChkString(rankData.getPresentHighestDivision()))
+                            .lcgPreviousTier(validationChkString(rankData.getPreviousTier()))
+                            .lcgPreviousDivision(validationChkString(rankData.getPreviousDivision()))
+                            .lcgPreviousHighTier(validationChkString(rankData.getPreviousHighestTier()))
+                            .lcgPreviousHighDivision(validationChkString(rankData.getPreviousHighestDivision()))
                             .build());
                 }
             }
