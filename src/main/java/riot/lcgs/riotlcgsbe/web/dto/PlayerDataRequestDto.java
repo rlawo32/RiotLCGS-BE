@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import riot.lcgs.riotlcgsbe.web.dto.object.GameData;
 import riot.lcgs.riotlcgsbe.web.dto.object.RankData;
-import riot.lcgs.riotlcgsbe.web.dto.object.TeamData;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -13,5 +14,5 @@ import riot.lcgs.riotlcgsbe.web.dto.object.TeamData;
 public class PlayerDataRequestDto {
 
     private GameData gameData;
-    private RankData rankData;
+    private List<RankData> rankData;
 }
