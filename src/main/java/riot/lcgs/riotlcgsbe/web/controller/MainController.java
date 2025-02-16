@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import riot.lcgs.riotlcgsbe.service.MainService;
-import riot.lcgs.riotlcgsbe.service.SaveService;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
@@ -17,11 +16,10 @@ import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 public class MainController {
 
     private final MainService mainService;
-    private final SaveService saveService;
 
     @PostMapping("/insertPlayerData")
     public CommonResponseDto<?> insertPlayerData(@RequestBody PlayerDataRequestDto requestDto) {
-        return saveService.LCGPlayerDataSave(requestDto);
+        return mainService.LCGPlayerDataSave(requestDto);
     }
 
     @PostMapping("/insertData")
