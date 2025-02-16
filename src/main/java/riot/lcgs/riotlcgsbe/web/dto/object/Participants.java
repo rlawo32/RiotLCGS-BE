@@ -11,5 +11,5 @@ public class Participants {
     private Integer spell2Id;
     private Stats stats;
     private Integer teamId;
-    private Object timeline;
+    private TimeLine timeline;
 }
