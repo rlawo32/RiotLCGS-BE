@@ -33,7 +33,7 @@ public class SaveService {
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
 
     @Transactional
-    public CommonResponseDto<?> LCGTeamLogSave(Long gameId, GameData gameData, TeamData teamData, Map<String, String> version) {
+    public CommonResponseDto<?> LCGTeamLogSave(Long gameId, GameData gameData, Map<String, String> version) {
 
         try {
             String[] extractionStep1 = gameData.getGameCreationDate().split("T");

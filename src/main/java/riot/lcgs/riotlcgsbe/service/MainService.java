@@ -41,7 +41,7 @@ public class MainService {
                 saveService.LCGMatchMainSave(gameId, gameData);
                 saveService.LCGMatchSubSave(gameId, gameData);
                 saveService.LCGMatchTeamSave(gameId, gameData);
-                saveService.LCGTeamLogSave(gameId, gameData, teamData, version);
+                saveService.LCGTeamLogSave(gameId, gameData, version);
                 saveService.LCGPlayerStatisticsSave(gameData);
 
                 return CommonResponseDto.setSuccess("Success", "저장 완료");
