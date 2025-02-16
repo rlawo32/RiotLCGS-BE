@@ -15,7 +15,6 @@ import java.util.Map;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
-import static riot.lcgs.riotlcgsbe.util.ValidationTool.*;
 
 @RequiredArgsConstructor
 @Service
@@ -247,7 +246,8 @@ public class SaveService {
                         .lcgPerkName2(ExtractionPerk(statsData.getPerkSubStyle()).getData())
                         .lcgItemId1(statsData.getItem0()).lcgItemId2(statsData.getItem1())
                         .lcgItemId3(statsData.getItem2()).lcgItemId4(statsData.getItem3())
-                        .lcgItemId5(statsData.getItem4()).lcgItemId6(statsData.getItem5()).lcgItemId7(statsData.getItem6())
+                        .lcgItemId5(statsData.getItem4()).lcgItemId6(statsData.getItem5())
+                        .lcgItemId7(statsData.getItem6())
                         .lcgKillCount(statsData.getKills())
                         .lcgAssistCount(statsData.getAssists())
                         .lcgDeathCount(statsData.getDeaths())
@@ -471,58 +471,5 @@ public class SaveService {
         }
 
         return CommonResponseDto.setSuccess("Success", "");
-    }
-
-    @Transactional
-    public CommonResponseDto<?> LCGPlayerDataSave(PlayerDataRequestDto requestDto) {
-
-        try {
-            GameData gameData = requestDto.getGameData();
-            List<RankData> list1 = requestDto.getRankData();
-            List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
-
-            for(int i=0; i<list2.size(); i++) {
-                ParticipantIdentities participantIdentities = list2.get(i);
-                Player playerData = participantIdentities.getPlayer();
-
-                String puuid = playerData.getPuuid();
-                String nickname = playerData.getGameName() + "#" + playerData.getTagLine();
-                boolean existsCheck = lcgPlayerDataRepository.existsLCG_Player_DataByLcgSummonerPuuid(puuid);
-
-                RankData rankData = list1.stream().filter(rank -> rank.getPuuid().equals(puuid)).findAny().orElse(null);
-
-                if(existsCheck) {
-                    LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
-                            .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
-
-                    lcgPlayerData.playerDataUpdate(playerData, rankData);
-                } else {
-                    lcgPlayerDataRepository.save(LCG_Player_Data.builder()
-                            .lcgSummonerPuuid(validationChkString(puuid))
-                            .lcgPlayer("")
-                            .lcgSummonerNickname(validationChkString(nickname))
-                            .lcgSummonerId(validationChkLong(playerData.getSummonerId()))
-                            .lcgSummonerName(validationChkString(playerData.getGameName()))
-                            .lcgSummonerTag(validationChkString(playerData.getTagLine()))
-                            .lcgSummonerIcon(validationChkInteger(playerData.getProfileIcon()))
-                            .lcgRankWin(validationChkInteger(rankData.getWins()))
-                            .lcgRankPoint(validationChkInteger(rankData.getPoints()))
-                            .lcgPresentTier(validationChkString(rankData.getPresentTier()))
-                            .lcgPresentDivision(validationChkString(rankData.getPresentDivision()))
-                            .lcgPresentHighTier(validationChkString(rankData.getPresentHighestTier()))
-                            .lcgPresentHighDivision(validationChkString(rankData.getPresentHighestDivision()))
-                            .lcgPreviousTier(validationChkString(rankData.getPreviousTier()))
-                            .lcgPreviousDivision(validationChkString(rankData.getPreviousDivision()))
-                            .lcgPreviousHighTier(validationChkString(rankData.getPreviousHighestTier()))
-                            .lcgPreviousHighDivision(validationChkString(rankData.getPreviousHighestDivision()))
-                            .build());
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return CommonResponseDto.setFailed("Database Insert Failed !");
-        }
-
-        return CommonResponseDto.setSuccess("Success", "플레이어 저장 완료!");
     }
 }
