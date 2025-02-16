@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 import riot.lcgs.riotlcgsbe.web.dto.object.Player;
 import riot.lcgs.riotlcgsbe.web.dto.object.RankData;
 
-import static riot.lcgs.riotlcgsbe.util.ValidationTool.*;
-
 @NoArgsConstructor
 @Entity
 @Getter
@@ -89,21 +87,21 @@ public class LCG_Player_Data {
 
 
     public LCG_Player_Data playerDataUpdate(Player playerData, RankData rankData) {
-        this.lcgSummonerNickname = validationChkString(playerData.getGameName()) + "#" + validationChkString(playerData.getTagLine());
-        this.lcgSummonerId = validationChkLong(playerData.getSummonerId());
-        this.lcgSummonerName = validationChkString(playerData.getGameName());
-        this.lcgSummonerTag = validationChkString(playerData.getTagLine());
-        this.lcgSummonerIcon = validationChkInteger(playerData.getProfileIcon());
-        this.lcgRankWin = validationChkInteger(rankData.getWins());
-        this.lcgRankPoint = validationChkInteger(rankData.getPoints());
-        this.lcgPresentTier = validationChkString(rankData.getPresentTier());
-        this.lcgPresentDivision = validationChkString(rankData.getPresentDivision());
-        this.lcgPresentHighTier = validationChkString(rankData.getPresentHighestTier());
-        this.lcgPresentHighDivision = validationChkString(rankData.getPresentHighestDivision());
-        this.lcgPreviousTier = validationChkString(rankData.getPreviousTier());
-        this.lcgPreviousDivision = validationChkString(rankData.getPreviousDivision());
-        this.lcgPreviousHighTier = validationChkString(rankData.getPreviousHighestTier());
-        this.lcgPreviousHighDivision = validationChkString(rankData.getPreviousHighestDivision());
+        this.lcgSummonerNickname = playerData.getGameName() + "#" + playerData.getTagLine();
+        this.lcgSummonerId = playerData.getSummonerId();
+        this.lcgSummonerName = playerData.getGameName();
+        this.lcgSummonerTag = playerData.getTagLine();
+        this.lcgSummonerIcon = playerData.getProfileIcon();
+        this.lcgRankWin = rankData.getWins();
+        this.lcgRankPoint = rankData.getPoints();
+        this.lcgPresentTier = rankData.getPresentTier();
+        this.lcgPresentDivision = rankData.getPresentDivision();
+        this.lcgPresentHighTier = rankData.getPresentHighestTier();
+        this.lcgPresentHighDivision = rankData.getPresentHighestDivision();
+        this.lcgPreviousTier = rankData.getPreviousTier();
+        this.lcgPreviousDivision = rankData.getPreviousDivision();
+        this.lcgPreviousHighTier = rankData.getPreviousHighestTier();
+        this.lcgPreviousHighDivision = rankData.getPreviousHighestDivision();
         return this;
     }
 
