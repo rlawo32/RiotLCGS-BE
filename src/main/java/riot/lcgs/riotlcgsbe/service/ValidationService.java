@@ -48,12 +48,10 @@ public class ValidationService {
                 validationChkInteger(playerData.getCurrentAccountId());
                 validationChkString(playerData.getCurrentPlatformId());
                 validationChkString(playerData.getGameName());
-                validationChkString(playerData.getMatchHistoryUri());
                 validationChkString(playerData.getPlatformId());
                 validationChkInteger(playerData.getProfileIcon());
                 validationChkString(playerData.getPuuid());
                 validationChkLong(playerData.getSummonerId());
-                validationChkString(playerData.getSummonerName());
                 validationChkString(playerData.getTagLine());
 
                 // Stats Validation Check
@@ -129,7 +127,7 @@ public class ValidationService {
             return CommonResponseDto.setSuccess("Success", "Data 검사 완료");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setFailed("Database Insert Failed !");
+            return CommonResponseDto.setFailed("Failed");
         }
     }
 
@@ -153,7 +151,7 @@ public class ValidationService {
             return CommonResponseDto.setSuccess("Success", "Data 검사 완료");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setFailed("Database Insert Failed !");
+            return CommonResponseDto.setFailed("Failed");
         }
     }
 }
