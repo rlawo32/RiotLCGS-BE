@@ -32,33 +32,39 @@ public class MainService {
 
         GameData gameData = requestDto.getGameData();
 
-        validationService.ValidationCheckGameData(gameData);
-        Long gameId = gameData.getGameId();
+        String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
 
-        // TeamId => 100 : Blue , 200 : Red
+        if(checkGameData.equals("Success")) {
 
-        boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
+            Long gameId = gameData.getGameId();
 
-        if(!duplicationCheck) {
-            if(DataDragonAPIVersion().isResult()) {
-                Map<String, String> version = DataDragonAPIVersion().getData();
-                ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
-                ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
+            // TeamId => 100 : Blue , 200 : Red
 
-                mvpService.LCGMvpSelection(gameData);
-                saveService.LCGMatchInfoSave(gameId, gameData, version);
-                saveService.LCGMatchMainSave(gameId, gameData);
-                saveService.LCGMatchSubSave(gameId, gameData);
-                saveService.LCGMatchTeamSave(gameId, gameData);
-                saveService.LCGTeamLogSave(gameId, gameData, version);
-                saveService.LCGPlayerStatisticsSave(gameData);
+            boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
-                return CommonResponseDto.setSuccess("Success", "저장 완료");
+            if(!duplicationCheck) {
+                if(DataDragonAPIVersion().isResult()) {
+                    Map<String, String> version = DataDragonAPIVersion().getData();
+                    ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
+                    ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
+
+                    mvpService.LCGMvpSelection(gameData);
+                    saveService.LCGMatchInfoSave(gameId, gameData, version);
+                    saveService.LCGMatchMainSave(gameId, gameData);
+                    saveService.LCGMatchSubSave(gameId, gameData);
+                    saveService.LCGMatchTeamSave(gameId, gameData);
+                    saveService.LCGTeamLogSave(gameId, gameData, version);
+                    saveService.LCGPlayerStatisticsSave(gameData);
+
+                    return CommonResponseDto.setSuccess("Success", "저장 완료");
+                } else {
+                    return CommonResponseDto.setFailed("통신 실패");
+                }
             } else {
-                return CommonResponseDto.setFailed("통신 실패");
+                return CommonResponseDto.setFailed("중복 저장");
             }
         } else {
-            return CommonResponseDto.setFailed("중복 저장");
+            return CommonResponseDto.setFailed("검증 오류 발생");
         }
     }
     @Transactional
@@ -68,53 +74,58 @@ public class MainService {
             GameData gameData = requestDto.getGameData();
             List<RankData> list1 = requestDto.getRankData();
 
-            validationService.ValidationCheckGameData(gameData);
-            validationService.ValidationCheckRankData(list1);
-            List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
+            String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
+            String checkRankData = validationService.ValidationCheckRankData(list1).getMessage();
 
-            for(int i=0; i<list2.size(); i++) {
-                ParticipantIdentities participantIdentities = list2.get(i);
-                Player playerData = participantIdentities.getPlayer();
+            if(checkGameData.equals("Success") && checkRankData.equals("Success")) {
+                List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
 
-                String puuid = playerData.getPuuid();
-                String nickname = playerData.getGameName() + "#" + playerData.getTagLine();
-                boolean existsCheck = lcgPlayerDataRepository.existsLCG_Player_DataByLcgSummonerPuuid(puuid);
+                for(int i=0; i<list2.size(); i++) {
+                    ParticipantIdentities participantIdentities = list2.get(i);
+                    Player playerData = participantIdentities.getPlayer();
 
-                RankData rankData = list1.stream().filter(rank -> rank.getPuuid().equals(puuid)).findAny().orElse(null);
+                    String puuid = playerData.getPuuid();
+                    String nickname = playerData.getGameName() + "#" + playerData.getTagLine();
+                    boolean existsCheck = lcgPlayerDataRepository.existsLCG_Player_DataByLcgSummonerPuuid(puuid);
 
-                if(existsCheck) {
-                    LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
-                            .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
+                    RankData rankData = list1.stream().filter(rank -> rank.getPuuid().equals(puuid)).findAny().orElse(null);
 
-                    lcgPlayerData.playerDataUpdate(playerData, rankData);
-                } else {
-                    lcgPlayerDataRepository.save(LCG_Player_Data.builder()
-                            .lcgSummonerPuuid(puuid)
-                            .lcgPlayer("")
-                            .lcgSummonerNickname(nickname)
-                            .lcgSummonerId(playerData.getSummonerId())
-                            .lcgSummonerName(playerData.getGameName())
-                            .lcgSummonerTag(playerData.getTagLine())
-                            .lcgSummonerIcon(playerData.getProfileIcon())
-                            .lcgRankWin(rankData.getWins())
-                            .lcgRankPoint(rankData.getPoints())
-                            .lcgPresentTier(rankData.getPresentTier())
-                            .lcgPresentDivision(rankData.getPresentDivision())
-                            .lcgPresentHighTier(rankData.getPresentHighestTier())
-                            .lcgPresentHighDivision(rankData.getPresentHighestDivision())
-                            .lcgPreviousTier(rankData.getPreviousTier())
-                            .lcgPreviousDivision(rankData.getPreviousDivision())
-                            .lcgPreviousHighTier(rankData.getPreviousHighestTier())
-                            .lcgPreviousHighDivision(rankData.getPreviousHighestDivision())
-                            .build());
+                    if(existsCheck) {
+                        LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
+                                .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
+
+                        lcgPlayerData.playerDataUpdate(playerData, rankData);
+                    } else {
+                        lcgPlayerDataRepository.save(LCG_Player_Data.builder()
+                                .lcgSummonerPuuid(puuid)
+                                .lcgPlayer("")
+                                .lcgSummonerNickname(nickname)
+                                .lcgSummonerId(playerData.getSummonerId())
+                                .lcgSummonerName(playerData.getGameName())
+                                .lcgSummonerTag(playerData.getTagLine())
+                                .lcgSummonerIcon(playerData.getProfileIcon())
+                                .lcgRankWin(rankData.getWins())
+                                .lcgRankPoint(rankData.getPoints())
+                                .lcgPresentTier(rankData.getPresentTier())
+                                .lcgPresentDivision(rankData.getPresentDivision())
+                                .lcgPresentHighTier(rankData.getPresentHighestTier())
+                                .lcgPresentHighDivision(rankData.getPresentHighestDivision())
+                                .lcgPreviousTier(rankData.getPreviousTier())
+                                .lcgPreviousDivision(rankData.getPreviousDivision())
+                                .lcgPreviousHighTier(rankData.getPreviousHighestTier())
+                                .lcgPreviousHighDivision(rankData.getPreviousHighestDivision())
+                                .build());
+                    }
                 }
+
+                return CommonResponseDto.setSuccess("Success", "플레이어 저장 완료!");
+            } else {
+                return CommonResponseDto.setFailed("검증 오류 발생");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
-
-        return CommonResponseDto.setSuccess("Success", "플레이어 저장 완료!");
     }
 
 }

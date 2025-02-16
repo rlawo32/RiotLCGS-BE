@@ -6,12 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.*;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
-import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
@@ -332,7 +332,7 @@ public class SaveService {
                     Participants participants = list2.get(j);
                     Stats statsData = participants.getStats();
 
-                    if(teams.getTeamId() == participants.getTeamId()) {
+                    if(Objects.equals(teams.getTeamId(), participants.getTeamId())) {
                         totalGold += statsData.getGoldEarned();
                         totalKill += statsData.getKills();
                         totalDeath += statsData.getDeaths();
