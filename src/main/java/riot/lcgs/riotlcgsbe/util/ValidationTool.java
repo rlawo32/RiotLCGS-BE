@@ -1,7 +1,5 @@
 package riot.lcgs.riotlcgsbe.util;
 
-import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
-
 public class ValidationTool {
   
     public static String validationChkString(String param) {
