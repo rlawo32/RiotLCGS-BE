@@ -22,7 +22,8 @@ import static riot.lcgs.riotlcgsbe.service.HttpService.*;
 public class MainService {
 
     private final ValidationService validationService;
-    private final SaveService saveService;
+    private final MatchService matchService;
+    private final PlayerService playerService;
     private final MvpService mvpService;
 
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
@@ -49,12 +50,12 @@ public class MainService {
                     ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
                     mvpService.LCGMvpSelection(gameData);
-                    saveService.LCGMatchInfoSave(gameId, gameData, version);
-                    saveService.LCGMatchMainSave(gameId, gameData);
-                    saveService.LCGMatchSubSave(gameId, gameData);
-                    saveService.LCGMatchTeamSave(gameId, gameData);
-                    saveService.LCGTeamLogSave(gameId, gameData, version);
-                    saveService.LCGPlayerStatisticsSave(gameData);
+                    matchService.LCGMatchInfoSave(gameId, gameData, version);
+                    matchService.LCGMatchMainSave(gameId, gameData);
+                    matchService.LCGMatchSubSave(gameId, gameData);
+                    matchService.LCGMatchTeamSave(gameId, gameData);
+                    matchService.LCGTeamLogSave(gameId, gameData, version);
+                    playerService.LCGPlayerStatisticsSave(gameData);
 
                     return CommonResponseDto.setSuccess("Success", "저장 완료");
                 } else {
@@ -68,55 +69,17 @@ public class MainService {
         }
     }
     @Transactional
-    public CommonResponseDto<?> LCGPlayerDataSave(PlayerDataRequestDto requestDto) {
+    public CommonResponseDto<?> LCGCustomGamePlayerSave(PlayerDataRequestDto requestDto) {
 
         try {
             GameData gameData = requestDto.getGameData();
-            List<RankData> list1 = requestDto.getRankData();
+            List<RankData> rankData = requestDto.getRankData();
 
             String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
-            String checkRankData = validationService.ValidationCheckRankData(list1).getMessage();
+            String checkRankData = validationService.ValidationCheckRankData(rankData).getMessage();
 
             if(checkGameData.equals("Success") && checkRankData.equals("Success")) {
-                List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
-
-                for(int i=0; i<list2.size(); i++) {
-                    ParticipantIdentities participantIdentities = list2.get(i);
-                    Player playerData = participantIdentities.getPlayer();
-
-                    String puuid = playerData.getPuuid();
-                    String nickname = playerData.getGameName() + "#" + playerData.getTagLine();
-                    boolean existsCheck = lcgPlayerDataRepository.existsLCG_Player_DataByLcgSummonerPuuid(puuid);
-
-                    RankData rankData = list1.stream().filter(rank -> rank.getPuuid().equals(puuid)).findAny().orElse(null);
-
-                    if(existsCheck) {
-                        LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
-                                .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
-
-                        lcgPlayerData.playerDataUpdate(playerData, rankData);
-                    } else {
-                        lcgPlayerDataRepository.save(LCG_Player_Data.builder()
-                                .lcgSummonerPuuid(puuid)
-                                .lcgPlayer("")
-                                .lcgSummonerNickname(nickname)
-                                .lcgSummonerId(playerData.getSummonerId())
-                                .lcgSummonerName(playerData.getGameName())
-                                .lcgSummonerTag(playerData.getTagLine())
-                                .lcgSummonerIcon(playerData.getProfileIcon())
-                                .lcgRankWin(rankData.getWins())
-                                .lcgRankPoint(rankData.getPoints())
-                                .lcgPresentTier(rankData.getPresentTier())
-                                .lcgPresentDivision(rankData.getPresentDivision())
-                                .lcgPresentHighTier(rankData.getPresentHighestTier())
-                                .lcgPresentHighDivision(rankData.getPresentHighestDivision())
-                                .lcgPreviousTier(rankData.getPreviousTier())
-                                .lcgPreviousDivision(rankData.getPreviousDivision())
-                                .lcgPreviousHighTier(rankData.getPreviousHighestTier())
-                                .lcgPreviousHighDivision(rankData.getPreviousHighestDivision())
-                                .build());
-                    }
-                }
+                playerService.LCGPlayerDataSave(gameData, rankData);
 
                 return CommonResponseDto.setSuccess("Success", "플레이어 저장 완료!");
             } else {

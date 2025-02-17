@@ -107,6 +107,7 @@ public class ValidationService {
             for(Teams teams : list3) {
                 List<Bans> bans = teams.getBans();
 
+                // Teams Validation Check
                 validationChkInteger(teams.getTeamId());
                 validationChkString(teams.getWin());
                 validationChkBoolean(teams.getFirstBlood());
@@ -136,6 +137,8 @@ public class ValidationService {
 
         try {
             for(RankData data : rankData) {
+
+                // RankData Validation Check
                 validationChkInteger(data.getWins());
                 validationChkInteger(data.getPoints());
                 validationChkString(data.getPresentTier());

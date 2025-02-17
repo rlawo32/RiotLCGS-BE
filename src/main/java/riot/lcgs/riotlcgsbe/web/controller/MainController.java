@@ -19,7 +19,7 @@ public class MainController {
 
     @PostMapping("/insertPlayerData")
     public CommonResponseDto<?> insertPlayerData(@RequestBody PlayerDataRequestDto requestDto) {
-        return mainService.LCGPlayerDataSave(requestDto);
+        return mainService.LCGCustomGamePlayerSave(requestDto);
     }
 
     @PostMapping("/insertData")
