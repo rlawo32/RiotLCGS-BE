@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import riot.lcgs.riotlcgsbe.web.dto.object.Player;
+import riot.lcgs.riotlcgsbe.web.dto.object.RankData;
+import riot.lcgs.riotlcgsbe.web.dto.object.Stats;
 
 @NoArgsConstructor
 @Entity
@@ -52,6 +55,16 @@ public class LCG_Player_Champion {
     @NotNull
     @Column(name = "lcg_fail_count")
     private Long lcgFailCount;
+
+    public LCG_Player_Champion playerChampionUpdate(Stats statsData) {
+        this.lcgKillCount += (long) statsData.getKills();
+        this.lcgDeathCount += (long) statsData.getDeaths();
+        this.lcgAssistCount += (long) statsData.getAssists();
+        this.lcgPlayCount += 1L;
+        this.lcgWinCount += statsData.getWin() ? 1L : 0L;
+        this.lcgFailCount += statsData.getWin() ? 0L : 1L;
+        return this;
+    }
 
     @Builder
     public LCG_Player_Champion(String lcgPuuid, int lcgChampionId, String lcgChampionName,
