@@ -6,11 +6,13 @@ import lombok.NoArgsConstructor;
 import riot.lcgs.riotlcgsbe.web.dto.object.GameData;
 import riot.lcgs.riotlcgsbe.web.dto.object.TeamData;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomGameRequestDto {
 
     private GameData gameData;
-    private TeamData teamData;
+    private List<TeamData> teamData;
 }
