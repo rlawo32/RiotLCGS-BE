@@ -57,7 +57,7 @@ public class MainService {
                     matchService.LCGTeamLogSave(gameId, gameData, version);
                     playerService.LCGPlayerStatisticsSave(gameData);
 
-                    return CommonResponseDto.setSuccess("Success", "저장 완료");
+                    return CommonResponseDto.setSuccess("저장 완료", "Success");
                 } else {
                     return CommonResponseDto.setFailed("통신 실패");
                 }
@@ -81,7 +81,7 @@ public class MainService {
             if(checkGameData.equals("Success") && checkRankData.equals("Success")) {
                 playerService.LCGPlayerDataSave(gameData, rankData);
 
-                return CommonResponseDto.setSuccess("Success", "플레이어 저장 완료!");
+                return CommonResponseDto.setSuccess("플레이어 저장 완료!", "Success");
             } else {
                 return CommonResponseDto.setFailed("검증 오류 발생");
             }

@@ -70,7 +70,7 @@ public class PlayerService {
                             .build());
                 }
             }
-            return CommonResponseDto.setSuccess("Success", "플레이어 저장 완료!");
+            return CommonResponseDto.setSuccess("플레이어 저장 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
@@ -167,7 +167,7 @@ public class PlayerService {
                 }
             }
 
-            return CommonResponseDto.setSuccess("Success", "");
+            return CommonResponseDto.setSuccess("플레이어 정보 저장 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
@@ -193,7 +193,7 @@ public class PlayerService {
                 validationChkString(data.getPreviousHighestDivision());
             }
 
-            return CommonResponseDto.setSuccess("Success", "Data 검사 완료");
+            return CommonResponseDto.setSuccess("Data 검사 완료", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Failed");

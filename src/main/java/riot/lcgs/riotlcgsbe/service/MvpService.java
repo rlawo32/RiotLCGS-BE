@@ -132,7 +132,7 @@ public class MvpService {
 
             List<Metrics> list = Arrays.asList(metrics);
 
-            return CommonResponseDto.setSuccess("Success", list);
+            return CommonResponseDto.setSuccess("Mvp 데이터 계산 완료!", list);
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");

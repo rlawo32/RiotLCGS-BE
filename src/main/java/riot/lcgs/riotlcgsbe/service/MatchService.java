@@ -74,12 +74,12 @@ public class MatchService {
                     .teamAName5(arr[4]).teamBName1(arr[5])
                     .teamBName2(arr[6]).teamBName3(arr[7])
                     .teamBName4(arr[8]).teamBName5(arr[9]).build());
+
+            return CommonResponseDto.setSuccess("MatchLog Data 저장 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
-
-        return CommonResponseDto.setSuccess("Success", "");
     }
 
     @Transactional
@@ -162,14 +162,13 @@ public class MatchService {
                         .lcgChampionVer(version.get("champion"))
                         .lcgMainImage(imageMain)
                         .lcgSubImage(imageSub).build());
-            } 
-            
+            }
+
+            return CommonResponseDto.setSuccess("MatchInfo Data 저장 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
-
-        return CommonResponseDto.setSuccess("Success", "");
     }
 
     @Transactional
@@ -256,12 +255,12 @@ public class MatchService {
                         .lcgMinionCount(statsData.getTotalMinionsKilled())
                         .lcgJungleCount(statsData.getNeutralMinionsKilled()).build());
             }
+
+            return CommonResponseDto.setSuccess("MatchMain Data 저장 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
-
-        return CommonResponseDto.setSuccess("Success", "");
     }
 
     @Transactional
@@ -303,12 +302,12 @@ public class MatchService {
                         .lcgGoldPerMinute(CalculatorCharacteristic(duration, statsData).getData().get("GPM"))
                         .lcgDamagePerGold(CalculatorCharacteristic(duration, statsData).getData().get("DPG")).build());
             }
+
+            return CommonResponseDto.setSuccess("MatchSub Data 저장 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
-
-        return CommonResponseDto.setSuccess("Success", "");
     }
 
     @Transactional
@@ -368,12 +367,12 @@ public class MatchService {
                         .build());
 
             }
+
+            return CommonResponseDto.setSuccess("MatchTeam Data 저장 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
-
-        return CommonResponseDto.setSuccess("Success", "");
     }
 
 }

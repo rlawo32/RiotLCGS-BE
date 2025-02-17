@@ -70,12 +70,11 @@ public class HttpService {
             verChampion = mainVersion.getN().getChampion();
             verSummoner = mainVersion.getN().getSummoner();
 
+            return CommonResponseDto.setSuccess("DDragon Version 통신 성공!", result);
         } catch (IOException ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed(ex.getMessage());
         }
-
-        return CommonResponseDto.setSuccess("Success", result);
     }
 
     public static CommonResponseDto<String> DataDragonAPIChampion() {
@@ -104,12 +103,11 @@ public class HttpService {
             br.close();
             conn.disconnect();
 
+            return CommonResponseDto.setSuccess("DDragon Champion 통신 성공!", sb.toString());
         } catch (IOException ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed(ex.getMessage());
         }
-
-        return CommonResponseDto.setSuccess("Success", sb.toString());
     }
 
     public static CommonResponseDto<?> DataDragonAPISummoner() {
@@ -142,19 +140,19 @@ public class HttpService {
             JsonNode node1 = objectMapper.readTree(sb.toString());
             MainVersion mainVersion = objectMapper.treeToValue(node1, MainVersion.class);
 
+            return CommonResponseDto.setSuccess("DDragon Summoner 통신 성공!", "Success");
         } catch (IOException ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed(ex.getMessage());
         }
-
-        return CommonResponseDto.setSuccess("Success", "");
     }
 
     public static CommonResponseDto<List<Perk>> DataDragonAPIPerk() {
-        List<Perk> perk = new ArrayList<>();
-        StringBuffer sb = new StringBuffer();
 
         try {
+            List<Perk> perk = new ArrayList<>();
+            StringBuffer sb = new StringBuffer();
+
             URL url = new URL("https://ddragon.leagueoflegends.com/cdn/" + verMain + "/data/en_US/runesReforged.json");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -181,11 +179,10 @@ public class HttpService {
             JsonNode node1 = objectMapper.readTree(sb.toString());
             perk = List.of(objectMapper.treeToValue(node1, Perk[].class));
 
+            return CommonResponseDto.setSuccess("DDragon Perk 통신 성공!", perk);
         } catch (IOException ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed(ex.getMessage());
         }
-
-        return CommonResponseDto.setSuccess("Success", perk);
     }
 }
