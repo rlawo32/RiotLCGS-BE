@@ -32,6 +32,7 @@ public class MainService {
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
 
         GameData gameData = requestDto.getGameData();
+        List<TeamData> teamData = requestDto.getTeamData();
 
         String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
 
@@ -43,19 +44,21 @@ public class MainService {
 
             boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
-            if(!duplicationCheck) {
+            if(duplicationCheck) {
                 if(DataDragonAPIVersion().isResult()) {
                     Map<String, String> version = DataDragonAPIVersion().getData();
                     ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
                     ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
-                    mvpService.LCGMvpSelection(gameData);
-                    matchService.LCGMatchInfoSave(gameId, gameData, version);
-                    matchService.LCGMatchMainSave(gameId, gameData);
-                    matchService.LCGMatchSubSave(gameId, gameData);
-                    matchService.LCGMatchTeamSave(gameId, gameData);
-                    matchService.LCGTeamLogSave(gameId, gameData, version);
-                    playerService.LCGPlayerStatisticsSave(gameData);
+//                    mvpService.LCGMvpSelection(gameData);
+//                    matchService.LCGMatchInfoSave(gameId, gameData, version);
+//                    matchService.LCGMatchMainSave(gameId, gameData);
+//                    matchService.LCGMatchSubSave(gameId, gameData);
+//                    matchService.LCGMatchTeamSave(gameId, gameData);
+//                    matchService.LCGTeamLogSave(gameId, gameData, version);
+//                    playerService.LCGPlayerStatisticsSave(gameData);
+                    playerService.LCGPlayerChampionSave(gameData);
+                    playerService.LCGPlayerRelativeSave(gameData, teamData);
 
                     return CommonResponseDto.setSuccess("저장 완료", "Success");
                 } else {
