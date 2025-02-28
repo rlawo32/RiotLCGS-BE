@@ -26,6 +26,14 @@ public class LCG_Match_Etc {
     private String lcgUpdateDate;
 
     @NotNull
+    @Column(name = "lcg_update_player")
+    private String lcgUpdatePlayer;
+
+    @NotNull
+    @Column(name = "lcg_update_data")
+    private String lcgUpdateData;
+
+    @NotNull
     @Column(name = "lcg_cdn")
     private String lcgCdn;
 
@@ -66,11 +74,13 @@ public class LCG_Match_Etc {
     private String lcgSubImage;
 
     @Builder
-    public LCG_Match_Etc(String lcgVersion, String lcgUpdateDate, String lcgCdn, String lcgLang,
-                         String lcgMainVer, String lcgItemVer, String lcgRuneVer, String lcgMasteryVer,
-                         String lcgSummonerVer, String lcgChampionVer, String lcgMainImage, String lcgSubImage) {
+    public LCG_Match_Etc(String lcgVersion, String lcgUpdateDate, String lcgUpdatePlayer, String lcgUpdateData,
+                         String lcgCdn, String lcgLang, String lcgMainVer, String lcgItemVer, String lcgRuneVer, 
+                         String lcgMasteryVer, String lcgSummonerVer, String lcgChampionVer, String lcgMainImage, String lcgSubImage) {
         this.lcgVersion = lcgVersion;
         this.lcgUpdateDate = lcgUpdateDate;
+        this.lcgUpdatePlayer = lcgUpdatePlayer;
+        this.lcgUpdateData = lcgUpdateData;
         this.lcgCdn = lcgCdn;
         this.lcgLang = lcgLang;
         this.lcgMainVer = lcgMainVer;
