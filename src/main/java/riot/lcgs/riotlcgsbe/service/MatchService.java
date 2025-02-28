@@ -152,6 +152,8 @@ public class MatchService {
                 lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
                         .lcgVersion("LcgVer" + String.format("%04d", list.size()+1))
                         .lcgUpdateDate(gameData.getGameCreationDate())
+                        .lcgUpdatePlayer("")
+                        .lcgUpdateData("")
                         .lcgCdn(version.get("cdn"))
                         .lcgLang(version.get("lang"))
                         .lcgMainVer(version.get("ver"))
