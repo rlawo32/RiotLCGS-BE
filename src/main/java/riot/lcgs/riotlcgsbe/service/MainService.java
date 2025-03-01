@@ -3,9 +3,7 @@ package riot.lcgs.riotlcgsbe.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Data;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
@@ -27,7 +25,6 @@ public class MainService {
     private final MvpService mvpService;
 
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
-    private final LCG_Player_Data_Repository lcgPlayerDataRepository;
 
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
 
@@ -35,13 +32,13 @@ public class MainService {
         List<TeamData> teamData = requestDto.getTeamData();
 
         String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
+        String checkTeamData = validationService.ValidationCheckTeamData(teamData).getMessage();
 
-        if(checkGameData.equals("Success")) {
+        if(checkGameData.equals("Success") && checkTeamData.equals("Success")) {
 
             Long gameId = gameData.getGameId();
 
             // TeamId => 100 : Blue , 200 : Red
-
             boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
             if(duplicationCheck) {
@@ -50,15 +47,15 @@ public class MainService {
                     ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
                     ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
-//                    mvpService.LCGMvpSelection(gameData);
-//                    matchService.LCGMatchInfoSave(gameId, gameData, version);
-//                    matchService.LCGMatchMainSave(gameId, gameData);
-//                    matchService.LCGMatchSubSave(gameId, gameData);
-//                    matchService.LCGMatchTeamSave(gameId, gameData);
-//                    matchService.LCGTeamLogSave(gameId, gameData, version);
-//                    playerService.LCGPlayerStatisticsSave(gameData);
-                    playerService.LCGPlayerChampionSave(gameData);
+                    mvpService.LCGMvpSelection(gameData);
                     playerService.LCGPlayerRelativeSave(gameData, teamData);
+                    playerService.LCGPlayerChampionSave(gameData);
+                    playerService.LCGPlayerStatisticsSave(gameData);
+                    matchService.LCGMatchInfoSave(gameId, gameData, version);
+                    matchService.LCGMatchMainSave(gameId, gameData);
+                    matchService.LCGMatchSubSave(gameId, gameData);
+                    matchService.LCGMatchTeamSave(gameId, gameData);
+                    matchService.LCGTeamLogSave(gameId, gameData, version);
 
                     return CommonResponseDto.setSuccess("저장 완료", "Success");
                 } else {
