@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import riot.lcgs.riotlcgsbe.web.dto.object.Player;
+import riot.lcgs.riotlcgsbe.web.dto.object.RankData;
 
 @NoArgsConstructor
 @Entity
@@ -72,6 +74,11 @@ public class LCG_Match_Etc {
     @NotNull
     @Column(name = "lcg_sub_image")
     private String lcgSubImage;
+
+    public LCG_Match_Etc playerRecentUpdate(String now) {
+        this.lcgUpdatePlayer = now;
+        return this;
+    }
 
     @Builder
     public LCG_Match_Etc(String lcgVersion, String lcgUpdateDate, String lcgUpdatePlayer, String lcgUpdateData,
