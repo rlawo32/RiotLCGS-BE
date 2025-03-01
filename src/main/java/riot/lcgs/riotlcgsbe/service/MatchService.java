@@ -8,6 +8,8 @@ import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,6 @@ public class MatchService {
     private final LCG_Match_Sub_Repository lcgMatchSubRepository;
     private final LCG_Match_Team_Repository lcgMatchTeamRepository;
     private final LCG_Match_Log_Repository lcgMatchLogRepository;
-    private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
 
     @Transactional
@@ -89,6 +90,10 @@ public class MatchService {
             String[] extractionStep1 = gameData.getGameCreationDate().split("T");
             String[] extractionStep2 = extractionStep1[1].split("\\.");
             String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
+
+            LocalDateTime localDateTime = LocalDateTime.now();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String now = localDateTime.format(dtf);
 
             int duration = gameData.getGameDuration();
 
@@ -152,8 +157,8 @@ public class MatchService {
                 lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
                         .lcgVersion("LcgVer" + String.format("%04d", list.size()+1))
                         .lcgUpdateDate(gameData.getGameCreationDate())
-                        .lcgUpdatePlayer("")
-                        .lcgUpdateData("")
+                        .lcgUpdatePlayer(now)
+                        .lcgUpdateData(now)
                         .lcgCdn(version.get("cdn"))
                         .lcgLang(version.get("lang"))
                         .lcgMainVer(version.get("ver"))

@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.*;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Champion_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Relative_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Statistics_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.CalculatorJungleObjectScore;
@@ -27,6 +26,7 @@ public class PlayerService {
 
     private final MvpService mvpService;
 
+    private final LCG_Match_Etc_Repository lcgMatchEtcRepository;
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
     private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
     private final LCG_Player_Champion_Repository lcgPlayerChampionRepository;
@@ -37,6 +37,10 @@ public class PlayerService {
 
         try {
             List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
+
+            LocalDateTime localDateTime = LocalDateTime.now();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String now = localDateTime.format(dtf);
 
             for(int i=0; i<list2.size(); i++) {
                 ParticipantIdentities participantIdentities = list2.get(i);
@@ -52,8 +56,10 @@ public class PlayerService {
                     LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
+                    assert rankData != null;
                     lcgPlayerData.playerDataUpdate(playerData, rankData);
                 } else {
+                    assert rankData != null;
                     lcgPlayerDataRepository.save(LCG_Player_Data.builder()
                             .lcgSummonerPuuid(puuid)
                             .lcgPlayer("")
@@ -74,6 +80,12 @@ public class PlayerService {
                             .lcgPreviousHighDivision(rankData.getPreviousHighestDivision())
                             .build());
                 }
+
+                List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
+                LCG_Match_Etc lcgMatchEtc = lcgMatchEtcRepository.findById("LcgVer" + String.format("%04d", list.size()))
+                        .orElseThrow(() -> new IllegalArgumentException("해당 게임 버전이 없습니다. LcgVer : " + list.size() +"v"));
+
+                lcgMatchEtc.playerRecentUpdate(now);
             }
             return CommonResponseDto.setSuccess("플레이어 저장 완료!", "Success");
         } catch (Exception ex) {
