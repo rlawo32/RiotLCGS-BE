@@ -3,6 +3,7 @@ package riot.lcgs.riotlcgsbe.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
@@ -13,6 +14,8 @@ import static riot.lcgs.riotlcgsbe.util.ValidationTool.*;
 @RequiredArgsConstructor
 @Service
 public class ValidationService {
+
+    private final LCG_Player_Data_Repository lcgPlayerDataRepository;
 
     @Transactional
     public CommonResponseDto<?> ValidationCheckGameData(GameData gameData) {
@@ -149,6 +152,25 @@ public class ValidationService {
                 validationChkString(data.getPreviousDivision());
                 validationChkString(data.getPreviousHighestTier());
                 validationChkString(data.getPreviousHighestDivision());
+            }
+
+            return CommonResponseDto.setSuccess("Success", "Data 검사 완료");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Failed");
+        }
+    }
+
+    @Transactional
+    public CommonResponseDto<?> ValidationCheckTeamData(List<TeamData> teamData) {
+
+        try {
+            for(TeamData data : teamData) {
+
+                // TeamData Validation Check
+                String name = data.getName();
+                lcgPlayerDataRepository.findByLcgPlayer(name).orElseThrow
+                        (() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
             }
 
             return CommonResponseDto.setSuccess("Success", "Data 검사 완료");
