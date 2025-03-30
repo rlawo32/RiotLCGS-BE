@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Sub_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Statistics_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
@@ -25,6 +28,9 @@ public class MainService {
     private final MvpService mvpService;
 
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
+    private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
+    private final LCG_Match_Sub_Repository lcgMatchSubRepository;
+    private final LCG_Player_Data_Repository lcgPlayerDataRepository;
 
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
 
@@ -41,21 +47,21 @@ public class MainService {
             // TeamId => 100 : Blue , 200 : Red
             boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
-            if(duplicationCheck) {
+            if(!duplicationCheck) {
                 if(DataDragonAPIVersion().isResult()) {
                     Map<String, String> version = DataDragonAPIVersion().getData();
                     ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
                     ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
-                    mvpService.LCGMvpSelection(gameData);
-                    playerService.LCGPlayerRelativeSave(gameData, teamData);
-                    playerService.LCGPlayerChampionSave(gameData);
-                    playerService.LCGPlayerStatisticsSave(gameData);
-                    matchService.LCGMatchInfoSave(gameId, gameData, version);
-                    matchService.LCGMatchMainSave(gameId, gameData);
-                    matchService.LCGMatchSubSave(gameId, gameData);
-                    matchService.LCGMatchTeamSave(gameId, gameData);
-                    matchService.LCGTeamLogSave(gameId, gameData, version);
+//                    mvpService.LCGMvpSelection(gameData);
+//                    playerService.LCGPlayerRelativeSave(gameData, teamData);
+//                    playerService.LCGPlayerChampionSave(gameData);
+//                    playerService.LCGPlayerStatisticsSave(gameData);
+//                    matchService.LCGMatchInfoSave(gameId, gameData, version);
+//                    matchService.LCGTeamLogSave(gameId, gameData, version);
+//                    matchService.LCGMatchMainSave(gameId, gameData);
+//                    matchService.LCGMatchSubSave(gameId, gameData);
+//                    matchService.LCGMatchTeamSave(gameId, gameData);
 
                     return CommonResponseDto.setSuccess("저장 완료", "Success");
                 } else {
@@ -75,11 +81,13 @@ public class MainService {
             GameData gameData = requestDto.getGameData();
             List<RankData> rankData = requestDto.getRankData();
 
+            System.out.println(lcgPlayerStatisticsRepository.findByAllWinningRate());
+
             String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
             String checkRankData = validationService.ValidationCheckRankData(rankData).getMessage();
 
             if(checkGameData.equals("Success") && checkRankData.equals("Success")) {
-                playerService.LCGPlayerDataSave(gameData, rankData);
+//                playerService.LCGPlayerDataSave(gameData, rankData);
 
                 return CommonResponseDto.setSuccess("플레이어 저장 완료!", "Success");
             } else {
@@ -91,4 +99,15 @@ public class MainService {
         }
     }
 
+    public CommonResponseDto<?> testService() {
+
+        try {
+            System.out.println(lcgPlayerStatisticsRepository.findByAllKdaRank());
+
+            return CommonResponseDto.setSuccess("TEST 완료!", "Success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+    }
 }

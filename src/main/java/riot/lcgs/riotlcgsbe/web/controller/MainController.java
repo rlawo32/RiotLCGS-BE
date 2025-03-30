@@ -27,4 +27,8 @@ public class MainController {
         return mainService.LolCustomGameDataSave(requestDto);
     }
 
+    @PostMapping("/test")
+    public CommonResponseDto<?> test() {
+        return mainService.testService();
+    }
 }

@@ -11,6 +11,7 @@ public class CommonResponseDto<D> {
     private D data;
 
     public static <D> CommonResponseDto<D> setSuccess(String message, D data) {
+        System.out.println(data + " : " + message);
         return CommonResponseDto.set(true, message, data);
     }
 
