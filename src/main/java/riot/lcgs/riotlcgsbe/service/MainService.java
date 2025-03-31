@@ -28,9 +28,6 @@ public class MainService {
     private final MvpService mvpService;
 
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
-    private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
-    private final LCG_Match_Sub_Repository lcgMatchSubRepository;
-    private final LCG_Player_Data_Repository lcgPlayerDataRepository;
 
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
 
@@ -81,8 +78,6 @@ public class MainService {
             GameData gameData = requestDto.getGameData();
             List<RankData> rankData = requestDto.getRankData();
 
-            System.out.println(lcgPlayerStatisticsRepository.findByAllWinningRate());
-
             String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
             String checkRankData = validationService.ValidationCheckRankData(rankData).getMessage();
 
@@ -102,7 +97,7 @@ public class MainService {
     public CommonResponseDto<?> testService() {
 
         try {
-            System.out.println(lcgPlayerStatisticsRepository.findByAllKdaRank());
+            mvpService.LCGPowerRankingSelection();
 
             return CommonResponseDto.setSuccess("TEST 완료!", "Success");
         } catch (Exception ex) {
