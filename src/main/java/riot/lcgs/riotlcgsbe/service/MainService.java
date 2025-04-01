@@ -97,7 +97,7 @@ public class MainService {
     public CommonResponseDto<?> testService() {
 
         try {
-            mvpService.LCGPowerRankingSelection();
+            playerService.LCGPlayerRankingSave();
 
             return CommonResponseDto.setSuccess("TEST 완료!", "Success");
         } catch (Exception ex) {
