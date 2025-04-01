@@ -169,6 +169,21 @@ public class MvpService {
     			).reversed() //reversed 내림차순. reversed를 지우면 오름차순.
     		);
 
+            // int score = 10;
+    		// for(Map<String, Object> map1 : list) {
+    		// 	for(Map<String, Object> map2 : personal) {
+    		// 		if(map1.get("key").equals(map2.get("name"))) {
+    		// 			Object test = (Object) ((int) map2.get("score") + score);
+    		// 			map2.put("score", test);
+    		// 		}
+    		// 	}
+    		// 	score -= 1;
+    		// }
+    
+    		// for(Map<String, Object> map : personal) {
+    		// 	System.out.println("name : " + map.get("name") + " score : " + map.get("score"));
+    		// }
+
             List<Map<String, Object>> list = List.of((Map<String, Object>) listDPMRank);
 
             for(Map<String, Object> map : list) {
