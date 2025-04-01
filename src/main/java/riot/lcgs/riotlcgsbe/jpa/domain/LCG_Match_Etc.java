@@ -75,15 +75,30 @@ public class LCG_Match_Etc {
     @Column(name = "lcg_sub_image")
     private String lcgSubImage;
 
+    @NotNull
+    @Column(name = "lcg_ranking_count")
+    private Long lcgRankingCount;
+
+    public LCG_Match_Etc gameDataRecentUpdate(String now) {
+        this.lcgUpdateData = now;
+        return this;
+    }
+
     public LCG_Match_Etc playerRecentUpdate(String now) {
         this.lcgUpdatePlayer = now;
+        return this;
+    }
+
+    public LCG_Match_Etc rankingCountUpdate(Long count) {
+        this.lcgRankingCount = count;
         return this;
     }
 
     @Builder
     public LCG_Match_Etc(String lcgVersion, String lcgUpdateDate, String lcgUpdatePlayer, String lcgUpdateData,
                          String lcgCdn, String lcgLang, String lcgMainVer, String lcgItemVer, String lcgRuneVer, 
-                         String lcgMasteryVer, String lcgSummonerVer, String lcgChampionVer, String lcgMainImage, String lcgSubImage) {
+                         String lcgMasteryVer, String lcgSummonerVer, String lcgChampionVer, String lcgMainImage,
+                         String lcgSubImage, Long lcgRankingCount) {
         this.lcgVersion = lcgVersion;
         this.lcgUpdateDate = lcgUpdateDate;
         this.lcgUpdatePlayer = lcgUpdatePlayer;
@@ -98,5 +113,6 @@ public class LCG_Match_Etc {
         this.lcgChampionVer = lcgChampionVer;
         this.lcgMainImage = lcgMainImage;
         this.lcgSubImage = lcgSubImage;
+        this.lcgRankingCount = lcgRankingCount;
     }
 }
