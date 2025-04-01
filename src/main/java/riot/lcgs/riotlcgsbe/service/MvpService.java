@@ -3,9 +3,6 @@ package riot.lcgs.riotlcgsbe.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Sub_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Statistics_Repository;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
@@ -16,10 +13,6 @@ import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 @RequiredArgsConstructor
 @Service
 public class MvpService {
-
-    private final LCG_Match_Sub_Repository lcgMatchSubRepository;
-    private final LCG_Player_Data_Repository lcgPlayerDataRepository;
-    private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
 
     @Transactional
     public CommonResponseDto<List<Metrics>> LCGMvpSelection(GameData gameData) {
@@ -137,58 +130,6 @@ public class MvpService {
 //            }
 
             List<Metrics> list = Arrays.asList(metrics);
-
-            return CommonResponseDto.setSuccess("Mvp 데이터 계산 완료!", list);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return CommonResponseDto.setFailed("Database Insert Failed !");
-        }
-    }
-
-    @Transactional
-    public CommonResponseDto<List<Map<String, Object>>> LCGPowerRankingSelection() {
-
-        try {
-            List<Map<String, Object>> listDPMRank = lcgMatchSubRepository.findByAllAvgDpmRank();
-            List<Map<String, Object>> listGPMRank = lcgMatchSubRepository.findByAllAvgGpmRank();
-            List<Map<String, Object>> listDPGRank = lcgMatchSubRepository.findByAllAvgDpgRank();
-            List<Map<String, Object>> listTierRank = lcgPlayerDataRepository.findByAllTierRank();
-            List<Map<String, Object>> listWinningRate = lcgPlayerStatisticsRepository.findByAllWinningRate();
-            List<Map<String, Object>> listMvpRank = lcgPlayerStatisticsRepository.findByAllMvpRank();
-            List<Map<String, Object>> listAceRank = lcgPlayerStatisticsRepository.findByAllAceRank();
-            List<Map<String, Object>> listKdaRank = lcgPlayerStatisticsRepository.findByAllKdaRank();
-            List<Map<String, Object>> listVisionRank = lcgPlayerStatisticsRepository.findByAllVisionRank();
-            List<Map<String, Object>> listGoldRank = lcgPlayerStatisticsRepository.findByAllGoldRank();
-            List<Map<String, Object>> listDeathRank = lcgPlayerStatisticsRepository.findByAllDeathRank();
-            List<Map<String, Object>> listMultiKillRank = lcgPlayerStatisticsRepository.findByAllMultiKillRank();
-            List<Map<String, Object>> listDemolisherRank = lcgPlayerStatisticsRepository.findByAllDemolisherRank();
-
-            listDPMRank.sort(
-    			Comparator.comparing(
-    				(Map<String, Object> map) -> (Double)map.get("avg")
-    			).reversed() //reversed 내림차순. reversed를 지우면 오름차순.
-    		);
-
-            // int score = 10;
-    		// for(Map<String, Object> map1 : list) {
-    		// 	for(Map<String, Object> map2 : personal) {
-    		// 		if(map1.get("key").equals(map2.get("name"))) {
-    		// 			Object test = (Object) ((int) map2.get("score") + score);
-    		// 			map2.put("score", test);
-    		// 		}
-    		// 	}
-    		// 	score -= 1;
-    		// }
-    
-    		// for(Map<String, Object> map : personal) {
-    		// 	System.out.println("name : " + map.get("name") + " score : " + map.get("score"));
-    		// }
-
-            List<Map<String, Object>> list = List.of((Map<String, Object>) listDPMRank);
-
-            for(Map<String, Object> map : list) {
-                System.out.println("puuid : " + map.get("puuid") + " cnt : " + map.get("count") + " avg : " + map.get("avg"));
-            }
 
             return CommonResponseDto.setSuccess("Mvp 데이터 계산 완료!", list);
         } catch (Exception ex) {
