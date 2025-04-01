@@ -168,10 +168,19 @@ public class MatchService {
                         .lcgSummonerVer(version.get("summoner"))
                         .lcgChampionVer(version.get("champion"))
                         .lcgMainImage(imageMain)
-                        .lcgSubImage(imageSub).build());
+                        .lcgSubImage(imageSub)
+                        .lcgRankingCount(0L).build());
+            } else {
+                List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
+                LCG_Match_Etc lcgMatchEtc = lcgMatchEtcRepository.findById("LcgVer" + String.format("%04d", list.size()))
+                        .orElseThrow(() -> new IllegalArgumentException("해당 게임 버전이 없습니다. LcgVer : " + list.size() +"v"));
+
+                lcgMatchEtc.playerRecentUpdate(now);
+                lcgMatchEtc.gameDataRecentUpdate(now);
+                lcgMatchEtc.rankingCountUpdate(0L);
             }
 
-            return CommonResponseDto.setSuccess("MatchInfo Data 저장 완료!", "Success");
+            return CommonResponseDto.setSuccess("MatchInfo Data 저장 및 MatchEtc 업데이트 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
