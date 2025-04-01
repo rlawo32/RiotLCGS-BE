@@ -163,12 +163,11 @@ public class MvpService {
             List<Map<String, Object>> listMultiKillRank = lcgPlayerStatisticsRepository.findByAllMultiKillRank();
             List<Map<String, Object>> listDemolisherRank = lcgPlayerStatisticsRepository.findByAllDemolisherRank();
 
-            listDPMRank.sort(new Comparator<Object>() {
-                @Override
-                public double compare(Object s1, Object s2) {
-                    return (Double) ((Map<String, Object>) s1).get("avg") - (Double) ((Map<String, Object>) s2).get("avg");
-                }
-            });
+            listDPMRank.sort(
+    			Comparator.comparing(
+    				(Map<String, Object> map) -> (Double)map.get("avg")
+    			).reversed() //reversed 내림차순. reversed를 지우면 오름차순.
+    		);
 
             List<Map<String, Object>> list = List.of((Map<String, Object>) listDPMRank);
 
