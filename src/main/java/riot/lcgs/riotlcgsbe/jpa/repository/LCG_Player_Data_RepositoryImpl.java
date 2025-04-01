@@ -21,6 +21,26 @@ public class LCG_Player_Data_RepositoryImpl extends QuerydslRepositorySupport im
     }
 
     @Override
+    public List<Map<String, Object>> findByAllPlayer() {
+        List<Tuple> query = queryFactory
+                .select(lCG_Player_Data.lcgSummonerPuuid, lCG_Player_Data.lcgPlayer, lCG_Player_Data.lcgSummonerNickname)
+                .from(lCG_Player_Data).fetch();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for(Tuple tuple : query) {
+            Map<String, Object> row = new HashMap<>();
+            row.put("puuid", tuple.get(lCG_Player_Data.lcgSummonerPuuid));
+            row.put("name", tuple.get(lCG_Player_Data.lcgPlayer));
+            row.put("nickname", tuple.get(lCG_Player_Data.lcgSummonerNickname));
+            row.put("score", 0);
+
+            result.add(row);
+        }
+
+        return result;
+    }
+
+    @Override
     public List<Map<String, Object>> findByAllTierRank() {
         StringPath tier = Expressions.stringPath("tier");
         StringPath division = Expressions.stringPath("division");

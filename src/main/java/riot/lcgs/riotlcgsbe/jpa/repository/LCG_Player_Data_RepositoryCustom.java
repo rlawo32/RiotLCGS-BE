@@ -5,5 +5,7 @@ import java.util.Map;
 
 public interface LCG_Player_Data_RepositoryCustom {
 
+    List<Map<String, Object>> findByAllPlayer();
+
     List<Map<String, Object>> findByAllTierRank();
 }
