@@ -370,15 +370,19 @@ public class PlayerService {
     private void calcPlayerRankingScore(List<Map<String, Object>> listPlayer, List<Map<String, Object>> listScore) {
 
         int point = listPlayer.size();
+		Object compare = 0;
 
         for(Map<String, Object> map1 : listScore) {
+			if(!map1.get("avg").equals(compare)) {
+				point -= 1;
+			} 
             for(Map<String, Object> map2 : listPlayer) {
                 if(map1.get("puuid").equals(map2.get("puuid"))) {
                     Object score = ((int) map2.get("score") + point);
                     map2.put("score", score);
                 }
             }
-            point -= 1;
+			compare = map1.get("value");
         }
     }
 }
