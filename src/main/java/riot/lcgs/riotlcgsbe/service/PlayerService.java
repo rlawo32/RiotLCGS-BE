@@ -305,76 +305,118 @@ public class PlayerService {
         }
     }
 
-//    @Transactional
+    @Transactional
     public CommonResponseDto<?> LCGPlayerRankingSave() {
 
         try {
             List<Map<String, Object>> listPlayer = lcgPlayerDataRepository.findByAllPlayer();
             List<Map<String, Object>> listDPMRank = lcgMatchSubRepository.findByAllAvgDpmRank();
             List<Map<String, Object>> listGPMRank = lcgMatchSubRepository.findByAllAvgGpmRank();
-//            List<Map<String, Object>> listDPGRank = lcgMatchSubRepository.findByAllAvgDpgRank();
-//            List<Map<String, Object>> listTierRank = lcgPlayerDataRepository.findByAllTierRank();
-//            List<Map<String, Object>> listWinningRate = lcgPlayerStatisticsRepository.findByAllWinningRate();
-//            List<Map<String, Object>> listMvpRank = lcgPlayerStatisticsRepository.findByAllMvpRank();
-//            List<Map<String, Object>> listAceRank = lcgPlayerStatisticsRepository.findByAllAceRank();
-//            List<Map<String, Object>> listKdaRank = lcgPlayerStatisticsRepository.findByAllKdaRank();
-//            List<Map<String, Object>> listVisionRank = lcgPlayerStatisticsRepository.findByAllVisionRank();
-//            List<Map<String, Object>> listGoldRank = lcgPlayerStatisticsRepository.findByAllGoldRank();
-//            List<Map<String, Object>> listDeathRank = lcgPlayerStatisticsRepository.findByAllDeathRank();
-//            List<Map<String, Object>> listMultiKillRank = lcgPlayerStatisticsRepository.findByAllMultiKillRank();
-//            List<Map<String, Object>> listDemolisherRank = lcgPlayerStatisticsRepository.findByAllDemolisherRank();
+            List<Map<String, Object>> listDPGRank = lcgMatchSubRepository.findByAllAvgDpgRank();
+            List<Map<String, Object>> listTierRank = lcgPlayerDataRepository.findByAllTierRank();
+            List<Map<String, Object>> listWinningRate = lcgPlayerStatisticsRepository.findByAllWinningRate();
+            List<Map<String, Object>> listMvpRank = lcgPlayerStatisticsRepository.findByAllMvpRank();
+            List<Map<String, Object>> listAceRank = lcgPlayerStatisticsRepository.findByAllAceRank();
+            List<Map<String, Object>> listKdaRank = lcgPlayerStatisticsRepository.findByAllKdaRank();
+            List<Map<String, Object>> listVisionRank = lcgPlayerStatisticsRepository.findByAllVisionRank();
+            List<Map<String, Object>> listGoldRank = lcgPlayerStatisticsRepository.findByAllGoldRank();
+            List<Map<String, Object>> listDeathRank = lcgPlayerStatisticsRepository.findByAllDeathRank();
+            List<Map<String, Object>> listMultiKillRank = lcgPlayerStatisticsRepository.findByAllMultiKillRank();
+            List<Map<String, Object>> listDemolisherRank = lcgPlayerStatisticsRepository.findByAllDemolisherRank();
 
-            listDPMRank.sort(
+            calcPlayerRankingScore(listPlayer, listDPMRank, "D", listPlayer.size()*2, 2);
+            calcPlayerRankingScore(listPlayer, listGPMRank, "D", listPlayer.size()*2, 2);
+            calcPlayerRankingScore(listPlayer, listDPGRank, "D", listPlayer.size()*2, 2);
+            calcPlayerRankingScore(listPlayer, listTierRank, "L", listPlayer.size(), 1);
+            calcPlayerRankingScore(listPlayer, listWinningRate, "D", listPlayer.size()*2, 2);
+            calcPlayerRankingScore(listPlayer, listMvpRank, "L", listPlayer.size()*3, 3);
+            calcPlayerRankingScore(listPlayer, listAceRank, "L", listPlayer.size()*3, 3);
+            calcPlayerRankingScore(listPlayer, listKdaRank, "D", listPlayer.size()*3, 3);
+            calcPlayerRankingScore(listPlayer, listVisionRank, "L", listPlayer.size()*2, 2);
+            calcPlayerRankingScore(listPlayer, listGoldRank, "L", listPlayer.size(), 1);
+            calcPlayerRankingScore(listPlayer, listDeathRank, "R", listPlayer.size()*2, 2);
+            calcPlayerRankingScore(listPlayer, listMultiKillRank, "L", listPlayer.size(), 1);
+            calcPlayerRankingScore(listPlayer, listDemolisherRank, "L", listPlayer.size(), 1);
+
+            listPlayer.sort(
                 Comparator.comparing(
-                    (Map<String, Object> map) -> (Double)map.get("avg")
+                    (Map<String, Object> map) -> (int) map.get("score")
                 ).reversed() //reversed 내림차순. reversed 지우면 오름차순.
             );
 
-            calcPlayerRankingScore(listPlayer, listDPMRank);
-//
-            listGPMRank.sort(
-                Comparator.comparing(
-                    (Map<String, Object> map) -> (Double)map.get("avg")
-                ).reversed() //reversed 내림차순. reversed 지우면 오름차순.
-            );
+            int rank = 0;
+            Object compare = 0;
 
-            calcPlayerRankingScore(listPlayer, listGPMRank);
-
-            // for(Map<String, Object> map : personal) {
-            // 	System.out.println("name : " + map.get("name") + " score : " + map.get("score"));
-            // }
             for(Map<String, Object> map : listPlayer) {
-                System.out.println("puuid : " + map.get("puuid") + " score : " + map.get("score"));
+                if(!map.get("score").equals(compare)) {
+                    rank += 1;
+                }
+                map.put("rank", rank);
+                compare = map.get("score");
             }
 
-//            boolean duplicationCheck = lcgPlayerRankingRepository.existsLCG_Player_RankingByLcgRankingCount(0L);
-//
-//            if(!duplicationCheck) {
-//                lcgPlayerRankingRepository.save(LCG_Player_Ranking.builder()
-//                        .lcgRankingCount(0L)
-//                        .lcgRankingRank(0L)
-//                        .lcgRankingScore(0L)
-//                        .lcgSummonerPuuid("")
-//                        .lcgPlayerName("")
-//                        .lcgSummonerNickname("")
-//                        .build());
-//            }
+            for(Map<String, Object> map : listPlayer) {
+                System.out.println("puuid : " + map.get("puuid") + " score : " + map.get("score") + " rank : " + map.get("rank"));
+            }
 
-            return CommonResponseDto.setSuccess("플레이어 Champion 전적 저장 완료!", "Success");
+            List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
+            LCG_Match_Etc lcgMatchEtc = lcgMatchEtcRepository.findById("LcgVer" + String.format("%04d", list.size()))
+                    .orElseThrow(() -> new IllegalArgumentException("해당 게임 버전이 없습니다. LcgVer : " + list.size() +"v"));
+
+            Long rankingCount = lcgMatchEtc.getLcgRankingCount();
+
+            boolean duplicationCheck = lcgPlayerRankingRepository.existsLCG_Player_RankingByLcgRankingCount(rankingCount);
+
+            if(!duplicationCheck) {
+                for(Map<String, Object> map : listPlayer) {
+                    lcgPlayerRankingRepository.save(LCG_Player_Ranking.builder()
+                            .lcgRankingCount(rankingCount)
+                            .lcgRankingRank(Long.parseLong(String.valueOf(map.get("rank"))))
+                            .lcgRankingScore(Long.parseLong(String.valueOf(map.get("score"))))
+                            .lcgSummonerPuuid((String) map.get("puuid"))
+                            .lcgPlayerName((String) map.get("name"))
+                            .lcgSummonerNickname((String) map.get("nickname"))
+                            .build());
+                }
+
+                return CommonResponseDto.setSuccess("플레이어 Champion 전적 저장 완료!", "Success");
+            } else {
+                return CommonResponseDto.setFailed("중복 저장");
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Failed");
         }
     }
 
-    private void calcPlayerRankingScore(List<Map<String, Object>> listPlayer, List<Map<String, Object>> listScore) {
+    private void calcPlayerRankingScore(List<Map<String, Object>> listPlayer, List<Map<String, Object>> listGrade,
+                                        String flag, int point, int decrease) {
 
-        int point = listPlayer.size();
+        if(flag.equals("D")) {
+            listGrade.sort(
+                Comparator.comparing(
+                    (Map<String, Object> map) -> (Double)map.get("grade")
+                ).reversed()
+            );
+        } else if(flag.equals("L")) {
+            listGrade.sort(
+                Comparator.comparing(
+                    (Map<String, Object> map) -> (Long) map.get("grade")
+                ).reversed()
+            );
+        } else if(flag.equals("R")) {
+            listGrade.sort(
+                Comparator.comparing(
+                    (Map<String, Object> map) -> (Long) map.get("grade")
+                )
+            );
+        }
+
 		Object compare = 0;
 
-        for(Map<String, Object> map1 : listScore) {
-			if(!map1.get("avg").equals(compare)) {
-				point -= 1;
+        for(Map<String, Object> map1 : listGrade) {
+			if(!map1.get("grade").equals(compare)) {
+				point -= decrease;
 			} 
             for(Map<String, Object> map2 : listPlayer) {
                 if(map1.get("puuid").equals(map2.get("puuid"))) {
@@ -382,7 +424,7 @@ public class PlayerService {
                     map2.put("score", score);
                 }
             }
-			compare = map1.get("value");
+			compare = map1.get("grade");
         }
     }
 }
