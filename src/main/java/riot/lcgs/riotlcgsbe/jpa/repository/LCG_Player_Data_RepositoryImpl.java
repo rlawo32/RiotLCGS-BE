@@ -33,6 +33,7 @@ public class LCG_Player_Data_RepositoryImpl extends QuerydslRepositorySupport im
             row.put("name", tuple.get(lCG_Player_Data.lcgPlayer));
             row.put("nickname", tuple.get(lCG_Player_Data.lcgSummonerNickname));
             row.put("score", 0);
+            row.put("rank", 0);
 
             result.add(row);
         }
@@ -74,8 +75,8 @@ public class LCG_Player_Data_RepositoryImpl extends QuerydslRepositorySupport im
             row.put("puuid", tuple.get(lCG_Player_Data.lcgSummonerPuuid));
             row.put("tier", tuple.get(lCG_Player_Data.lcgPresentTier));
             row.put("division", tuple.get(lCG_Player_Data.lcgPresentDivision));
-            row.put("score", Integer.parseInt(Objects.requireNonNull(tuple.get(tier)))
-                    + Integer.parseInt(Objects.requireNonNull(tuple.get(division))));
+            row.put("grade", Long.parseLong(Objects.requireNonNull(tuple.get(tier)))
+                    + Long.parseLong(Objects.requireNonNull(tuple.get(division)))); // tierScore
 
             result.add(row);
         }

@@ -39,7 +39,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
             row.put("countVictory", tuple.get(lCG_Player_Statistics.lcgCountVictory));
             row.put("countDefeat", tuple.get(lCG_Player_Statistics.lcgCountDefeat));
-            row.put("rate", tuple.get(rate));
+            row.put("grade", tuple.get(rate)); // winningRate
 
             result.add(row);
         }
@@ -59,7 +59,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
-            row.put("countMvp", tuple.get(lCG_Player_Statistics.lcgCountMvp));
+            row.put("grade", tuple.get(lCG_Player_Statistics.lcgCountMvp)); // countMvp
 
             result.add(row);
         }
@@ -79,7 +79,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
-            row.put("countAce", tuple.get(lCG_Player_Statistics.lcgCountAce));
+            row.put("grade", tuple.get(lCG_Player_Statistics.lcgCountAce)); // countAce
 
             result.add(row);
         }
@@ -105,7 +105,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             row.put("countKill", tuple.get(lCG_Player_Statistics.lcgCountKill));
             row.put("countDeath", tuple.get(lCG_Player_Statistics.lcgCountDeath));
             row.put("countAssist", tuple.get(lCG_Player_Statistics.lcgCountAssist));
-            row.put("kda", tuple.get(kda));
+            row.put("grade", tuple.get(kda)); // kda
 
             result.add(row);
         }
@@ -125,7 +125,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
-            row.put("visionScore", tuple.get(lCG_Player_Statistics.lcgCountVisionScore));
+            row.put("grade", tuple.get(lCG_Player_Statistics.lcgCountVisionScore)); // visionScore
 
             result.add(row);
         }
@@ -145,7 +145,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
-            row.put("countGold", tuple.get(lCG_Player_Statistics.lcgCountGold));
+            row.put("grade", tuple.get(lCG_Player_Statistics.lcgCountGold)); // countGold
 
             result.add(row);
         }
@@ -165,7 +165,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
-            row.put("countDeath", tuple.get(lCG_Player_Statistics.lcgCountDeath));
+            row.put("grade", tuple.get(lCG_Player_Statistics.lcgCountDeath)); // countDeath
 
             result.add(row);
         }
@@ -185,7 +185,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
-            row.put("multiKillScore", tuple.get(lCG_Player_Statistics.lcgMultiKillScore));
+            row.put("grade", tuple.get(lCG_Player_Statistics.lcgMultiKillScore)); // multiKillScore
 
             result.add(row);
         }
@@ -197,7 +197,7 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
     public List<Map<String, Object>> findByAllDemolisherRank() {
         List<Tuple> query = queryFactory
                 .select(lCG_Player_Statistics.lcgSummonerPuuid, lCG_Player_Statistics.lcgCountPlay,
-                        lCG_Player_Statistics.lcgCountTower, lCG_Player_Statistics.lcgCountTowerDamage)
+                        lCG_Player_Statistics.lcgCountTower, lCG_Player_Statistics.lcgCountInhibitor)
                 .from(lCG_Player_Statistics).fetch();
 
         List<Map<String, Object>> result = new ArrayList<>();
@@ -205,8 +205,8 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("countPlay", tuple.get(lCG_Player_Statistics.lcgCountPlay));
-            row.put("countTower", tuple.get(lCG_Player_Statistics.lcgCountTower));
-            row.put("countTowerDamage", tuple.get(lCG_Player_Statistics.lcgCountTowerDamage));
+            // countTower + countInhibitor
+            row.put("grade", tuple.get(lCG_Player_Statistics.lcgCountTower) + tuple.get(lCG_Player_Statistics.lcgCountInhibitor));
 
             result.add(row);
         }

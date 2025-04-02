@@ -38,7 +38,7 @@ public class LCG_Match_Sub_RepositoryImpl extends QuerydslRepositorySupport impl
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Match_Sub.lcgSummonerPuuid));
             row.put("count", tuple.get(dpmCnt));
-            row.put("avg", tuple.get(dpmAvg));
+            row.put("grade", tuple.get(dpmAvg)); // avgDpm
 
             result.add(row);
         }
@@ -61,7 +61,7 @@ public class LCG_Match_Sub_RepositoryImpl extends QuerydslRepositorySupport impl
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Match_Sub.lcgSummonerPuuid));
             row.put("count", tuple.get(gpmCnt));
-            row.put("avg", tuple.get(gpmAvg));
+            row.put("grade", tuple.get(gpmAvg)); // avgGpm
 
             result.add(row);
         }
@@ -84,7 +84,7 @@ public class LCG_Match_Sub_RepositoryImpl extends QuerydslRepositorySupport impl
             Map<String, Object> row = new HashMap<>();
             row.put("puuid", tuple.get(lCG_Match_Sub.lcgSummonerPuuid));
             row.put("count", tuple.get(dpgCnt));
-            row.put("avg", tuple.get(dpgAvg));
+            row.put("grade", tuple.get(dpgAvg)); // avgDpg
 
             result.add(row);
         }
