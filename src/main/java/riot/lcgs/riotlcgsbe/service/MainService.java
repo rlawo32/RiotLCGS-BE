@@ -4,9 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Sub_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Statistics_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
@@ -50,15 +47,16 @@ public class MainService {
                     ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
                     ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
-//                    mvpService.LCGMvpSelection(gameData);
-//                    playerService.LCGPlayerRelativeSave(gameData, teamData);
-//                    playerService.LCGPlayerChampionSave(gameData);
-//                    playerService.LCGPlayerStatisticsSave(gameData);
-//                    matchService.LCGMatchInfoSave(gameId, gameData, version);
-//                    matchService.LCGTeamLogSave(gameId, gameData, version);
-//                    matchService.LCGMatchMainSave(gameId, gameData);
-//                    matchService.LCGMatchSubSave(gameId, gameData);
-//                    matchService.LCGMatchTeamSave(gameId, gameData);
+                    mvpService.LCGMvpSelection(gameData);
+                    playerService.LCGPlayerRelativeSave(gameData, teamData);
+                    playerService.LCGPlayerChampionSave(gameData);
+                    playerService.LCGPlayerStatisticsSave(gameData);
+                    matchService.LCGMatchInfoSave(gameId, gameData, version);
+                    matchService.LCGTeamLogSave(gameId, gameData, version);
+                    matchService.LCGMatchMainSave(gameId, gameData);
+                    matchService.LCGMatchSubSave(gameId, gameData);
+                    matchService.LCGMatchTeamSave(gameId, gameData);
+                    playerService.LCGPlayerRankingSave();
 
                     return CommonResponseDto.setSuccess("저장 완료", "Success");
                 } else {
