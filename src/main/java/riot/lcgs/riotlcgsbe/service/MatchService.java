@@ -177,7 +177,7 @@ public class MatchService {
 
                 lcgMatchEtc.playerRecentUpdate(now);
                 lcgMatchEtc.gameDataRecentUpdate(now);
-                lcgMatchEtc.rankingCountUpdate(0L);
+                lcgMatchEtc.rankingCountUpdate(lcgMatchEtc.getLcgRankingCount()+1);
             }
 
             return CommonResponseDto.setSuccess("MatchInfo Data 저장 및 MatchEtc 업데이트 완료!", "Success");
