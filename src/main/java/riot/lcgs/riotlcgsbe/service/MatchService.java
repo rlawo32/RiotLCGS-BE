@@ -144,7 +144,9 @@ public class MatchService {
                     .lcgMaxDpd(0)
                     .lcgMaxTpd(0)
                     .lcgMaxDamageTotal(maxDamageTotal[9])
-                    .lcgMaxDamageTaken(maxDamageTaken[9]).build());
+                    .lcgMaxDamageTaken(maxDamageTaken[9])
+                    .lcgAiSummaryContent("")
+                    .lcgAiSummaryVerify("N").build());
 
             boolean existsCheck = lcgMatchEtcRepository.existsLCG_Match_EtcByLcgMainVer(version.get("ver"));
 

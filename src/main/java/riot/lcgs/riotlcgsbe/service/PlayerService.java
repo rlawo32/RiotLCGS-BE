@@ -80,6 +80,8 @@ public class PlayerService {
                             .lcgPreviousDivision(rankData.getPreviousDivision())
                             .lcgPreviousHighTier(rankData.getPreviousHighestTier())
                             .lcgPreviousHighDivision(rankData.getPreviousHighestDivision())
+                            .lcgAiSummaryContent("")
+                            .lcgAiSummaryVerify("N")
                             .build());
                 }
 
@@ -353,10 +355,6 @@ public class PlayerService {
                 }
                 map.put("rank", rank);
                 compare = map.get("score");
-            }
-
-            for(Map<String, Object> map : listPlayer) {
-                System.out.println("puuid : " + map.get("puuid") + " score : " + map.get("score") + " rank : " + map.get("rank"));
             }
 
             List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
