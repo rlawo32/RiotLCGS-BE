@@ -85,6 +85,14 @@ public class LCG_Player_Data {
     @Column(name = "lcg_previous_high_division")
     private String lcgPreviousHighDivision;
 
+    @NotNull
+    @Column(name = "lcg_ai_summary_content")
+    private String lcgAiSummaryContent;
+
+    @NotNull
+    @Column(name = "lcg_ai_summary_verify")
+    private String lcgAiSummaryVerify;
+
 
     public LCG_Player_Data playerDataUpdate(Player playerData, RankData rankData) {
         this.lcgSummonerNickname = playerData.getGameName() + "#" + playerData.getTagLine();
@@ -102,6 +110,7 @@ public class LCG_Player_Data {
         this.lcgPreviousDivision = rankData.getPreviousDivision();
         this.lcgPreviousHighTier = rankData.getPreviousHighestTier();
         this.lcgPreviousHighDivision = rankData.getPreviousHighestDivision();
+        this.lcgAiSummaryVerify = "N";
         return this;
     }
 
@@ -111,7 +120,8 @@ public class LCG_Player_Data {
                            int lcgSummonerIcon, int lcgRankPoint, int lcgRankWin,
                            String lcgPresentTier, String lcgPresentDivision, String lcgPresentHighTier,
                            String lcgPresentHighDivision, String lcgPreviousTier, String lcgPreviousDivision,
-                           String lcgPreviousHighTier, String lcgPreviousHighDivision) {
+                           String lcgPreviousHighTier, String lcgPreviousHighDivision,
+                           String lcgAiSummaryContent, String lcgAiSummaryVerify) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgSummonerNickname = lcgSummonerNickname;
@@ -129,5 +139,7 @@ public class LCG_Player_Data {
         this.lcgPreviousDivision = lcgPreviousDivision;
         this.lcgPreviousHighTier = lcgPreviousHighTier;
         this.lcgPreviousHighDivision = lcgPreviousHighDivision;
+        this.lcgAiSummaryContent = lcgAiSummaryContent;
+        this.lcgAiSummaryVerify = lcgAiSummaryVerify;
     }
 }
