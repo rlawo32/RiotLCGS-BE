@@ -32,7 +32,7 @@ public class PlayerService {
     private final LCG_Player_Champion_Repository lcgPlayerChampionRepository;
     private final LCG_Player_Relative_Repository lcgPlayerRelativeRepository;
     private final LCG_Player_Ranking_Repository lcgPlayerRankingRepository;
-
+    private final LCG_Player_Position_Repository lcgPlayerPositionRepository;
 
     @Transactional
     public CommonResponseDto<?> LCGPlayerDataSave(GameData gameData, List<RankData> list1) {
@@ -423,6 +423,72 @@ public class PlayerService {
                 }
             }
 			compare = map1.get("grade");
+        }
+    }
+
+    @Transactional
+    public CommonResponseDto<?> LCGPlayerPositionSave(GameData gameData, List<TeamData> teamData) {
+
+        try {
+            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+            List<Participants> list2 = gameData.getParticipants();
+            List<Teams> list3 = gameData.getTeams();
+
+            for(TeamData player : teamData) {
+                String name = player.getName();
+                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
+
+                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
+            }
+
+            for(int i=0; i<list1.size(); i++) {
+                ParticipantIdentities participantIdentities = list1.get(i);
+                Participants participants = list2.get(i);
+                Player playerData = participantIdentities.getPlayer();
+                Stats statsData = participants.getStats();
+
+                String personPuuid = playerData.getPuuid();
+                String opponentPuuid = "";
+                String line = "";
+
+                for(TeamData player : teamData) {
+                    if(player.getPuuid().equals(personPuuid)) {
+                        line = player.getLine();
+                    }
+                }
+
+                for(TeamData player : teamData) {
+                    if(!player.getPuuid().equals(personPuuid) && player.getLine().equals(line)) {
+                        opponentPuuid = player.getPuuid();
+                    }
+                }
+
+                boolean duplicationCheck = lcgPlayerRelativeRepository.
+                        existsLCG_Player_RelativeByLcgPersonPuuidAndLcgMatchLineAndLcgOpponentPuuid(personPuuid, line, opponentPuuid);
+
+                if(duplicationCheck) {
+                    LCG_Player_Relative lcgPlayerRelative = lcgPlayerRelativeRepository.
+                            findByLcgPersonPuuidAndLcgMatchLineAndLcgOpponentPuuid(personPuuid, line, opponentPuuid)
+                            .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. personPuuid : " + personPuuid));
+
+                    lcgPlayerRelative.playerRelativeUpdate(statsData);
+                } else {
+                    lcgPlayerRelativeRepository.save(LCG_Player_Relative.builder()
+                            .lcgPersonPuuid(personPuuid)
+                            .lcgMatchLine(line)
+                            .lcgOpponentPuuid(opponentPuuid)
+                            .lcgPlayCount(1L)
+                            .lcgWinCount(statsData.getWin() ? 1L : 0L)
+                            .lcgFailCount(statsData.getWin() ? 0L : 1L)
+                            .build());
+                }
+            }
+
+            return CommonResponseDto.setSuccess("플레이어 Relative 전적 저장 완료!", "Success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Failed");
         }
     }
 }
