@@ -1,0 +1,117 @@
+package riot.lcgs.riotlcgsbe.jpa.domain;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@Entity
+@Getter
+@Table(name = "LCG_Player_Position")
+public class LCG_Player_Position {
+
+    @Id
+    @Column(name = "lcg_summoner_puuid")
+    private String lcgSummonerPuuid;
+
+    @NotNull
+    @Column(name = "lcg_summoner_nickname")
+    private String lcgSummonerNickname;
+
+    @NotNull
+    @Column(name = "lcg_play_count")
+    private Long lcgPlayCount;
+
+    @NotNull
+    @Column(name = "lcg_total_playtime")
+    private Long lcgTotalPlaytime;
+
+    @NotNull
+    @Column(name = "lcg_position_top_count")
+    private Long lcgPositionTopCount;
+
+    @NotNull
+    @Column(name = "lcg_position_jug_count")
+    private Long lcgPositionJugCount;
+
+    @NotNull
+    @Column(name = "lcg_position_mid_count")
+    private Long lcgPositionMidCount;
+
+    @NotNull
+    @Column(name = "lcg_position_adc_count")
+    private Long lcgPositionAdcCount;
+
+    @NotNull
+    @Column(name = "lcg_position_sup_count")
+    private Long lcgPositionSupCount;
+
+    @NotNull
+    @Column(name = "lcg_position_top_win")
+    private Long lcgPositionTopWin;
+
+    @NotNull
+    @Column(name = "lcg_position_jug_win")
+    private Long lcgPositionJugWin;
+
+    @NotNull
+    @Column(name = "lcg_position_mid_win")
+    private Long lcgPositionMidWin;
+
+    @NotNull
+    @Column(name = "lcg_position_adc_win")
+    private Long lcgPositionAdcWin;
+
+    @NotNull
+    @Column(name = "lcg_position_sup_win")
+    private Long lcgPositionSupWin;
+
+    @NotNull
+    @Column(name = "lcg_position_top_playtime")
+    private Long lcgPositionTopPlaytime;
+
+    @NotNull
+    @Column(name = "lcg_position_jug_playtime")
+    private Long lcgPositionJugPlaytime;
+
+    @NotNull
+    @Column(name = "lcg_position_mid_playtime")
+    private Long lcgPositionMidPlaytime;
+
+    @NotNull
+    @Column(name = "lcg_position_adc_playtime")
+    private Long lcgPositionAdcPlaytime;
+
+    @NotNull
+    @Column(name = "lcg_position_sup_playtime")
+    private Long lcgPositionSupPlaytime;
+
+    @Builder
+    public LCG_Player_Position(String lcgSummonerPuuid, String lcgSummonerNickname, Long lcgPlayCount, Long lcgTotalPlaytime, 
+                               Long lcgPositionTopCount, Long lcgPositionJugCount, Long lcgPositionMidCount, Long lcgPositionAdcCount, 
+                               Long lcgPositionSupCount, Long lcgPositionTopWin, Long lcgPositionJugWin, Long lcgPositionMidWin, 
+                               Long lcgPositionAdcWin, Long lcgPositionSupWin, Long lcgPositionTopPlaytime, Long lcgPositionJugPlaytime, 
+                               Long lcgPositionMidPlaytime, Long lcgPositionAdcPlaytime, Long lcgPositionSupPlaytime) {
+        this.lcgSummonerPuuid = lcgSummonerPuuid;
+        this.lcgSummonerNickname = lcgSummonerNickname;
+        this.lcgPlayCount = lcgPlayCount;
+        this.lcgTotalPlaytime = lcgTotalPlaytime;
+        this.lcgPositionTopCount = lcgPositionTopCount;
+        this.lcgPositionJugCount = lcgPositionJugCount;
+        this.lcgPositionMidCount = lcgPositionMidCount;
+        this.lcgPositionAdcCount = lcgPositionAdcCount;
+        this.lcgPositionSupCount = lcgPositionSupCount;
+        this.lcgPositionTopWin = lcgPositionTopWin;
+        this.lcgPositionJugWin = lcgPositionJugWin;
+        this.lcgPositionMidWin = lcgPositionMidWin;
+        this.lcgPositionAdcWin = lcgPositionAdcWin;
+        this.lcgPositionSupWin = lcgPositionSupWin;
+        this.lcgPositionTopPlaytime = lcgPositionTopPlaytime;
+        this.lcgPositionJugPlaytime = lcgPositionJugPlaytime;
+        this.lcgPositionMidPlaytime = lcgPositionMidPlaytime;
+        this.lcgPositionAdcPlaytime = lcgPositionAdcPlaytime;
+        this.lcgPositionSupPlaytime = lcgPositionSupPlaytime;
+    }
+}
