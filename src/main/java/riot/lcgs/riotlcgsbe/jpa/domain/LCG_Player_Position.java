@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import riot.lcgs.riotlcgsbe.web.dto.object.Player;
+import riot.lcgs.riotlcgsbe.web.dto.object.RankData;
 
 @NoArgsConstructor
 @Entity
@@ -87,6 +89,28 @@ public class LCG_Player_Position {
     @NotNull
     @Column(name = "lcg_position_sup_playtime")
     private Long lcgPositionSupPlaytime;
+
+    public LCG_Player_Position playerPositionUpdate(String nickname, int duration, String line, boolean win) {
+        this.lcgSummonerNickname = nickname;
+        this.lcgPlayCount += 1L;
+        this.lcgTotalPlaytime += (long) duration;
+        this.lcgPositionTopCount += line.equals("TOP") ? 1L : 0L;
+        this.lcgPositionJugCount += line.equals("JUG") ? 1L : 0L;
+        this.lcgPositionMidCount += line.equals("MID") ? 1L : 0L;
+        this.lcgPositionAdcCount += line.equals("ADC") ? 1L : 0L;
+        this.lcgPositionSupCount += line.equals("SUP") ? 1L : 0L;
+        this.lcgPositionTopWin += line.equals("TOP") && win ? 1L : 0L;
+        this.lcgPositionJugWin += line.equals("JUG") && win ? 1L : 0L;
+        this.lcgPositionMidWin += line.equals("MID") && win ? 1L : 0L;
+        this.lcgPositionAdcWin += line.equals("ADC") && win ? 1L : 0L;
+        this.lcgPositionSupWin += line.equals("SUP") && win ? 1L : 0L;
+        this.lcgPositionTopPlaytime += line.equals("TOP") ? (long) duration : 0L;
+        this.lcgPositionJugPlaytime += line.equals("JUG") ? (long) duration : 0L;
+        this.lcgPositionMidPlaytime += line.equals("MID") ? (long) duration : 0L;
+        this.lcgPositionAdcPlaytime += line.equals("ADC") ? (long) duration : 0L;
+        this.lcgPositionSupPlaytime += line.equals("SUP") ? (long) duration : 0L;
+        return this;
+    }
 
     @Builder
     public LCG_Player_Position(String lcgSummonerPuuid, String lcgSummonerNickname, Long lcgPlayCount, Long lcgTotalPlaytime, 
