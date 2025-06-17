@@ -32,31 +32,47 @@ public class MainService {
         List<TeamData> teamData = requestDto.getTeamData();
 
         String checkGameData = validationService.ValidationCheckGameData(gameData).getMessage();
-        String checkTeamData = validationService.ValidationCheckTeamData(teamData).getMessage();
+        //String checkTeamData = validationService.ValidationCheckTeamData(teamData).getMessage();
 
-        if(checkGameData.equals("Success") && checkTeamData.equals("Success")) {
+        if(checkGameData.equals("Success")) {
 
             Long gameId = gameData.getGameId();
+
+            // 숭준이가 현석 아이디 사용
+//            for(int i=0; i<gameData.getParticipantIdentities().size(); i++) {
+//                if(gameData.getParticipantIdentities().get(i).getPlayer().getPuuid().equals("1127fed4-642a-5b70-bab9-1c7a326ca923")) {
+//                    gameData.getParticipantIdentities().get(i).getPlayer().setPuuid("864ff5ac-b218-55fd-94ba-cb9cabe66ce4");
+//                }
+//            }
+//
+//            for(int i=0; i<teamData.size(); i++) {
+//                if(teamData.get(i).getPuuid().equals("1127fed4-642a-5b70-bab9-1c7a326ca923")) {
+//                    teamData.get(i).setPuuid("864ff5ac-b218-55fd-94ba-cb9cabe66ce4");
+//                }
+//            }
+            //
 
             // TeamId => 100 : Blue , 200 : Red
             boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
-            if(!duplicationCheck) {
+            if(duplicationCheck) {
                 if(DataDragonAPIVersion().isResult()) {
                     Map<String, String> version = DataDragonAPIVersion().getData();
                     ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
                     ExtractionTool.jsonPerk = DataDragonAPIPerk().getData();
 
-                    mvpService.LCGMvpSelection(gameData);
-                    playerService.LCGPlayerRelativeSave(gameData, teamData);
-                    playerService.LCGPlayerChampionSave(gameData);
-                    playerService.LCGPlayerStatisticsSave(gameData);
-                    matchService.LCGMatchInfoSave(gameId, gameData, version);
-                    matchService.LCGTeamLogSave(gameId, gameData, version);
-                    matchService.LCGMatchMainSave(gameId, gameData);
-                    matchService.LCGMatchSubSave(gameId, gameData);
-                    matchService.LCGMatchTeamSave(gameId, gameData);
-                    playerService.LCGPlayerRankingSave();
+                    playerService.LCGPlayerPositionSave(gameData, teamData);
+
+//                    mvpService.LCGMvpSelection(gameData);
+//                    playerService.LCGPlayerRelativeSave(gameData, teamData);
+//                    playerService.LCGPlayerChampionSave(gameData);
+//                    playerService.LCGPlayerStatisticsSave(gameData);
+//                    matchService.LCGMatchInfoSave(gameId, gameData, version);
+//                    matchService.LCGTeamLogSave(gameId, gameData, version);
+//                    matchService.LCGMatchMainSave(gameId, gameData);
+//                    matchService.LCGMatchSubSave(gameId, gameData);
+//                    matchService.LCGMatchTeamSave(gameId, gameData);
+//                    playerService.LCGPlayerRankingSave();
 
                     return CommonResponseDto.setSuccess("저장 완료", "Success");
                 } else {
@@ -80,7 +96,8 @@ public class MainService {
             String checkRankData = validationService.ValidationCheckRankData(rankData).getMessage();
 
             if(checkGameData.equals("Success") && checkRankData.equals("Success")) {
-//                playerService.LCGPlayerDataSave(gameData, rankData);
+                playerService.LCGPlayerRankingSave();
+                playerService.LCGPlayerDataSave(gameData, rankData);
 
                 return CommonResponseDto.setSuccess("플레이어 저장 완료!", "Success");
             } else {
