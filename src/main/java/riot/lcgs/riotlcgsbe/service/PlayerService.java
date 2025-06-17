@@ -432,7 +432,8 @@ public class PlayerService {
         try {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
-            List<Teams> list3 = gameData.getTeams();
+
+            int duration = gameData.getGameDuration();
 
             for(TeamData player : teamData) {
                 String name = player.getName();
@@ -448,39 +449,45 @@ public class PlayerService {
                 Player playerData = participantIdentities.getPlayer();
                 Stats statsData = participants.getStats();
 
-                String personPuuid = playerData.getPuuid();
-                String opponentPuuid = "";
+                String puuid = playerData.getPuuid();
+                String nickname = playerData.getGameName() + "#" + playerData.getTagLine();
                 String line = "";
+                boolean win = statsData.getWin();
 
                 for(TeamData player : teamData) {
-                    if(player.getPuuid().equals(personPuuid)) {
+                    if(player.getPuuid().equals(puuid)) {
                         line = player.getLine();
                     }
                 }
 
-                for(TeamData player : teamData) {
-                    if(!player.getPuuid().equals(personPuuid) && player.getLine().equals(line)) {
-                        opponentPuuid = player.getPuuid();
-                    }
-                }
-
-                boolean duplicationCheck = lcgPlayerRelativeRepository.
-                        existsLCG_Player_RelativeByLcgPersonPuuidAndLcgMatchLineAndLcgOpponentPuuid(personPuuid, line, opponentPuuid);
+                boolean duplicationCheck = lcgPlayerPositionRepository.existsLCG_Player_PositionByLcgSummonerPuuid(puuid);
 
                 if(duplicationCheck) {
-                    LCG_Player_Relative lcgPlayerRelative = lcgPlayerRelativeRepository.
-                            findByLcgPersonPuuidAndLcgMatchLineAndLcgOpponentPuuid(personPuuid, line, opponentPuuid)
-                            .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. personPuuid : " + personPuuid));
+                    LCG_Player_Position lcgPlayerPosition = lcgPlayerPositionRepository.findById(puuid)
+                            .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerRelative.playerRelativeUpdate(statsData);
+                    lcgPlayerPosition.playerPositionUpdate(nickname, duration, line, win);
                 } else {
-                    lcgPlayerRelativeRepository.save(LCG_Player_Relative.builder()
-                            .lcgPersonPuuid(personPuuid)
-                            .lcgMatchLine(line)
-                            .lcgOpponentPuuid(opponentPuuid)
+                    lcgPlayerPositionRepository.save(LCG_Player_Position.builder()
+                            .lcgSummonerPuuid(puuid)
+                            .lcgSummonerNickname(nickname)
                             .lcgPlayCount(1L)
-                            .lcgWinCount(statsData.getWin() ? 1L : 0L)
-                            .lcgFailCount(statsData.getWin() ? 0L : 1L)
+                            .lcgTotalPlaytime((long) duration)
+                            .lcgPositionTopCount(line.equals("TOP") ? 1L : 0L)
+                            .lcgPositionJugCount(line.equals("JUG") ? 1L : 0L)
+                            .lcgPositionMidCount(line.equals("MID") ? 1L : 0L)
+                            .lcgPositionAdcCount(line.equals("ADC") ? 1L : 0L)
+                            .lcgPositionSupCount(line.equals("SUP") ? 1L : 0L)
+                            .lcgPositionTopWin(line.equals("TOP") && win ? 1L : 0L)
+                            .lcgPositionJugWin(line.equals("JUG") && win ? 1L : 0L)
+                            .lcgPositionMidWin(line.equals("MID") && win ? 1L : 0L)
+                            .lcgPositionAdcWin(line.equals("ADC") && win ? 1L : 0L)
+                            .lcgPositionSupWin(line.equals("SUP") && win ? 1L : 0L)
+                            .lcgPositionTopPlaytime(line.equals("TOP") ? (long) duration : 0L)
+                            .lcgPositionJugPlaytime(line.equals("JUG") ? (long) duration : 0L)
+                            .lcgPositionMidPlaytime(line.equals("MID") ? (long) duration : 0L)
+                            .lcgPositionAdcPlaytime(line.equals("ADC") ? (long) duration : 0L)
+                            .lcgPositionSupPlaytime(line.equals("SUP") ? (long) duration : 0L)
                             .build());
                 }
             }
