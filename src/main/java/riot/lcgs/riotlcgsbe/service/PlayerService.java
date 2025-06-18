@@ -377,7 +377,7 @@ public class PlayerService {
                             .build());
                 }
 
-                return CommonResponseDto.setSuccess("플레이어 Champion 전적 저장 완료!", "Success");
+                return CommonResponseDto.setSuccess("플레이어 Ranking 저장 완료!", "Success");
             } else {
                 return CommonResponseDto.setFailed("중복 저장");
             }
@@ -492,7 +492,7 @@ public class PlayerService {
                 }
             }
 
-            return CommonResponseDto.setSuccess("플레이어 Relative 전적 저장 완료!", "Success");
+            return CommonResponseDto.setSuccess("플레이어 Position 저장 및 업데이트 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Failed");
