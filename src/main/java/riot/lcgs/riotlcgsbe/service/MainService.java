@@ -52,6 +52,13 @@ public class MainService {
 //            }
             //
 
+            // 경우2(원딜) -> 경우1(알코올)
+            for(int i=0; i<gameData.getParticipantIdentities().size(); i++) {
+                if(gameData.getParticipantIdentities().get(i).getPlayer().getPuuid().equals("8c77580d-04d8-5885-94a0-6fea71350fa4")) {
+                    gameData.getParticipantIdentities().get(i).getPlayer().setPuuid("0d698fc9-7d69-5c0f-8c10-14a827e8de2d");
+                }
+            }
+
             // TeamId => 100 : Blue , 200 : Red
             boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
