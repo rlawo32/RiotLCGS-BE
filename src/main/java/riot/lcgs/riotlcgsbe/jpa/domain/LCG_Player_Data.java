@@ -93,6 +93,9 @@ public class LCG_Player_Data {
     @Column(name = "lcg_ai_summary_verify")
     private String lcgAiSummaryVerify;
 
+    @NotNull
+    @Column(name = "lcg_player_hide")
+    private String lcgPlayerHide;
 
     public LCG_Player_Data playerDataUpdate(Player playerData, RankData rankData) {
         this.lcgSummonerNickname = playerData.getGameName() + "#" + playerData.getTagLine();
@@ -121,7 +124,7 @@ public class LCG_Player_Data {
                            String lcgPresentTier, String lcgPresentDivision, String lcgPresentHighTier,
                            String lcgPresentHighDivision, String lcgPreviousTier, String lcgPreviousDivision,
                            String lcgPreviousHighTier, String lcgPreviousHighDivision,
-                           String lcgAiSummaryContent, String lcgAiSummaryVerify) {
+                           String lcgAiSummaryContent, String lcgAiSummaryVerify, String lcgPlayerHide) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgSummonerNickname = lcgSummonerNickname;
@@ -141,5 +144,6 @@ public class LCG_Player_Data {
         this.lcgPreviousHighDivision = lcgPreviousHighDivision;
         this.lcgAiSummaryContent = lcgAiSummaryContent;
         this.lcgAiSummaryVerify = lcgAiSummaryVerify;
+        this.lcgPlayerHide = lcgPlayerHide;
     }
 }
