@@ -82,6 +82,7 @@ public class PlayerService {
                             .lcgPreviousHighDivision(rankData.getPreviousHighestDivision())
                             .lcgAiSummaryContent("")
                             .lcgAiSummaryVerify("N")
+                            .lcgPlayerHide("N")
                             .build());
                 }
 
