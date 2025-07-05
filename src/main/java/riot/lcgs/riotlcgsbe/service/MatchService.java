@@ -98,6 +98,7 @@ public class MatchService {
             int duration = gameData.getGameDuration();
 
             List<Participants> list1 = gameData.getParticipants();
+            List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
             int[] maxGold = new int[10];
             int[] maxCrowd = new int[10];
             int[] maxDpm = new int[10];
@@ -147,6 +148,17 @@ public class MatchService {
                     .lcgMaxDamageTaken(maxDamageTaken[9])
                     .lcgAiSummaryContent("")
                     .lcgAiSummaryVerify("N").build());
+
+            for(int i=0; i<list2.size(); i++) {
+                ParticipantIdentities participantIdentities = list2.get(i);
+                Player playerData = participantIdentities.getPlayer();
+
+                String puuid = playerData.getPuuid();
+
+                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
+                lcgPlayerData.aiSummaryUpdate();
+            }
 
             boolean existsCheck = lcgMatchEtcRepository.existsLCG_Match_EtcByLcgMainVer(version.get("ver"));
 
