@@ -116,9 +116,8 @@ public class LCG_Player_Data {
         return this;
     }
 
-    public LCG_Player_Data aiSummaryUpdate() {
+    public void aiSummaryUpdate() {
         this.lcgAiSummaryVerify = "N";
-        return this;
     }
 
     @Builder
