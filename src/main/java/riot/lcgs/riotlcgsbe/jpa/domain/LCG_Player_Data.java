@@ -113,6 +113,10 @@ public class LCG_Player_Data {
         this.lcgPreviousDivision = rankData.getPreviousDivision();
         this.lcgPreviousHighTier = rankData.getPreviousHighestTier();
         this.lcgPreviousHighDivision = rankData.getPreviousHighestDivision();
+        return this;
+    }
+
+    public LCG_Player_Data aiSummaryUpdate() {
         this.lcgAiSummaryVerify = "N";
         return this;
     }
