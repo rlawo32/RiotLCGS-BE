@@ -45,7 +45,7 @@ public class MainService {
             // TeamId => 100 : Blue , 200 : Red
             boolean duplicationCheck = lcgMatchInfoRepository.existsLCG_Match_InfoByLcgGameId(gameId);
 
-            if(duplicationCheck) {
+            if(!duplicationCheck) {
                 if(DataDragonAPIVersion().isResult()) {
                     Map<String, String> version = DataDragonAPIVersion().getData();
                     ExtractionTool.jsonChampion = DataDragonAPIChampion().getData();
@@ -54,12 +54,12 @@ public class MainService {
                     playerService.LCGPlayerRelativeSave(gameData, teamData);
                     playerService.LCGPlayerChampionSave(gameData);
                     playerService.LCGPlayerStatisticsSave(gameData);
-//                    playerService.LCGPlayerPositionSave(gameData, teamData);
-//                    matchService.LCGMatchInfoSave(gameId, gameData, version);
-//                    matchService.LCGTeamLogSave(gameId, gameData, version);
-//                    matchService.LCGMatchMainSave(gameId, gameData);
-//                    matchService.LCGMatchSubSave(gameId, gameData);
-//                    matchService.LCGMatchTeamSave(gameId, gameData);
+                    playerService.LCGPlayerPositionSave(gameData, teamData);
+                    matchService.LCGMatchInfoSave(gameId, gameData, version);
+                    matchService.LCGTeamLogSave(gameId, gameData, version);
+                    matchService.LCGMatchMainSave(gameId, gameData);
+                    matchService.LCGMatchSubSave(gameId, gameData);
+                    matchService.LCGMatchTeamSave(gameId, gameData);
 //                    playerService.LCGPlayerRankingSave();
 
                     return CommonResponseDto.setSuccess("저장 완료", "Success");
