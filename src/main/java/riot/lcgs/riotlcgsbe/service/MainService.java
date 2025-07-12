@@ -57,7 +57,7 @@ public class MainService {
                     playerService.LCGPlayerPositionSave(gameData, teamData);
                     matchService.LCGMatchInfoSave(gameId, gameData, version);
                     matchService.LCGTeamLogSave(gameId, gameData, version);
-                    matchService.LCGMatchMainSave(gameId, gameData);
+                    matchService.LCGMatchMainSave(gameId, gameData, teamData);
                     matchService.LCGMatchSubSave(gameId, gameData);
                     matchService.LCGMatchTeamSave(gameId, gameData);
 //                    playerService.LCGPlayerRankingSave();
@@ -84,7 +84,7 @@ public class MainService {
             String checkRankData = validationService.ValidationCheckRankData(rankData).getMessage();
 
             if(checkGameData.equals("Success") && checkRankData.equals("Success")) {
-                playerService.LCGPlayerRankingSave();
+                //playerService.LCGPlayerRankingSave();
                 playerService.LCGPlayerDataSave(gameData, rankData);
 
                 return CommonResponseDto.setSuccess("플레이어 저장 완료!", "Success");
