@@ -38,6 +38,14 @@ public class LCG_Match_Main {
     private String lcgMvpRank;
 
     @NotNull
+    @Column(name = "lcg_summoner_line")
+    private String lcgSummonerLine;
+
+    @NotNull
+    @Column(name = "lcg_line_order")
+    private int lcgLineOrder;
+
+    @NotNull
     @Column(name = "lcg_champion_id")
     private int lcgChampionId;
 
@@ -121,18 +129,27 @@ public class LCG_Match_Main {
     @Column(name = "lcg_jungle_count")
     private int lcgJungleCount;
 
+//    public LCG_Match_Main positionUpdate(String line, int orderNum) {
+//        this.lcgSummonerLine = line;
+//        this.lcgLineOrder = orderNum;
+//        return this;
+//    }
+
     @Builder
     public LCG_Match_Main(Long lcgGameId, int lcgParticipantId, int lcgTeamId, String lcgSummonerPuuid,
-                          String lcgMvpRank, int lcgChampionId, String lcgChampionName, int lcgChampionLevel,
-                          String lcgSpellName1, String lcgSpellName2, String lcgPerkName1, String lcgPerkName2,
-                          int lcgItemId1, int lcgItemId2, int lcgItemId3, int lcgItemId4, int lcgItemId5,
-                          int lcgItemId6, int lcgItemId7, int lcgKillCount, int lcgDeathCount, int lcgAssistCount,
-                          int lcgDamageTotal, int lcgDamageTaken, int lcgMinionCount, int lcgJungleCount) {
+                          String lcgMvpRank, String lcgSummonerLine, int lcgLineOrder, int lcgChampionId,
+                          String lcgChampionName, int lcgChampionLevel, String lcgSpellName1, String lcgSpellName2,
+                          String lcgPerkName1, String lcgPerkName2, int lcgItemId1, int lcgItemId2, int lcgItemId3,
+                          int lcgItemId4, int lcgItemId5, int lcgItemId6, int lcgItemId7, int lcgKillCount,
+                          int lcgDeathCount, int lcgAssistCount, int lcgDamageTotal, int lcgDamageTaken,
+                          int lcgMinionCount, int lcgJungleCount) {
         this.lcgGameId = lcgGameId;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgTeamId = lcgTeamId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgMvpRank = lcgMvpRank;
+        this.lcgSummonerLine = lcgSummonerLine;
+        this.lcgLineOrder = lcgLineOrder;
         this.lcgChampionId = lcgChampionId;
         this.lcgChampionName = lcgChampionName;
         this.lcgChampionLevel = lcgChampionLevel;
