@@ -202,7 +202,7 @@ public class MatchService {
     }
 
     @Transactional
-    public CommonResponseDto<?> LCGMatchMainSave(Long gameId, GameData gameData) {
+    public CommonResponseDto<?> LCGMatchMainSave(Long gameId, GameData gameData, List<TeamData> teamData) {
 
         try {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
@@ -237,6 +237,14 @@ public class MatchService {
                 }
             }
 
+            for(TeamData player : teamData) {
+                String name = player.getName();
+                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
+
+                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
+            }
+
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
                 Participants participants = list2.get(i);
@@ -258,14 +266,45 @@ public class MatchService {
                     }
                 }
 
+                String puuid = playerData.getPuuid();
+                String line = "";
+                int teamId = participants.getTeamId();
+                int orderNum = 0;
+
+                for(TeamData player : teamData) {
+                    if(player.getPuuid().equals(puuid)) {
+                        line = player.getLine();
+                    }
+                }
+
+                if(teamId == 100) {
+                    switch (line) {
+                        case "TOP" : orderNum = 1; break;
+                        case "JUG" : orderNum = 2; break;
+                        case "MID" : orderNum = 3; break;
+                        case "ADC" : orderNum = 4; break;
+                        case "SUP" : orderNum = 5; break;
+                    }
+                } else {
+                    switch (line) {
+                        case "TOP" : orderNum = 6; break;
+                        case "JUG" : orderNum = 7; break;
+                        case "MID" : orderNum = 8; break;
+                        case "ADC" : orderNum = 9; break;
+                        case "SUP" : orderNum = 10; break;
+                    }
+                }
+
                 String championName = ExtractionName(participants.getChampionId()).getData();
 
                 lcgMatchMainRepository.save(LCG_Match_Main.builder()
                         .lcgGameId(gameId)
                         .lcgParticipantId(participantIdentities.getParticipantId())
                         .lcgTeamId(participants.getTeamId())
-                        .lcgSummonerPuuid(playerData.getPuuid())
+                        .lcgSummonerPuuid(puuid)
                         .lcgMvpRank(mvpRank)
+                        .lcgSummonerLine(line)
+                        .lcgLineOrder(orderNum)
                         .lcgChampionId(participants.getChampionId())
                         .lcgChampionName(championName)
                         .lcgChampionLevel(statsData.getChampLevel())
