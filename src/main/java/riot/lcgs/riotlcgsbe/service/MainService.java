@@ -3,7 +3,9 @@ package riot.lcgs.riotlcgsbe.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import riot.lcgs.riotlcgsbe.jpa.domain.TEST;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.TEST_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
@@ -26,6 +28,7 @@ public class MainService {
     private final MvpService mvpService;
 
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
+    private final TEST_Repository testRepository;
 
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
 
@@ -60,7 +63,7 @@ public class MainService {
                     matchService.LCGMatchMainSave(gameId, gameData, teamData);
                     matchService.LCGMatchSubSave(gameId, gameData);
                     matchService.LCGMatchTeamSave(gameId, gameData);
-//                    playerService.LCGPlayerRankingSave();
+                    playerService.LCGPlayerRankingSave();
 
                     return CommonResponseDto.setSuccess("저장 완료", "Success");
                 } else {
@@ -97,10 +100,15 @@ public class MainService {
         }
     }
 
+    @Transactional
     public CommonResponseDto<?> testService() {
 
         try {
             playerService.LCGPlayerRankingSave();
+//            testRepository.save(TEST.builder()
+//                    .testContent("TEST1")
+//                    .testVerify("N")
+//                    .build());
 
             return CommonResponseDto.setSuccess("TEST 완료!", "Success");
         } catch (Exception ex) {
