@@ -15,22 +15,6 @@ import riot.lcgs.riotlcgsbe.web.dto.object.RankData;
 public class LCG_Player_Ranking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "row_num")
-    private Long rowNum;
-
-    @NotNull
-    @Column(name = "lcg_ranking_count")
-    private Long lcgRankingCount;
-
-    @NotNull
-    @Column(name = "lcg_ranking_rank")
-    private Long lcgRankingRank;
-
-    @NotNull
-    @Column(name = "lcg_ranking_score")
-    private Long lcgRankingScore;
-
     @NotNull
     @Column(name = "lcg_summoner_puuid")
     private String lcgSummonerPuuid;
@@ -43,14 +27,31 @@ public class LCG_Player_Ranking {
     @Column(name = "lcg_summoner_nickname")
     private String lcgSummonerNickname;
 
+    @NotNull
+    @Column(name = "lcg_ranking_current")
+    private int lcgRankingCurrent;
+
+    @NotNull
+    @Column(name = "lcg_ranking_previous")
+    private int lcgRankingPrevious;
+
+    @NotNull
+    @Column(name = "lcg_ranking_score")
+    private int lcgRankingScore;
+
+    @NotNull
+    @Column(name = "lcg_ranking_count")
+    private int lcgRankingCount;
+
     @Builder
-    public LCG_Player_Ranking(Long lcgRankingCount, Long lcgRankingRank, Long lcgRankingScore,
-                              String lcgSummonerPuuid, String lcgPlayerName, String lcgSummonerNickname) {
-        this.lcgRankingCount = lcgRankingCount;
-        this.lcgRankingRank = lcgRankingRank;
-        this.lcgRankingScore = lcgRankingScore;
+    public LCG_Player_Ranking(String lcgSummonerPuuid, String lcgPlayerName, String lcgSummonerNickname,
+                              int lcgRankingCurrent, int lcgRankingPrevious, int lcgRankingScore, int lcgRankingCount) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayerName = lcgPlayerName;
         this.lcgSummonerNickname = lcgSummonerNickname;
+        this.lcgRankingCurrent = lcgRankingCurrent;
+        this.lcgRankingPrevious = lcgRankingPrevious;
+        this.lcgRankingScore = lcgRankingScore;
+        this.lcgRankingCount = lcgRankingCount;
     }
 }
