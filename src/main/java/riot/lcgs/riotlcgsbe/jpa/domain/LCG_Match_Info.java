@@ -88,13 +88,17 @@ public class LCG_Match_Info {
     @Column(name = "lcg_ai_summary_verify")
     private String lcgAiSummaryVerify;
 
+    @NotNull
+    @Column(name = "lcg_game_capture_verify")
+    private String lcgGameCaptureVerify;
+
     @Builder
     public LCG_Match_Info(Long lcgGameId, String lcgGameDate, String lcgGameMode,
                           String lcgGameType, int lcgGameDuration, int lcgGameMap,
                           String lcgVerMain, int lcgMaxGold, int lcgMaxCrowd, int lcgMaxDpm,
                           int lcgMaxGpm, int lcgMaxDpg, int lcgMaxDpd, int lcgMaxTpd,
-                          int lcgMaxDamageTotal, int lcgMaxDamageTaken,
-                          String lcgAiSummaryContent, String lcgAiSummaryVerify) {
+                          int lcgMaxDamageTotal, int lcgMaxDamageTaken, String lcgAiSummaryContent,
+                          String lcgAiSummaryVerify, String lcgGameCaptureVerify) {
         this.lcgGameId = lcgGameId;
         this.lcgGameDate = lcgGameDate;
         this.lcgGameMode = lcgGameMode;
@@ -113,5 +117,6 @@ public class LCG_Match_Info {
         this.lcgMaxDamageTaken = lcgMaxDamageTaken;
         this.lcgAiSummaryContent = lcgAiSummaryContent;
         this.lcgAiSummaryVerify = lcgAiSummaryVerify;
+        this.lcgGameCaptureVerify = lcgGameCaptureVerify;
     }
 }
