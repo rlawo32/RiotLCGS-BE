@@ -364,17 +364,18 @@ public class PlayerService {
 
             Long rankingCount = lcgMatchEtc.getLcgRankingCount();
 
-            boolean duplicationCheck = lcgPlayerRankingRepository.existsLCG_Player_RankingByLcgRankingCount(rankingCount);
+            boolean duplicationCheck = lcgPlayerRankingRepository.existsLCG_Player_RankingByLcgRankingCount(Integer.parseInt(String.valueOf(rankingCount)));
 
             if(!duplicationCheck) {
                 for(Map<String, Object> map : listPlayer) {
                     lcgPlayerRankingRepository.save(LCG_Player_Ranking.builder()
-                            .lcgRankingCount(rankingCount)
-                            .lcgRankingRank(Long.parseLong(String.valueOf(map.get("rank"))))
-                            .lcgRankingScore(Long.parseLong(String.valueOf(map.get("score"))))
                             .lcgSummonerPuuid((String) map.get("puuid"))
                             .lcgPlayerName((String) map.get("name"))
                             .lcgSummonerNickname((String) map.get("nickname"))
+                            .lcgRankingCurrent(Integer.parseInt(String.valueOf(map.get("rank"))))
+                            .lcgRankingPrevious(0)
+                            .lcgRankingScore(Integer.parseInt(String.valueOf(map.get("score"))))
+                            .lcgRankingCount(0)
                             .build());
                 }
 
