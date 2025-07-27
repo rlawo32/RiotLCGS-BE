@@ -366,12 +366,12 @@ public class PlayerService {
                 String nickName = (String) map.get("nickname");
                 int rank2 = Integer.parseInt(String.valueOf(map.get("rank")));
                 int gradeStandard = Math.round((float) listPlayer.size() / 5);
-                int grade = 0;
+                int grade = 5;
                 for(int i=gradeStandard; i<=listPlayer.size(); i+=gradeStandard) {
-                    grade++;
                     if(rank2 <= i) {
                         break;
                     }
+                    grade--;
                 }
                 int score = Integer.parseInt(String.valueOf(map.get("score")));
 
