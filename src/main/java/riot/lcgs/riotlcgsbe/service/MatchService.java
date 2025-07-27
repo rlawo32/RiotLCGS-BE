@@ -147,7 +147,8 @@ public class MatchService {
                     .lcgMaxDamageTotal(maxDamageTotal[9])
                     .lcgMaxDamageTaken(maxDamageTaken[9])
                     .lcgAiSummaryContent("")
-                    .lcgAiSummaryVerify("N").build());
+                    .lcgAiSummaryVerify("N")
+                    .lcgGameCaptureVerify("N").build());
 
             for(int i=0; i<list2.size(); i++) {
                 ParticipantIdentities participantIdentities = list2.get(i);
