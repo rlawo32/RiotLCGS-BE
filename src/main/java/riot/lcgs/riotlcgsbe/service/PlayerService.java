@@ -358,31 +358,50 @@ public class PlayerService {
                 compare = map.get("score");
             }
 
-            List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
-            LCG_Match_Etc lcgMatchEtc = lcgMatchEtcRepository.findById("LcgVer" + String.format("%04d", list.size()))
-                    .orElseThrow(() -> new IllegalArgumentException("해당 게임 버전이 없습니다. LcgVer : " + list.size() +"v"));
+            int cnt = 0;
+            for(Map<String, Object> map : listPlayer) {
 
-            Long rankingCount = lcgMatchEtc.getLcgRankingCount();
-
-            boolean duplicationCheck = lcgPlayerRankingRepository.existsLCG_Player_RankingByLcgRankingCount(Integer.parseInt(String.valueOf(rankingCount)));
-
-            if(!duplicationCheck) {
-                for(Map<String, Object> map : listPlayer) {
-                    lcgPlayerRankingRepository.save(LCG_Player_Ranking.builder()
-                            .lcgSummonerPuuid((String) map.get("puuid"))
-                            .lcgPlayerName((String) map.get("name"))
-                            .lcgSummonerNickname((String) map.get("nickname"))
-                            .lcgRankingCurrent(Integer.parseInt(String.valueOf(map.get("rank"))))
-                            .lcgRankingPrevious(0)
-                            .lcgRankingScore(Integer.parseInt(String.valueOf(map.get("score"))))
-                            .lcgRankingCount(0)
-                            .build());
+                String puuid = (String) map.get("puuid");
+                String name = (String) map.get("name");
+                String nickName = (String) map.get("nickname");
+                int rank2 = Integer.parseInt(String.valueOf(map.get("rank")));
+                int gradeStandard = Math.round((float) listPlayer.size() / 5);
+                int grade = 0;
+                for(int i=gradeStandard; i<=listPlayer.size(); i+=gradeStandard) {
+                    grade++;
+                    if(rank2 <= i) {
+                        break;
+                    }
                 }
+                int score = Integer.parseInt(String.valueOf(map.get("score")));
 
-                return CommonResponseDto.setSuccess("플레이어 Ranking 저장 완료!", "Success");
-            } else {
-                return CommonResponseDto.setFailed("중복 저장");
+                System.out.println("플레이어 chk " + puuid + "/" + name + "/" + nickName + "/" + rank2 + "/" + score);
+                boolean duplicationCheck = lcgPlayerRankingRepository.existsLCG_Player_RankingByLcgSummonerPuuid(puuid);
+                cnt++;
+
+                if(!duplicationCheck) {
+                    lcgPlayerRankingRepository.save(LCG_Player_Ranking.builder()
+                            .lcgSummonerPuuid(puuid)
+                            .lcgPlayerName(name)
+                            .lcgSummonerNickname(nickName)
+                            .lcgRankingCurrent(rank2)
+                            .lcgRankingPrevious(0)
+                            .lcgRankingGrade(grade)
+                            .lcgRankingScore(score)
+                            .lcgRankingCount(1)
+                            .build());
+
+                    System.out.println("플레이어 Ranking 신규 저장 완료! (" + cnt + ") : " + name);
+                } else {
+                    LCG_Player_Ranking lcgPlayerRanking = lcgPlayerRankingRepository.findById(puuid)
+                            .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. puuid : " + puuid));
+
+                    lcgPlayerRanking.playerRankingUpdate(rank2, lcgPlayerRanking.getLcgRankingCurrent(), grade, score);
+
+                    System.out.println("플레이어 Ranking 업데이트 완료! (" + cnt + ") : " + name);
+                }
             }
+            return CommonResponseDto.setSuccess("플레이어 Ranking 업데이트 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Failed");
