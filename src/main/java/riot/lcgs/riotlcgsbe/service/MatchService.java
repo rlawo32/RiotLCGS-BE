@@ -161,17 +161,33 @@ public class MatchService {
                 lcgPlayerData.aiSummaryUpdate();
             }
 
+            return CommonResponseDto.setSuccess("MatchInfo Data 저장 및 MatchEtc 업데이트 완료!", "Success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+    }
+
+    @Transactional
+    public CommonResponseDto<String> LCGMatchEtcSave(Map<String, String> version) {
+
+        try {
+            LocalDateTime localDateTime = LocalDateTime.now();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String now = localDateTime.format(dtf);
+
             boolean existsCheck = lcgMatchEtcRepository.existsLCG_Match_EtcByLcgMainVer(version.get("ver"));
+            String imageUpdate;
 
             if(!existsCheck) {
                 List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
-                
+
                 String imageMain = version.get("cdn") + "/" + version.get("ver") + "/img/";
                 String imageSub = version.get("cdn") + "/img/";
-                
+
                 lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
                         .lcgVersion("LcgVer" + String.format("%04d", list.size()+1))
-                        .lcgUpdateDate(gameData.getGameCreationDate())
+                        .lcgUpdateDate(now)
                         .lcgUpdatePlayer(now)
                         .lcgUpdateData(now)
                         .lcgCdn(version.get("cdn"))
@@ -185,6 +201,7 @@ public class MatchService {
                         .lcgMainImage(imageMain)
                         .lcgSubImage(imageSub)
                         .lcgRankingCount(0L).build());
+                imageUpdate = "N";
             } else {
                 List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
                 LCG_Match_Etc lcgMatchEtc = lcgMatchEtcRepository.findById("LcgVer" + String.format("%04d", list.size()))
@@ -193,9 +210,10 @@ public class MatchService {
                 lcgMatchEtc.playerRecentUpdate(now);
                 lcgMatchEtc.gameDataRecentUpdate(now);
                 lcgMatchEtc.rankingCountUpdate(lcgMatchEtc.getLcgRankingCount()+1);
+                imageUpdate = "Y";
             }
 
-            return CommonResponseDto.setSuccess("MatchInfo Data 저장 및 MatchEtc 업데이트 완료!", "Success");
+            return CommonResponseDto.setSuccess("MatchEtc 업데이트 완료!", imageUpdate);
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
