@@ -200,6 +200,7 @@ public class MatchService {
                         .lcgChampionVer(version.get("champion"))
                         .lcgMainImage(imageMain)
                         .lcgSubImage(imageSub)
+                        .lcgR2Image("https://pub-2e725a3fe396499cb0d0d2085e11509e.r2.dev/")
                         .lcgRankingCount(0L).build());
                 imageUpdate = "N";
             } else {
