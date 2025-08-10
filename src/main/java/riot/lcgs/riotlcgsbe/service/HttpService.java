@@ -2,8 +2,6 @@ package riot.lcgs.riotlcgsbe.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.MainVersion;
 import riot.lcgs.riotlcgsbe.web.dto.object.Perk;
@@ -18,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
-@Service
 public class HttpService {
 
     private static String verMain;
