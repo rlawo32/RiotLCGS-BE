@@ -1,6 +1,7 @@
 package riot.lcgs.riotlcgsbe.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.TEST;
@@ -26,6 +27,7 @@ public class MainService {
     private final MatchService matchService;
     private final PlayerService playerService;
     private final MvpService mvpService;
+    private final ImageService imageService;
 
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
     private final TEST_Repository testRepository;
@@ -59,6 +61,7 @@ public class MainService {
                     playerService.LCGPlayerStatisticsSave(gameData);
                     playerService.LCGPlayerPositionSave(gameData, teamData);
                     matchService.LCGMatchInfoSave(gameId, gameData, version);
+                    matchService.LCGMatchEtcSave(version);
                     matchService.LCGTeamLogSave(gameId, gameData, version);
                     matchService.LCGMatchMainSave(gameId, gameData, teamData);
                     matchService.LCGMatchSubSave(gameId, gameData);
@@ -101,10 +104,28 @@ public class MainService {
     }
 
     @Transactional
+//    @Scheduled(cron = "0 0 0 * * ?") // 매일 24시
+    public void LCGCustomGameImageSave() {
+
+        try {
+            Map<String, String> version = DataDragonAPIVersion().getData();
+            String imageUpdate = matchService.LCGMatchEtcSave(version).getData();
+            if(imageUpdate.equals("N")) {
+                imageService.DataDragonImageUpload(version.get("ver"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Database Insert Failed !");
+        }
+    }
+
+    @Transactional
     public CommonResponseDto<?> testService() {
 
         try {
-            playerService.LCGPlayerRankingSave();
+            Map<String, String> version = DataDragonAPIVersion().getData();
+            imageService.DataDragonImageUpload(version.get("ver"));
+//            playerService.LCGPlayerRankingSave();
 //            testRepository.save(TEST.builder()
 //                    .testContent("TEST1")
 //                    .testVerify("N")
@@ -113,7 +134,7 @@ public class MainService {
             return CommonResponseDto.setSuccess("TEST 완료!", "Success");
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setFailed("Database Insert Failed !");
+            return CommonResponseDto.setFailed("TEST 실패!");
         }
     }
 }
