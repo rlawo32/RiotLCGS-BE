@@ -22,6 +22,10 @@ public class LCG_Match_Main {
     private Long lcgGameId;
 
     @NotNull
+    @Column(name = "lcg_game_set")
+    private String lcgGameSet;
+
+    @NotNull
     @Column(name = "lcg_participant_id")
     private int lcgParticipantId;
 
@@ -136,14 +140,15 @@ public class LCG_Match_Main {
 //    }
 
     @Builder
-    public LCG_Match_Main(Long lcgGameId, int lcgParticipantId, int lcgTeamId, String lcgSummonerPuuid,
-                          String lcgMvpRank, String lcgSummonerLine, int lcgLineOrder, int lcgChampionId,
-                          String lcgChampionName, int lcgChampionLevel, String lcgSpellName1, String lcgSpellName2,
-                          String lcgPerkName1, String lcgPerkName2, int lcgItemId1, int lcgItemId2, int lcgItemId3,
-                          int lcgItemId4, int lcgItemId5, int lcgItemId6, int lcgItemId7, int lcgKillCount,
-                          int lcgDeathCount, int lcgAssistCount, int lcgDamageTotal, int lcgDamageTaken,
-                          int lcgMinionCount, int lcgJungleCount) {
+    public LCG_Match_Main(Long lcgGameId, String lcgGameSet, int lcgParticipantId, int lcgTeamId,
+                          String lcgSummonerPuuid, String lcgMvpRank, String lcgSummonerLine, int lcgLineOrder,
+                          int lcgChampionId, String lcgChampionName, int lcgChampionLevel, String lcgSpellName1,
+                          String lcgSpellName2, String lcgPerkName1, String lcgPerkName2, int lcgItemId1,
+                          int lcgItemId2, int lcgItemId3, int lcgItemId4, int lcgItemId5, int lcgItemId6,
+                          int lcgItemId7, int lcgKillCount,  int lcgDeathCount, int lcgAssistCount,
+                          int lcgDamageTotal, int lcgDamageTaken, int lcgMinionCount, int lcgJungleCount) {
         this.lcgGameId = lcgGameId;
+        this.lcgGameSet = lcgGameSet;
         this.lcgParticipantId = lcgParticipantId;
         this.lcgTeamId = lcgTeamId;
         this.lcgSummonerPuuid = lcgSummonerPuuid;
