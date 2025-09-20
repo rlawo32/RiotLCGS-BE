@@ -10,10 +10,7 @@ import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
@@ -230,6 +227,23 @@ public class MatchService {
             List<Teams> list3 = gameData.getTeams();
             List<Metrics> list4 = mvpService.LCGMvpSelection(gameData).getData();
 
+            // 게임 세트 구하기
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime minus = now.minusHours(4);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+            String todayGameSet = minus.format(formatter);
+            String gameSet = "";
+
+            Optional<LCG_Match_Main> lcgMatchMain = lcgMatchMainRepository.findLCG_Match_MainByLcgGameSetContaining(todayGameSet);
+
+            if(lcgMatchMain.isPresent()) {
+                String prevSet = lcgMatchMain.get().getLcgGameSet(); // ex. 09/18-SET_01
+                int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
+                gameSet = prevSet.split("_")[0] + String.format("%02d", nextNumber); // ex. 09/18-SET_02
+            } else {
+                gameSet = todayGameSet + "SET_01";
+            }
+
             String mvpPuuid = "";
             String acePuuid = "";
             int winTeam = 0;
@@ -319,6 +333,7 @@ public class MatchService {
 
                 lcgMatchMainRepository.save(LCG_Match_Main.builder()
                         .lcgGameId(gameId)
+                        .lcgGameSet(gameSet)
                         .lcgParticipantId(participantIdentities.getParticipantId())
                         .lcgTeamId(participants.getTeamId())
                         .lcgSummonerPuuid(puuid)
