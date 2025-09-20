@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Main;
 import riot.lcgs.riotlcgsbe.jpa.domain.TEST;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
 import riot.lcgs.riotlcgsbe.jpa.repository.TEST_Repository;
@@ -13,8 +14,11 @@ import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static riot.lcgs.riotlcgsbe.service.HttpService.*;
 import static riot.lcgs.riotlcgsbe.util.AccountCheckTool.playerAccountChk;
@@ -123,13 +127,35 @@ public class MainService {
     public CommonResponseDto<?> testService() {
 
         try {
-            Map<String, String> version = DataDragonAPIVersion().getData();
-            imageService.DataDragonImageUpload(version.get("ver"));
+//            Map<String, String> version = DataDragonAPIVersion().getData();
+//            imageService.DataDragonImageUpload(version.get("ver"));
 //            playerService.LCGPlayerRankingSave();
 //            testRepository.save(TEST.builder()
 //                    .testContent("TEST1")
 //                    .testVerify("N")
 //                    .build());
+
+            // 게임 세트 구하기
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime minus = now.minusHours(4);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+            String todayGameSet = minus.format(formatter);
+            String gameSet = "";
+
+            Optional<TEST> test = testRepository.findTESTByTestContent(todayGameSet);
+
+            if(test.isPresent()) {
+                String prevSet = test.get().getTestContent(); // ex. 09/18-SET_01
+                int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
+                gameSet = prevSet.split("_")[0] + String.format("%02d", nextNumber); // ex. 09/18-SET_02
+            } else {
+                gameSet = todayGameSet + "SET_01";
+            }
+
+            testRepository.save(TEST.builder()
+                    .testContent(gameSet)
+                    .testVerify("N")
+                    .build());
 
             return CommonResponseDto.setSuccess("TEST 완료!", "Success");
         } catch (Exception ex) {
