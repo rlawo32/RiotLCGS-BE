@@ -234,14 +234,14 @@ public class MatchService {
             String todayGameSet = minus.format(formatter);
             String gameSet = "";
 
-            Optional<LCG_Match_Main> lcgMatchMain = lcgMatchMainRepository.findLCG_Match_MainByLcgGameSetContaining(todayGameSet);
+            Optional<LCG_Match_Main> lcgMatchMain = lcgMatchMainRepository.findTopByLcgGameSetContainingOrderByRowNumDesc(todayGameSet);
 
             if(lcgMatchMain.isPresent()) {
                 String prevSet = lcgMatchMain.get().getLcgGameSet(); // ex. 09/18-SET_01
                 int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
-                gameSet = prevSet.split("_")[0] + String.format("%02d", nextNumber); // ex. 09/18-SET_02
+                gameSet = prevSet.split("_")[0] + "_" +String.format("%02d", nextNumber); // ex. 09/18-SET_02
             } else {
-                gameSet = todayGameSet + "SET_01";
+                gameSet = todayGameSet + "-SET_01";
             }
 
             String mvpPuuid = "";
