@@ -139,6 +139,11 @@ public class LCG_Match_Main {
 //        return this;
 //    }
 
+    public LCG_Match_Main gameSetUpdate(String gameSet) {
+        this.lcgGameSet = gameSet;
+        return this;
+    }
+
     @Builder
     public LCG_Match_Main(Long lcgGameId, String lcgGameSet, int lcgParticipantId, int lcgTeamId,
                           String lcgSummonerPuuid, String lcgMvpRank, String lcgSummonerLine, int lcgLineOrder,
