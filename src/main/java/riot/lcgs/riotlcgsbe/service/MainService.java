@@ -5,8 +5,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Main;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Data;
 import riot.lcgs.riotlcgsbe.jpa.domain.TEST;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Main_Repository;
 import riot.lcgs.riotlcgsbe.jpa.repository.TEST_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
@@ -34,6 +36,7 @@ public class MainService {
     private final ImageService imageService;
 
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
+    private final LCG_Match_Main_Repository lcgMatchMainRepository;
     private final TEST_Repository testRepository;
 
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
@@ -142,20 +145,22 @@ public class MainService {
             String todayGameSet = minus.format(formatter);
             String gameSet = "";
 
-            Optional<TEST> test = testRepository.findTESTByTestContent(todayGameSet);
+            Optional<LCG_Match_Main> lcgMatchMainGameSet = lcgMatchMainRepository.findTopByLcgGameSetContainingOrderByRowNumDesc(todayGameSet);
 
-            if(test.isPresent()) {
-                String prevSet = test.get().getTestContent(); // ex. 09/18-SET_01
+            if(lcgMatchMainGameSet.isPresent()) {
+                String prevSet = lcgMatchMainGameSet.get().getLcgGameSet(); // ex. 09/18-SET_01
                 int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
-                gameSet = prevSet.split("_")[0] + String.format("%02d", nextNumber); // ex. 09/18-SET_02
+                gameSet = prevSet.split("_")[0] + "_" +String.format("%02d", nextNumber); // ex. 09/18-SET_02
             } else {
-                gameSet = todayGameSet + "SET_01";
+                gameSet = todayGameSet + "-SET_02";
             }
 
-            testRepository.save(TEST.builder()
-                    .testContent(gameSet)
-                    .testVerify("N")
-                    .build());
+            Long gameId = 7800181301L;
+
+            List<LCG_Match_Main> lcgMatchMain = lcgMatchMainRepository.findByLcgGameId(gameId);
+            for(int i=0; i<lcgMatchMain.size(); i++) {
+                lcgMatchMain.get(i).gameSetUpdate(gameSet);
+            }
 
             return CommonResponseDto.setSuccess("TEST 완료!", "Success");
         } catch (Exception ex) {
