@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface TEST_Repository extends JpaRepository<TEST, Long> {
 
-    Optional<TEST> findTESTByTestContent(String gameSet);
+    Optional<TEST> findTopByTestContentContainingOrderByRowNumDesc(String gameSet);
 }
