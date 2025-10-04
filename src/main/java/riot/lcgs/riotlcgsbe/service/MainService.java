@@ -152,7 +152,7 @@ public class MainService {
                 int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
                 gameSet = prevSet.split("_")[0] + "_" +String.format("%02d", nextNumber); // ex. 09/18-SET_02
             } else {
-                gameSet = todayGameSet + "-SET_02";
+                gameSet = todayGameSet + "-SET_01";
             }
 
             Long gameId = 7800181301L;
