@@ -469,7 +469,6 @@ public class MatchService {
                         .lcgBansName4(bansLen >= 4 ? ExtractionName(bans.get(3).getChampionId()).getData() : "Empty")
                         .lcgBansName5(bansLen >= 5 ? ExtractionName(bans.get(4).getChampionId()).getData() : "Empty")
                         .build());
-
             }
 
             return CommonResponseDto.setSuccess("MatchTeam Data 저장 완료!", "Success");

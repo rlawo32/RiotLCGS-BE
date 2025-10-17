@@ -17,10 +17,19 @@ public class ExtractionTool {
     public static CommonResponseDto<String> ExtractionName(int championId) {
 
         int idx = jsonChampion.indexOf("\"" + championId + "\"");
-        String extractionStep1 = jsonChampion.substring(idx-30, idx);
-        String[] extractionStep2 = extractionStep1.split(",");
-        String extractionResult = extractionStep2[1].replace("\"", "").substring(3);
 
+        String extractionResult;
+        if(idx != -1) {
+            String extractionStep1 = jsonChampion.substring(idx-30, idx);
+            String[] extractionStep2 = extractionStep1.split(",");
+            extractionResult = extractionStep2[1].replace("\"", "").substring(3);
+        } else {
+            if(championId == -1) {
+                extractionResult = "Empty";
+            } else {
+                extractionResult = "";
+            }
+        }
         return CommonResponseDto.setSuccess("Success", extractionResult);
     }
 
