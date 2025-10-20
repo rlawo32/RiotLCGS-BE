@@ -142,14 +142,15 @@ public class LCG_Player_Data {
     }
 
     @Builder
-    public LCG_Player_Data(String lcgSummonerPuuid, String lcgPlayer, String lcgSummonerNickname,
-                           Long lcgSummonerId, String lcgSummonerName, String lcgSummonerTag,
-                           int lcgSummonerIcon, int lcgRankPoint, int lcgRankWin,
+    public LCG_Player_Data(String lcgSummonerPuuid, int lcgWinningStreak, String lcgPlayer, 
+                           String lcgSummonerNickname, Long lcgSummonerId, String lcgSummonerName, 
+                           String lcgSummonerTag, int lcgSummonerIcon, int lcgRankPoint, int lcgRankWin,
                            String lcgPresentTier, String lcgPresentDivision, String lcgPresentHighTier,
                            String lcgPresentHighDivision, String lcgPreviousTier, String lcgPreviousDivision,
                            String lcgPreviousHighTier, String lcgPreviousHighDivision,
                            String lcgAiSummaryContent, String lcgAiSummaryVerify, String lcgPlayerHide) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
+        this.lcgWinningStreak = lcgWinningStreak;
         this.lcgPlayer = lcgPlayer;
         this.lcgSummonerNickname = lcgSummonerNickname;
         this.lcgSummonerId = lcgSummonerId;
