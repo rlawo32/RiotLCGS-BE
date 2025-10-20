@@ -519,4 +519,43 @@ public class PlayerService {
             return CommonResponseDto.setFailed("Failed");
         }
     }
+
+	@Transactional
+    public CommonResponseDto<?> LCGPlayerWinningStreakUpdate(GameData gameData, List<TeamData> teamData) {
+
+        try {
+            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+            List<Participants> list2 = gameData.getParticipants();
+
+            int duration = gameData.getGameDuration();
+
+            for(TeamData player : teamData) {
+                String name = player.getName();
+                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
+
+                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
+            }
+
+            for(int i=0; i<list1.size(); i++) {
+                ParticipantIdentities participantIdentities = list1.get(i);
+                Participants participants = list2.get(i);
+                Player playerData = participantIdentities.getPlayer();
+                Stats statsData = participants.getStats();
+
+                String puuid = playerData.getPuuid();
+                boolean win = statsData.getWin();
+
+				LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
+						.orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
+
+				lcgPlayerData.winningStreakUpdate(win);
+            }
+
+            return CommonResponseDto.setSuccess("플레이어 연승 기록 완료!", "Success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Failed");
+        }
+    }
 }
