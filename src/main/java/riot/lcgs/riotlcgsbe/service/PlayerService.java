@@ -549,7 +549,7 @@ public class PlayerService {
 				LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findById(puuid)
 						.orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-				lcgPlayerData.winningStreakUpdate(win);
+				lcgPlayerData.winningStreakUpdate(win, lcgPlayerData.getLcgWinningStreak());
             }
 
             return CommonResponseDto.setSuccess("플레이어 연승 기록 완료!", "Success");
