@@ -22,6 +22,10 @@ public class LCG_Player_Data {
     private String lcgSummonerPuuid;
 
     @NotNull
+    @Column(name = "lcg_winning_streak")
+    private int lcgWinningStreak;
+    
+    @NotNull
     @Column(name = "lcg_player")
     private String lcgPlayer;
 
@@ -118,6 +122,23 @@ public class LCG_Player_Data {
 
     public void aiSummaryUpdate() {
         this.lcgAiSummaryVerify = "N";
+    }
+
+    public LCG_Player_Data winningStreakUpdate(boolean win, int cnt) {
+        if(win) {
+            if(cnt < 0) {
+                this.lcgWinningStreak = 1;
+            } else {
+                this.lcgWinningStreak += 1;
+            }
+        } else {
+            if(cnt > 0) {
+                this.lcgWinningStreak = -1;
+            } else {
+                this.lcgWinningStreak -= 1;
+            }
+        }
+        return this;
     }
 
     @Builder
