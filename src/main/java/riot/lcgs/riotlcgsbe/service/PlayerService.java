@@ -64,6 +64,7 @@ public class PlayerService {
                     assert rankData != null;
                     lcgPlayerDataRepository.save(LCG_Player_Data.builder()
                             .lcgSummonerPuuid(puuid)
+							.lcgWinningStreak(0)
                             .lcgPlayer("")
                             .lcgSummonerNickname(nickname)
                             .lcgSummonerId(playerData.getSummonerId())
