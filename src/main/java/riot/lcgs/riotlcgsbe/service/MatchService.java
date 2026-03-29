@@ -129,7 +129,7 @@ public class MatchService {
             // 게임 세트 구하기
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime minus = now.minusHours(4);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
             String todayGameSet = minus.format(formatter);
             String gameSet = "";
 
@@ -248,7 +248,7 @@ public class MatchService {
             // 게임 세트 구하기
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime minus = now.minusHours(4);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
             String todayGameSet = minus.format(formatter);
             String gameSet = "";
 
