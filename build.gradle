@@ -55,6 +55,7 @@ dependencies {
 	implementation 'software.amazon.awssdk:s3:2.25.18'
 
 	implementation 'org.hibernate.common:hibernate-commons-annotations:6.0.6.Final'
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
 }
 
 tasks.named('test') {

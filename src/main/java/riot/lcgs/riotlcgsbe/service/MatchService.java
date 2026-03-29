@@ -88,9 +88,9 @@ public class MatchService {
             String[] extractionStep2 = extractionStep1[1].split("\\.");
             String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
 
-            LocalDateTime localDateTime = LocalDateTime.now();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String now = localDateTime.format(dtf);
+//            LocalDateTime localDateTime = LocalDateTime.now();
+//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//            String now = localDateTime.format(dtf);
 
             int duration = gameData.getGameDuration();
 
@@ -126,8 +126,26 @@ public class MatchService {
             Arrays.sort(maxDamageTotal);
             Arrays.sort(maxDamageTaken);
 
+            // 게임 세트 구하기
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime minus = now.minusHours(4);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd");
+            String todayGameSet = minus.format(formatter);
+            String gameSet = "";
+
+            Optional<LCG_Match_Main> lcgMatchMain = lcgMatchMainRepository.findTopByLcgGameSetContainingOrderByRowNumDesc(todayGameSet);
+
+            if(lcgMatchMain.isPresent()) {
+                String prevSet = lcgMatchMain.get().getLcgGameSet(); // ex. 09/18-SET_01
+                int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
+                gameSet = prevSet.split("_")[0] + "_" +String.format("%02d", nextNumber); // ex. 09/18-SET_02
+            } else {
+                gameSet = todayGameSet + "-SET_01";
+            }
+
             lcgMatchInfoRepository.save(LCG_Match_Info.builder()
                     .lcgGameId(gameId)
+                    .lcgGameSet(gameSet)
                     .lcgGameDate(extractionGameDate)
                     .lcgGameMode(gameData.getGameMode())
                     .lcgGameType(gameData.getGameType())
@@ -330,6 +348,15 @@ public class MatchService {
                 }
 
                 String championName = ExtractionName(participants.getChampionId()).getData();
+                int perkSubId = statsData.getPerkSubStyle();
+
+                if(perkSubId == 0) {
+                    int perkSubSearchId = statsData.getPerk5();
+                    String perkSubSearchIcon1 = ExtractionPerkIcon(perkSubSearchId).getData();
+                    String[] perkSubSearchArr = perkSubSearchIcon1.split("/");
+                    String perkSubSearchIcon2 = perkSubSearchArr[2];
+                    perkSubId = ExtractionPerkKey(perkSubSearchIcon2).getData();
+                }
 
                 lcgMatchMainRepository.save(LCG_Match_Main.builder()
                         .lcgGameId(gameId)
@@ -345,8 +372,8 @@ public class MatchService {
                         .lcgChampionLevel(statsData.getChampLevel())
                         .lcgSpellName1(ExtractionSummonerSpell(participants.getSpell1Id()).getData())
                         .lcgSpellName2(ExtractionSummonerSpell(participants.getSpell2Id()).getData())
-                        .lcgPerkName1(ExtractionPerk(statsData.getPerk0()).getData())
-                        .lcgPerkName2(ExtractionPerk(statsData.getPerkSubStyle()).getData())
+                        .lcgPerkName1(ExtractionPerkIcon(statsData.getPerk0()).getData())
+                        .lcgPerkName2(ExtractionPerkIcon(perkSubId).getData())
                         .lcgItemId1(statsData.getItem0()).lcgItemId2(statsData.getItem1())
                         .lcgItemId3(statsData.getItem2()).lcgItemId4(statsData.getItem3())
                         .lcgItemId5(statsData.getItem4()).lcgItemId6(statsData.getItem5())

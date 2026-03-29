@@ -62,7 +62,7 @@ public class ExtractionTool {
         return CommonResponseDto.setSuccess("Success", extractionResult);
     }
 
-    public static CommonResponseDto<String> ExtractionPerk(int perkId) {
+    public static CommonResponseDto<String> ExtractionPerkIcon(int perkId) {
 
         Map<Integer, String> extractionResult = new HashMap<>();
 
@@ -78,5 +78,23 @@ public class ExtractionTool {
         }
 
         return CommonResponseDto.setSuccess("Success", extractionResult.get(perkId));
+    }
+
+    public static CommonResponseDto<Integer> ExtractionPerkKey(String perkKey) {
+
+        Map<String, Integer> extractionResult = new HashMap<>();
+
+        for(int i=0; i<jsonPerk.size(); i++) {
+            extractionResult.put(jsonPerk.get(i).getKey(), jsonPerk.get(i).getId());
+            List<PerkSlot> slots = jsonPerk.get(i).getSlots();
+            for(int j=0; j<slots.size(); j++) {
+                List<Rune> rune = jsonPerk.get(i).getSlots().get(j).getRunes();
+                for(int k=0; k<rune.size(); k++) {
+                    extractionResult.put(rune.get(k).getKey(), rune.get(k).getId());
+                }
+            }
+        }
+
+        return CommonResponseDto.setSuccess("Success", extractionResult.get(perkKey));
     }
 }

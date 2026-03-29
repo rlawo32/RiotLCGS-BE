@@ -21,6 +21,10 @@ public class LCG_Match_Info {
     private Long lcgGameId;
 
     @NotNull
+    @Column(name = "lcg_game_set")
+    private String lcgGameSet;
+
+    @NotNull
     @Column(name = "lcg_game_date")
     private String lcgGameDate;
 
@@ -93,13 +97,14 @@ public class LCG_Match_Info {
     private String lcgGameCaptureVerify;
 
     @Builder
-    public LCG_Match_Info(Long lcgGameId, String lcgGameDate, String lcgGameMode,
+    public LCG_Match_Info(Long lcgGameId, String lcgGameSet, String lcgGameDate, String lcgGameMode,
                           String lcgGameType, int lcgGameDuration, int lcgGameMap,
                           String lcgVerMain, int lcgMaxGold, int lcgMaxCrowd, int lcgMaxDpm,
                           int lcgMaxGpm, int lcgMaxDpg, int lcgMaxDpd, int lcgMaxTpd,
                           int lcgMaxDamageTotal, int lcgMaxDamageTaken, String lcgAiSummaryContent,
                           String lcgAiSummaryVerify, String lcgGameCaptureVerify) {
         this.lcgGameId = lcgGameId;
+        this.lcgGameSet = lcgGameSet;
         this.lcgGameDate = lcgGameDate;
         this.lcgGameMode = lcgGameMode;
         this.lcgGameType = lcgGameType;

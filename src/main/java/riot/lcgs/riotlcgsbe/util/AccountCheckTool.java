@@ -27,12 +27,14 @@ public class AccountCheckTool {
 		// 2월8일 all
 		// 2월15일 3~6번째 게임
 		// 5월4일 all
+		// 11월2일 all
 		if(gameData.getGameCreationDate().split("T")[0].equals("2025-02-08")
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-02-15") && gameData.getGameId() == 7523508506L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-02-15") && gameData.getGameId() == 7523613038L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-02-15") && gameData.getGameId() == 7523737287L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-02-15") && gameData.getGameId() == 7523820335L)
 				|| gameData.getGameCreationDate().split("T")[0].equals("2025-05-04")
+				|| gameData.getGameCreationDate().split("T")[0].equals("2025-11-02")
 		) {
 			for(int i=0; i<gameData.getParticipantIdentities().size(); i++) {
 				if(gameData.getParticipantIdentities().get(i).getPlayer().getPuuid().equals("1127fed4-642a-5b70-bab9-1c7a326ca923")) {
@@ -63,12 +65,14 @@ public class AccountCheckTool {
 
 		// 25년 - 승준이가 광호 아이디 사용 / 광호 -> 승준 변환
 		// 4월26일 1~6번째 게임
+		// 26년 1월1일 all
 		if((gameData.getGameCreationDate().split("T")[0].equals("2025-04-26") && gameData.getGameId() == 7615805208L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-04-26") && gameData.getGameId() == 7615880494L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-04-26") && gameData.getGameId() == 7615971149L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-04-26") && gameData.getGameId() == 7616037560L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-04-26") && gameData.getGameId() == 7616130103L)
 				|| (gameData.getGameCreationDate().split("T")[0].equals("2025-04-26") && gameData.getGameId() == 7616180111L)
+				|| (gameData.getGameCreationDate().split("T")[0].equals("2026-01-01"))
 		) {
 			for(int i = 0; i < gameData.getParticipantIdentities().size(); i++) {
 				if (gameData.getParticipantIdentities().get(i).getPlayer().getPuuid().equals("60e3571d-2b64-5e2b-b9ba-c73789b86639")) {
