@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import riot.lcgs.riotlcgsbe.service.MainService;
+import riot.lcgs.riotlcgsbe.web.dto.ApiTestDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
+
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +28,11 @@ public class MainController {
     @PostMapping("/insertData")
     public CommonResponseDto<?> insertData(@RequestBody CustomGameRequestDto requestDto) {
         return mainService.LolCustomGameDataSave(requestDto);
+    }
+
+    @PostMapping("/apiTest")
+    public Map<String, String> apiTest(@RequestBody ApiTestDataRequestDto requestDto) {
+        return mainService.apiTestService(requestDto);
     }
 
     @PostMapping("/test")

@@ -1,5 +1,7 @@
 package riot.lcgs.riotlcgsbe.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +13,7 @@ import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Main_Repository;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
 import riot.lcgs.riotlcgsbe.jpa.repository.TEST_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
+import riot.lcgs.riotlcgsbe.web.dto.ApiTestDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
@@ -18,10 +21,7 @@ import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static riot.lcgs.riotlcgsbe.service.HttpService.*;
@@ -127,6 +127,46 @@ public class MainService {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
         }
+    }
+
+    public Map<String, String> apiTestService(ApiTestDataRequestDto requestDto) {
+        GameData gameData = requestDto.getGameData();
+        List<TeamData> teamData = requestDto.getTeamData();
+        List<RankData> rankData = requestDto.getRankData();
+
+        List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+        List<Participants> list2 = gameData.getParticipants();
+        List<Teams> list3 = gameData.getTeams();
+
+        Map<String, String> result = new HashMap<>();
+
+        for(ParticipantIdentities part1 : list1) {
+            int team = 100;
+            String line = "";
+            int part1Id = part1.getParticipantId();
+            String puuid1 = part1.getPlayer().getPuuid();
+            String nickname = part1.getPlayer().getGameName() + "#" + part1.getPlayer().getTagLine();
+            for(Participants part2 : list2) {
+                int part2Id = part2.getParticipantId();
+                if(part1Id == part2Id) {
+                    team = part2.getTeamId();
+                }
+            }
+            for(TeamData part3 : teamData) {
+                String puuid2 = part3.getPuuid();
+                if(puuid1.equals(puuid2)) {
+                    line = part3.getLine();
+                }
+            }
+
+            if(team == 100) {
+                result.put("BlueTeam-" + line, nickname);
+            } else {
+                result.put("RedTeam-" + line, nickname);
+            }
+        }
+
+        return result;
     }
 
     @Transactional
