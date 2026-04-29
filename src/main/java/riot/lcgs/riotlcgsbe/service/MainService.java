@@ -134,35 +134,37 @@ public class MainService {
         List<TeamData> teamData = requestDto.getTeamData();
         List<RankData> rankData = requestDto.getRankData();
 
-        List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
-        List<Participants> list2 = gameData.getParticipants();
-        List<Teams> list3 = gameData.getTeams();
-
         Map<String, String> result = new HashMap<>();
 
-        for(ParticipantIdentities part1 : list1) {
-            int team = 100;
-            String line = "";
-            int part1Id = part1.getParticipantId();
-            String puuid1 = part1.getPlayer().getPuuid();
-            String nickname = part1.getPlayer().getGameName() + "#" + part1.getPlayer().getTagLine();
-            for(Participants part2 : list2) {
-                int part2Id = part2.getParticipantId();
-                if(part1Id == part2Id) {
-                    team = part2.getTeamId();
-                }
-            }
-            for(TeamData part3 : teamData) {
-                String puuid2 = part3.getPuuid();
-                if(puuid1.equals(puuid2)) {
-                    line = part3.getLine();
-                }
-            }
+        if(gameData.getParticipantIdentities() != null && gameData.getParticipants() != null) {
+            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+            List<Participants> list2 = gameData.getParticipants();
+            List<Teams> list3 = gameData.getTeams();
 
-            if(team == 100) {
-                result.put("BlueTeam-" + line, nickname);
-            } else {
-                result.put("RedTeam-" + line, nickname);
+            for(ParticipantIdentities part1 : list1) {
+                int team = 100;
+                String line = "";
+                int part1Id = part1.getParticipantId();
+                String puuid1 = part1.getPlayer().getPuuid();
+                String nickname = part1.getPlayer().getGameName() + "#" + part1.getPlayer().getTagLine();
+                for(Participants part2 : list2) {
+                    int part2Id = part2.getParticipantId();
+                    if(part1Id == part2Id) {
+                        team = part2.getTeamId();
+                    }
+                }
+                for(TeamData part3 : teamData) {
+                    String puuid2 = part3.getPuuid();
+                    if(puuid1.equals(puuid2)) {
+                        line = part3.getLine();
+                    }
+                }
+
+                if(team == 100) {
+                    result.put("BlueTeam-" + line, nickname);
+                } else {
+                    result.put("RedTeam-" + line, nickname);
+                }
             }
         }
 
