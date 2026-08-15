@@ -199,6 +199,7 @@ public class MatchService {
 
                 String imageMain = version.get("cdn") + "/" + version.get("ver") + "/img/";
                 String imageSub = version.get("cdn") + "/img/";
+                String imageR2 = "https://img.rabbitgang-img.shop/";
 
                 lcgMatchEtcRepository.save(LCG_Match_Etc.builder()
                         .lcgVersion("LcgVer" + String.format("%04d", list.size()+1))
@@ -213,10 +214,12 @@ public class MatchService {
                         .lcgMasteryVer(version.get("mastery"))
                         .lcgSummonerVer(version.get("summoner"))
                         .lcgChampionVer(version.get("champion"))
-                        .lcgMainImage(imageMain)
-                        .lcgSubImage(imageSub)
-                        .lcgR2Image("https://pub-2e725a3fe396499cb0d0d2085e11509e.r2.dev/")
-                        .lcgRankingCount(0L).build());
+                        .lcgMainImage(imageR2)
+                        .lcgSubImage(imageR2)
+                        .lcgImageExtension(".webp")
+                        .lcgMainImageBak(imageMain)
+                        .lcgSubImageBak(imageSub)
+                        .build());
                 imageUpdate = "N";
             } else {
                 List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();
@@ -225,7 +228,6 @@ public class MatchService {
 
                 lcgMatchEtc.playerRecentUpdate(now);
                 lcgMatchEtc.gameDataRecentUpdate(now);
-                lcgMatchEtc.rankingCountUpdate(lcgMatchEtc.getLcgRankingCount()+1);
                 imageUpdate = "Y";
             }
 
