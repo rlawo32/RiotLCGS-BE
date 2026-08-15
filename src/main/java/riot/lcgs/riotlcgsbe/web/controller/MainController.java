@@ -1,10 +1,7 @@
 package riot.lcgs.riotlcgsbe.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import riot.lcgs.riotlcgsbe.service.MainService;
 import riot.lcgs.riotlcgsbe.web.dto.ApiTestDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
@@ -25,14 +22,24 @@ public class MainController {
         return mainService.LCGCustomGamePlayerSave(requestDto);
     }
 
-    @PostMapping("/insertData")
-    public CommonResponseDto<?> insertData(@RequestBody CustomGameRequestDto requestDto) {
+    @PostMapping("/insertGameData")
+    public CommonResponseDto<?> insertGameData(@RequestBody CustomGameRequestDto requestDto) {
         return mainService.LolCustomGameDataSave(requestDto);
+    }
+
+    @PostMapping("/insertTest")
+    public CommonResponseDto<?> insertTest(@RequestBody CustomGameRequestDto requestDto) {
+        return mainService.insertTestService(requestDto);
     }
 
     @PostMapping("/apiTest")
     public Map<String, String> apiTest(@RequestBody ApiTestDataRequestDto requestDto) {
         return mainService.apiTestService(requestDto);
+    }
+
+    @GetMapping("/uploadImage")
+    public void uploadImage() {
+        mainService.LCGCustomGameImageSave(true);
     }
 
     @PostMapping("/test")

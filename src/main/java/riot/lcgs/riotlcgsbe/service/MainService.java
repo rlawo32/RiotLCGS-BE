@@ -1,17 +1,16 @@
 package riot.lcgs.riotlcgsbe.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Main;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Data;
-import riot.lcgs.riotlcgsbe.jpa.domain.TEST;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Test_Table;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Main_Repository;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.TEST_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Test_Table_Repository;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.ApiTestDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
@@ -40,7 +39,7 @@ public class MainService {
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
     private final LCG_Match_Main_Repository lcgMatchMainRepository;
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
-    private final TEST_Repository testRepository;
+    private final LCG_Test_Table_Repository lcgTestTableRepository;
 
     @Transactional
     public CommonResponseDto<?> LolCustomGameDataSave(CustomGameRequestDto requestDto) {
@@ -129,6 +128,40 @@ public class MainService {
         }
     }
 
+    @Transactional
+    public CommonResponseDto<?> insertTestService(CustomGameRequestDto requestDto) {
+        try {
+            GameData gameData = requestDto.getGameData();
+            List<TeamData> teamData = requestDto.getTeamData();
+
+            LocalDateTime localDateTime = LocalDateTime.now();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String now = localDateTime.format(dtf);
+
+            lcgTestTableRepository.save(LCG_Test_Table.builder()
+                    .testContent("TEST INSERT")
+                    .testVerify("Y")
+                    .testDate(now)
+                    .build());
+
+            if(gameData.getGameId() != null) {
+                String validationMsg = validationService.ValidationCheckGameData(gameData).getMessage();
+                //String checkTeamData = validationService.ValidationCheckTeamData(teamData).getMessage();
+                if (!"Success".equals(validationMsg)) {
+                    return CommonResponseDto.setFailed("검증 오류: " + validationMsg);
+                } else {
+                    return CommonResponseDto.setSuccess("INSERT 테스트 완료! (TEST TABLE 확인)", "Success");
+                }
+            } else {
+                return CommonResponseDto.setFailed("GameData 없음");
+
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+    }
+
     public Map<String, String> apiTestService(ApiTestDataRequestDto requestDto) {
         GameData gameData = requestDto.getGameData();
         List<TeamData> teamData = requestDto.getTeamData();
@@ -172,14 +205,14 @@ public class MainService {
     }
 
     @Transactional
-//    @Scheduled(cron = "0 0 0 * * ?") // 매일 24시
-    public void LCGCustomGameImageSave() {
-
+    @Scheduled(cron = "0 0 9 * * ?") // 매일 아침 9시
+    public void LCGCustomGameImageSave(boolean uploadTest) {
         try {
             Map<String, String> version = DataDragonAPIVersion().getData();
             String imageUpdate = matchService.LCGMatchEtcSave(version).getData();
-            if(imageUpdate.equals("N")) {
-                imageService.DataDragonImageUpload(version.get("ver"));
+            if(imageUpdate.equals("N") || uploadTest) {
+                Map<String, Object> upload = imageService.DataDragonImageUpload(version.get("ver"));
+                System.out.println("Success!! " + upload.get("elapsedMillis") + " / " + upload.get("uploadedCount"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
