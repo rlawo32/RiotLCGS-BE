@@ -72,7 +72,7 @@ public class ExtractionTool {
             for(int j=0; j<slots.size(); j++) {
                 List<Rune> rune = jsonPerk.get(i).getSlots().get(j).getRunes();
                 for(int k=0; k<rune.size(); k++) {
-                    extractionResult.put(rune.get(k).getId(), rune.get(k).getIcon());
+                    extractionResult.put(rune.get(k).getId(), rune.get(k).getIcon().split(".")[0]);
                 }
             }
         }
