@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "TEST")
-public class TEST {
+@Table(name = "LCG_Test_Table")
+public class LCG_Test_Table {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +25,14 @@ public class TEST {
     @Column(name = "test_verify")
     private String testVerify;
 
+    @NotNull
+    @Column(name = "test_date")
+    private String testDate;
+
     @Builder
-    public TEST(String testContent, String testVerify) {
+    public LCG_Test_Table(String testContent, String testVerify, String testDate) {
         this.testContent = testContent;
         this.testVerify = testVerify;
+        this.testDate = testDate;
     }
 }
