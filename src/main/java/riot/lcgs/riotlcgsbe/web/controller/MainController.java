@@ -42,6 +42,11 @@ public class MainController {
         mainService.LCGCustomGameImageSave(true);
     }
 
+    @GetMapping("/updatePatchNote")
+    public void updatePatchNote() {
+        mainService.LCGPatchNoteSave(true);
+    }
+
     @PostMapping("/test")
     public CommonResponseDto<?> test() {
         return mainService.testService();

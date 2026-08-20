@@ -66,6 +66,7 @@ public class ImageService {
     private static final String TARGET_DIR_SPELL = "/img/spell";
     private static final String TARGET_DIR_ITEM = "/img/item";
     private static final String TARGET_DIR_CHAMPION_LOADING = "img/champion/loading";
+    private static final String TARGET_DIR_CHAMPION_CENTERED = "img/champion/centered";
     private static final String TARGET_DIR_PERKS = "img/perk-images/Styles";
     private static final String R2_PREFIX_PROFILE_ICON = "profileicon/";
     private static final int DOWNLOAD_CONNECT_TIMEOUT_MS = 30_000;
@@ -383,6 +384,19 @@ public class ImageService {
                     log.debug("ProfileIcon Uploading: {}", fileName);
 
                     if (convertAndUpload(R2_PREFIX_PROFILE_ICON, s3, fileName, fileData)) {
+                        uploadedCount.incrementAndGet();
+                    }
+                }
+            }
+
+            if (!entry.isDirectory() && entryName.startsWith(TARGET_DIR_CHAMPION_CENTERED)) {
+                String fileName = entryName.substring((TARGET_DIR_CHAMPION_CENTERED).length() + 1);
+
+                if(fileName.endsWith("_0.jpg")) {
+                    byte[] fileData = readBytesFromZipEntry(tarIn);
+                    log.debug("CenteredImage Uploading: {}", fileName);
+
+                    if (convertAndUpload("centered/", s3, fileName, fileData)) {
                         uploadedCount.incrementAndGet();
                     }
                 }
