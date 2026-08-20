@@ -14,6 +14,7 @@ import java.util.*;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
+import static riot.lcgs.riotlcgsbe.util.DateTimeTool.*;
 
 @RequiredArgsConstructor
 @Service
@@ -87,10 +88,6 @@ public class MatchService {
             String[] extractionStep1 = gameData.getGameCreationDate().split("T");
             String[] extractionStep2 = extractionStep1[1].split("\\.");
             String extractionGameDate = extractionStep1[0] + "/" + extractionStep2[0];
-
-//            LocalDateTime localDateTime = LocalDateTime.now();
-//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//            String now = localDateTime.format(dtf);
 
             int duration = gameData.getGameDuration();
 
@@ -187,12 +184,9 @@ public class MatchService {
     public CommonResponseDto<String> LCGMatchEtcSave(Map<String, String> version) {
 
         try {
-            LocalDateTime localDateTime = LocalDateTime.now();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String now = localDateTime.format(dtf);
-
             boolean existsCheck = lcgMatchEtcRepository.existsLCG_Match_EtcByLcgMainVer(version.get("ver"));
             String imageUpdate;
+            String now = dateTimeCurrent().getData();
 
             if(!existsCheck) {
                 List<LCG_Match_Etc> list = lcgMatchEtcRepository.findAll();

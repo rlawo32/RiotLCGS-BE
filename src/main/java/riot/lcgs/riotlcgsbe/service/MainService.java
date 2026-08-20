@@ -4,13 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Main;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Data;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Test_Table;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Info_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Match_Main_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Player_Data_Repository;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Test_Table_Repository;
+import riot.lcgs.riotlcgsbe.jpa.domain.*;
+import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.util.ExtractionTool;
 import riot.lcgs.riotlcgsbe.web.dto.ApiTestDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
@@ -18,6 +13,7 @@ import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.PlayerDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -35,10 +31,13 @@ public class MainService {
     private final PlayerService playerService;
     private final MvpService mvpService;
     private final ImageService imageService;
+    private final CrawlingService crawlingService;
 
+    private final LCG_Match_Etc_Repository lcgMatchEtcRepository;
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
     private final LCG_Match_Main_Repository lcgMatchMainRepository;
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
+    private final LCG_Patch_Note_Repository lcgPatchNoteRepository;
     private final LCG_Test_Table_Repository lcgTestTableRepository;
 
     @Transactional
@@ -206,17 +205,44 @@ public class MainService {
 
     @Transactional
     @Scheduled(cron = "0 0 9 * * ?") // 매일 아침 9시
-    public void LCGCustomGameImageSave(boolean uploadTest) {
+    public void LCGCustomGameImageSave(boolean passivityUpload) {
         try {
             Map<String, String> version = DataDragonAPIVersion().getData();
             String imageUpdate = matchService.LCGMatchEtcSave(version).getData();
-            if(imageUpdate.equals("N") || uploadTest) {
+            if(imageUpdate.equals("N") || passivityUpload) {
                 Map<String, Object> upload = imageService.DataDragonImageUpload(version.get("ver"));
                 System.out.println("Success!! " + upload.get("elapsedMillis") + " / " + upload.get("uploadedCount"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("Database Insert Failed !");
+        }
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 10 * * ?") // 매일 아침 10시
+    public CommonResponseDto<?> LCGPatchNoteSave(boolean passivityUpload) {
+
+        try {
+            String latestVersion = lcgMatchEtcRepository.findLatestValue();
+            String ver = latestVersion.split("\\.")[1];
+            String year = String.valueOf(LocalDate.now().getYear()).substring(2);
+//            String patchVer = year + "-" + ver;
+            String patchVer = "26-2";
+
+            boolean duplicationChk1 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "CHAMPION");
+            boolean duplicationChk2 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "ITEM");
+            boolean duplicationChk3 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "BUGFIXE");
+
+            if((!duplicationChk1 && !duplicationChk2 && !duplicationChk3) || passivityUpload) {
+                crawlingService.LCGPatchNoteSave(patchVer);
+                return CommonResponseDto.setSuccess("PatchNote 저장 완료!", "Y");
+            } else {
+                return CommonResponseDto.setFailed("PatchNote 해당 버전 존재 Version :" + patchVer);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
         }
     }
 
