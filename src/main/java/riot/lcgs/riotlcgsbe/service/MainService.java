@@ -1,7 +1,6 @@
 package riot.lcgs.riotlcgsbe.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.*;
@@ -88,16 +87,16 @@ public class MainService {
         ExtractionTool.jsonChampion = championResult.getData();
         ExtractionTool.jsonPerk = perkResult.getData();
 
-        playerService.LCGPlayerRelativeSave(gameData, teamData);
-        playerService.LCGPlayerChampionSave(gameData);
-        playerService.LCGPlayerStatisticsSave(gameData);
-        playerService.LCGPlayerPositionSave(gameData, teamData);
         matchService.LCGMatchInfoSave(gameId, gameData, version);
         matchService.LCGMatchEtcSave(version);
         matchService.LCGTeamLogSave(gameId, gameData, version);
         matchService.LCGMatchMainSave(gameId, gameData, teamData);
         matchService.LCGMatchSubSave(gameId, gameData);
         matchService.LCGMatchTeamSave(gameId, gameData);
+        playerService.LCGPlayerRelativeSave(gameData, teamData);
+        playerService.LCGPlayerChampionSave(gameData);
+        playerService.LCGPlayerStatisticsSave(gameData);
+        playerService.LCGPlayerPositionSave(gameData, teamData);
         playerService.LCGPlayerWinningStreakUpdate(gameData, teamData);
         playerService.LCGPlayerRankingSave();
 
@@ -204,7 +203,6 @@ public class MainService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 9 * * ?") // 매일 아침 9시
     public void LCGCustomGameImageSave(boolean passivityUpload) {
         try {
             Map<String, String> version = DataDragonAPIVersion().getData();
@@ -220,29 +218,36 @@ public class MainService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 10 * * ?") // 매일 아침 10시
-    public CommonResponseDto<?> LCGPatchNoteSave(boolean passivityUpload) {
-
+    public void LCGPatchNoteSave(boolean passivityUpload, String version) {
         try {
-            String latestVersion = lcgMatchEtcRepository.findLatestValue();
-            String ver = latestVersion.split("\\.")[1];
+//            String latestVersion = lcgMatchEtcRepository.findLatestValue();
+            int ver = 1;
+            String[] latestVersion = lcgPatchNoteRepository.findLatestValue().split("-");
             String year = String.valueOf(LocalDate.now().getYear()).substring(2);
-//            String patchVer = year + "-" + ver;
-            String patchVer = "26-2";
+
+            if(latestVersion[0].equals(year)) {
+                ver = (passivityUpload ? Integer.parseInt(version) : Integer.parseInt(latestVersion[1])) + 1;
+            }
+
+            String patchVer = year + "-" + (ver < 10 ? "0" + ver : ver);
 
             boolean duplicationChk1 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "CHAMPION");
             boolean duplicationChk2 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "ITEM");
             boolean duplicationChk3 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "BUGFIXE");
 
             if((!duplicationChk1 && !duplicationChk2 && !duplicationChk3) || passivityUpload) {
-                crawlingService.LCGPatchNoteSave(patchVer);
-                return CommonResponseDto.setSuccess("PatchNote 저장 완료!", "Y");
+                boolean result = crawlingService.LCGPatchNoteSave(patchVer).isResult();
+                if(result) {
+                    System.out.println("PatchNote 저장 완료! / Version : " + patchVer);
+                } else {
+                    System.out.println("PatchNote 저장 실패! / Version : " + patchVer);
+                }
             } else {
-                return CommonResponseDto.setFailed("PatchNote 해당 버전 존재 Version :" + patchVer);
+                System.out.println("PatchNote 저장 실패! / 해당 버전 존재 Version : " + patchVer);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return CommonResponseDto.setFailed("Database Insert Failed !");
+            System.out.println("Database Insert Failed !");
         }
     }
 

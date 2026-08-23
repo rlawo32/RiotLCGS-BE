@@ -43,8 +43,8 @@ public class MainController {
     }
 
     @GetMapping("/updatePatchNote")
-    public void updatePatchNote() {
-        mainService.LCGPatchNoteSave(true);
+    public void updatePatchNote(@RequestParam String version) {
+        mainService.LCGPatchNoteSave(true, version);
     }
 
     @PostMapping("/test")
