@@ -11,7 +11,7 @@ public class AccountCheckTool {
   
     public static Map<String, Object> playerAccountChk(GameData gameData, List<TeamData> teamData) {
 
-		// 경우2(원딜) -> 경우1(알코올) 변환
+		// 경우2(8c77580d-04d8-5885-94a0-6fea71350fa4) -> 경우1(0d698fc9-7d69-5c0f-8c10-14a827e8de2d) 변환
 		for(int i=0; i<gameData.getParticipantIdentities().size(); i++) {
 			if(gameData.getParticipantIdentities().get(i).getPlayer().getPuuid().equals("8c77580d-04d8-5885-94a0-6fea71350fa4")) {
 				gameData.getParticipantIdentities().get(i).getPlayer().setPuuid("0d698fc9-7d69-5c0f-8c10-14a827e8de2d");
@@ -20,6 +20,7 @@ public class AccountCheckTool {
 		for(int i=0; i<teamData.size(); i++) {
 			if(teamData.get(i).getPuuid().equals("8c77580d-04d8-5885-94a0-6fea71350fa4")) {
 				teamData.get(i).setPuuid("0d698fc9-7d69-5c0f-8c10-14a827e8de2d");
+				teamData.get(i).setName("경우");
 			}
 		}
 
@@ -44,6 +45,7 @@ public class AccountCheckTool {
 			for(int i=0; i<teamData.size(); i++) {
 				if(teamData.get(i).getPuuid().equals("1127fed4-642a-5b70-bab9-1c7a326ca923")) {
 					teamData.get(i).setPuuid("864ff5ac-b218-55fd-94ba-cb9cabe66ce4");
+					teamData.get(i).setName("승준");
 				}
 			}
 		}
@@ -59,6 +61,7 @@ public class AccountCheckTool {
 			for(int i=0; i<teamData.size(); i++) {
 				if(teamData.get(i).getPuuid().equals("ce41bfe2-7ce4-5965-82d4-729a01bf4568")) {
 					teamData.get(i).setPuuid("1e062cfe-c62e-53ef-9145-ab0d6c76d40d");
+					teamData.get(i).setName("성재");
 				}
 			}
 		}
@@ -82,6 +85,7 @@ public class AccountCheckTool {
 			for(int i = 0; i < teamData.size(); i++) {
 				if (teamData.get(i).getPuuid().equals("60e3571d-2b64-5e2b-b9ba-c73789b86639")) {
 					teamData.get(i).setPuuid("864ff5ac-b218-55fd-94ba-cb9cabe66ce4");
+					teamData.get(i).setName("승준");
 				}
 			}
 		}

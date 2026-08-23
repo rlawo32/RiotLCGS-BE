@@ -67,12 +67,12 @@ public class ExtractionTool {
         Map<Integer, String> extractionResult = new HashMap<>();
 
         for(int i=0; i<jsonPerk.size(); i++) {
-            extractionResult.put(jsonPerk.get(i).getId(), jsonPerk.get(i).getIcon());
+            extractionResult.put(jsonPerk.get(i).getId(), jsonPerk.get(i).getIcon().split("\\.")[0]);
             List<PerkSlot> slots = jsonPerk.get(i).getSlots();
             for(int j=0; j<slots.size(); j++) {
                 List<Rune> rune = jsonPerk.get(i).getSlots().get(j).getRunes();
                 for(int k=0; k<rune.size(); k++) {
-                    extractionResult.put(rune.get(k).getId(), rune.get(k).getIcon().split(".")[0]);
+                    extractionResult.put(rune.get(k).getId(), rune.get(k).getIcon().split("\\.")[0]);
                 }
             }
         }
