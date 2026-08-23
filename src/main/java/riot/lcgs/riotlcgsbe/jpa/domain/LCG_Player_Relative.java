@@ -42,21 +42,27 @@ public class LCG_Player_Relative {
     @Column(name = "lcg_fail_count")
     private Long lcgFailCount;
 
-    public LCG_Player_Relative playerRelativeUpdate(Stats statsData) {
+    @NotNull
+    @Column(name = "lcg_update_date")
+    private String lcgUpdateDate;
+
+    public LCG_Player_Relative playerRelativeUpdate(Stats statsData, String now) {
         this.lcgPlayCount += 1L;
         this.lcgWinCount += statsData.getWin() ? 1L : 0L;
         this.lcgFailCount += statsData.getWin() ? 0L : 1L;
+        this.lcgUpdateDate = now;
         return this;
     }
 
     @Builder
     public LCG_Player_Relative(String lcgPersonPuuid, String lcgMatchLine, String lcgOpponentPuuid,
-                               Long lcgPlayCount, Long lcgWinCount, Long lcgFailCount) {
+                               Long lcgPlayCount, Long lcgWinCount, Long lcgFailCount, String lcgUpdateDate) {
         this.lcgPersonPuuid = lcgPersonPuuid;
         this.lcgMatchLine = lcgMatchLine;
         this.lcgOpponentPuuid = lcgOpponentPuuid;
         this.lcgPlayCount = lcgPlayCount;
         this.lcgWinCount = lcgWinCount;
         this.lcgFailCount = lcgFailCount;
+        this.lcgUpdateDate = lcgUpdateDate;
     }
 }

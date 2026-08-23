@@ -157,8 +157,12 @@ public class LCG_Player_Statistics {
     @Column(name = "lcg_jungle_object_score") // horde = 1, dragon = 2, herald = 4, baron = 7
     private Long lcgJungleObjectScore;
 
+    @NotNull
+    @Column(name = "lcg_update_date")
+    private String lcgUpdateDate;
+
     public LCG_Player_Statistics playerDataCounting(String nickname, Stats statsData, Teams teams, Long lcgCountMvp,
-                                                    Long lcgCountAce, Long multiKillScore, Long jungleObjectScore) {
+                                                    Long lcgCountAce, Long multiKillScore, Long jungleObjectScore, String now) {
         this.lcgNickname = nickname;
         this.lcgCountPlay += 1;
         this.lcgCountVictory += teams.getWin().equals("Win") ? 1 : 0;
@@ -192,6 +196,7 @@ public class LCG_Player_Statistics {
         this.lcgCountHerald += (long) teams.getRiftHeraldKills();
         this.lcgCountAtakhan += 0;
         this.lcgJungleObjectScore += jungleObjectScore;
+        this.lcgUpdateDate = now;
         return this;
     }
 
@@ -204,7 +209,8 @@ public class LCG_Player_Statistics {
                                  Long lcgCountWardPlaced, Long lcgCountVisionWard, Long lcgCountVisionScore,
                                  Long lcgCountDoubleKill, Long lcgCountTripleKill, Long lcgCountQuadraKill,
                                  Long lcgCountPentaKill, Long lcgMultiKillScore, Long lcgCountDragon, Long lcgCountBaron,
-                                 Long lcgCountHorde, Long lcgCountHerald, Long lcgCountAtakhan, Long lcgJungleObjectScore) {
+                                 Long lcgCountHorde, Long lcgCountHerald, Long lcgCountAtakhan, Long lcgJungleObjectScore,
+                                 String lcgUpdateDate) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayer = lcgPlayer;
         this.lcgNickname = lcgNickname;
@@ -240,5 +246,6 @@ public class LCG_Player_Statistics {
         this.lcgCountHerald = lcgCountHerald;
         this.lcgCountAtakhan = lcgCountAtakhan;
         this.lcgJungleObjectScore = lcgJungleObjectScore;
+        this.lcgUpdateDate = lcgUpdateDate;
     }
 }

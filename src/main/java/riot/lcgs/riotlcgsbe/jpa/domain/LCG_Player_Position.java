@@ -90,7 +90,11 @@ public class LCG_Player_Position {
     @Column(name = "lcg_position_sup_playtime")
     private Long lcgPositionSupPlaytime;
 
-    public LCG_Player_Position playerPositionUpdate(String nickname, int duration, String line, boolean win) {
+    @NotNull
+    @Column(name = "lcg_update_date")
+    private String lcgUpdateDate;
+
+    public LCG_Player_Position playerPositionUpdate(String nickname, int duration, String line, boolean win, String now) {
         this.lcgSummonerNickname = nickname;
         this.lcgPlayCount += 1L;
         this.lcgTotalPlaytime += (long) duration;
@@ -109,6 +113,7 @@ public class LCG_Player_Position {
         this.lcgPositionMidPlaytime += line.equals("MID") ? (long) duration : 0L;
         this.lcgPositionAdcPlaytime += line.equals("ADC") ? (long) duration : 0L;
         this.lcgPositionSupPlaytime += line.equals("SUP") ? (long) duration : 0L;
+        this.lcgUpdateDate = now;
         return this;
     }
 
@@ -117,7 +122,7 @@ public class LCG_Player_Position {
                                Long lcgPositionTopCount, Long lcgPositionJugCount, Long lcgPositionMidCount, Long lcgPositionAdcCount, 
                                Long lcgPositionSupCount, Long lcgPositionTopWin, Long lcgPositionJugWin, Long lcgPositionMidWin, 
                                Long lcgPositionAdcWin, Long lcgPositionSupWin, Long lcgPositionTopPlaytime, Long lcgPositionJugPlaytime, 
-                               Long lcgPositionMidPlaytime, Long lcgPositionAdcPlaytime, Long lcgPositionSupPlaytime) {
+                               Long lcgPositionMidPlaytime, Long lcgPositionAdcPlaytime, Long lcgPositionSupPlaytime, String lcgUpdateDate) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgSummonerNickname = lcgSummonerNickname;
         this.lcgPlayCount = lcgPlayCount;
@@ -137,5 +142,6 @@ public class LCG_Player_Position {
         this.lcgPositionMidPlaytime = lcgPositionMidPlaytime;
         this.lcgPositionAdcPlaytime = lcgPositionAdcPlaytime;
         this.lcgPositionSupPlaytime = lcgPositionSupPlaytime;
+        this.lcgUpdateDate = lcgUpdateDate;
     }
 }
