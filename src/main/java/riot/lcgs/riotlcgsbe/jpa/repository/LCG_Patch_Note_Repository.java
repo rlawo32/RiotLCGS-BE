@@ -1,6 +1,7 @@
 package riot.lcgs.riotlcgsbe.jpa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import riot.lcgs.riotlcgsbe.jpa.PatchNoteId;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Patch_Note;
 
@@ -10,4 +11,12 @@ public interface LCG_Patch_Note_Repository extends JpaRepository<LCG_Patch_Note,
             String lcgPatchVersion,
             String lcgPatchSection
     );
+
+    @Query(value = """
+        SELECT lcg_patch_version
+        FROM lcg_patch_note
+        ORDER BY lcg_created_date DESC
+        LIMIT 1
+        """, nativeQuery = true)
+    String findLatestValue();
 }
