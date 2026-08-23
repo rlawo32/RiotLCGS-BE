@@ -260,7 +260,7 @@ public class ImageService {
 
         Map<String, Object> startInfo = new HashMap<>();
         startInfo.put("version", ver);
-        EmailTool.sendMessage_Image("S", startInfo);
+        EmailTool.sendMessage_Image("ImageStart", startInfo);
 
         long startTime = System.currentTimeMillis();
         log.info("[START] Image upload start : {} / startTime={}", downloadUrl, LocalDateTime.now().format(LOG_TIME_FORMATTER));
@@ -296,7 +296,7 @@ public class ImageService {
         Map<String, Object> result = new HashMap<>();
         result.put("elapsedMillis", elapsedMillis);
         result.put("uploadedCount", uploadedCount.get());
-        EmailTool.sendMessage_Image("E", result);
+        EmailTool.sendMessage_Image("ImageEnd", result);
         return result;
     }
 

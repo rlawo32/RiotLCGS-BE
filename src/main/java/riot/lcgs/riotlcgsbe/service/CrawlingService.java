@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Patch_Note;
 import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Patch_Note_Repository;
+import riot.lcgs.riotlcgsbe.util.EmailTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class CrawlingService {
 
     private final LCG_Patch_Note_Repository lcgPatchNoteRepository;
 
+    private String searchUrl;
+
     private static final Set<String> IGNORE_HEADERS = Set.of(
             "aram",
             "arena",
@@ -43,10 +46,17 @@ public class CrawlingService {
             "systems"
     );
 
+    private static boolean isTargetSection(String h2Id) {
+        return h2Id.contains("items") || h2Id.contains("runes") || h2Id.contains("systems");
+    }
+
     public Map<String, String> patchNoteCrawling(String version) {
         Map<String, String> result = new LinkedHashMap<>();
         String htmlResponse = "";
         try {
+            String[] tmpArr = version.split("-");
+            version = tmpArr[0] + "-" + Integer.parseInt(tmpArr[1]);
+
             String fullUrl = "https://www.leagueoflegends.com/ko-kr/news/game-updates/league-of-legends-patch-" + version +"-notes/";
 
             Request searchRequest = new Request.Builder()
@@ -70,14 +80,18 @@ public class CrawlingService {
                     try (Response fallbackResponse = client.newCall(fallbackRequest).execute()) {
                         if (!fallbackResponse.isSuccessful()) {
                             log.error("서버 에러: {} - {}", fallbackResponse.code(), fallbackResponse.message());
+                        } else {
+                            htmlResponse = (fallbackResponse.body() != null) ? fallbackResponse.body().string() : "";
                         }
-                        htmlResponse = (fallbackResponse.body() != null) ? fallbackResponse.body().string() : "";
+                        searchUrl = fallbackUrl;
                     }
                 } else {
                     if (!response.isSuccessful()) {
                         log.error("서버 에러: {} - {}", response.code(), response.message());
+                    } else {
+                        htmlResponse = (response.body() != null) ? response.body().string() : "";
                     }
-                    htmlResponse = (response.body() != null) ? response.body().string() : "";
+                    searchUrl = fullUrl;
                 }
             }
         } catch (SocketTimeoutException e) {
@@ -89,36 +103,33 @@ public class CrawlingService {
         try {
             if (htmlResponse.isBlank()) {
                 log.error("htmlResponse 빈 응답 : {}", htmlResponse);
+                return result;
             }
 
             Document doc = Jsoup.parse(htmlResponse);
 
             Elements headers = doc.select("#patch-notes-container .header-primary");
 
-            boolean skip = false;
+            boolean restricted = false;
             int patchNoteSeq = 0;
 
             for (Element header : headers) {
                 Element h2 = header.selectFirst("h2");
 
-                if (h2 == null) {
-                    continue;
-                }
+                if (h2 == null) { continue; }
 
                 String h2Id = h2.id().toLowerCase();
 
-                boolean ignored = IGNORE_HEADERS.stream().anyMatch(h2Id::contains);
+                if (IGNORE_HEADERS.stream().anyMatch(h2Id::contains)) { continue; }
 
-                if (ignored) {
+                boolean isTarget = isTargetSection(h2Id);
+                boolean isBugfix = h2Id.contains("bugfix");
+                boolean isSkin = h2Id.contains("skin");
+
+                if (isBugfix) { restricted = false; }
+
+                if (restricted && !isBugfix && !isSkin && !isTarget) {
                     continue;
-                }
-
-                if (skip) {
-                    if (h2Id.contains("bugfixes")) {
-                        skip = false;
-                    } else {
-                        continue;
-                    }
                 }
 
                 StringBuilder html = new StringBuilder();
@@ -134,17 +145,15 @@ public class CrawlingService {
                         if (current.is(".header-primary")) {
                             break;
                         }
-
                         html.append(current.outerHtml());
                         current = current.nextElementSibling();
                     }
                 }
 
-                patchNoteSeq++;
-                result.put(String.format("%02d#%s", patchNoteSeq, h2Id), html.toString());
+                result.put( String.format("%02d#%s", ++patchNoteSeq, h2Id), html.toString());
 
-                if (SKIP_START_HEADERS.stream().anyMatch(h2Id::contains)) {
-                    skip = true;
+                if (isTarget) {
+                    restricted = true;
                 }
             }
         } catch (Exception e) {
@@ -158,22 +167,29 @@ public class CrawlingService {
     public CommonResponseDto<String> LCGPatchNoteSave(String version) {
 
         try {
-            String patchUrl = "https://www.leagueoflegends.com/ko-kr/news/game-updates/league-of-legends-patch-" + version + "-notes/";
             String now = dateTimeCurrent().getData();
 
-            Map<String, String> patchData = patchNoteCrawling(version);
+            Map<String, Object> startInfo = new HashMap<>();
+            startInfo.put("version", version);
+            EmailTool.sendMessage_Image("PatchNote", startInfo);
 
-            patchData.forEach((section, html) -> {
-                lcgPatchNoteRepository.save(LCG_Patch_Note.builder()
-                        .lcgPatchVersion(version)
-                        .lcgPatchSection(section)
-                        .lcgPatchHtml(html)
-                        .lcgPatchUrl(patchUrl)
-                        .lcgCreatedDate(now)
-                        .build());
-            });
+            Map<String, String> patchNoteData = patchNoteCrawling(version);
 
-            return CommonResponseDto.setSuccess("PatchNote 저장 완료!", "Y");
+            if(patchNoteData.isEmpty()) {
+                return CommonResponseDto.setFailed("PatchNote 저장 실패!");
+            } else {
+                patchNoteData.forEach((section, html) -> {
+                    lcgPatchNoteRepository.save(LCG_Patch_Note.builder()
+                            .lcgPatchVersion(version)
+                            .lcgPatchSection(section)
+                            .lcgPatchHtml(html)
+                            .lcgPatchUrl(searchUrl)
+                            .lcgCreatedDate(now)
+                            .build());
+                });
+
+                return CommonResponseDto.setSuccess("PatchNote 저장 완료!", "Y");
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
