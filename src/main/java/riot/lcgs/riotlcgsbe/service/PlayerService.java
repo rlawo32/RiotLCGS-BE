@@ -8,14 +8,13 @@ import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.CalculatorJungleObjectScore;
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.CalculatorMultiKillScore;
+import static riot.lcgs.riotlcgsbe.util.DateTimeTool.dateTimeCurrent;
 import static riot.lcgs.riotlcgsbe.util.ExtractionTool.*;
 
 @RequiredArgsConstructor
@@ -40,9 +39,7 @@ public class PlayerService {
         try {
             List<ParticipantIdentities> list2 = gameData.getParticipantIdentities();
 
-            LocalDateTime localDateTime = LocalDateTime.now();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String now = localDateTime.format(dtf);
+            String now = dateTimeCurrent().getData();
 
             for(int i=0; i<list2.size(); i++) {
                 ParticipantIdentities participantIdentities = list2.get(i);
@@ -109,6 +106,8 @@ public class PlayerService {
             List<Teams> list3 = gameData.getTeams();
             List<Metrics> list4 = mvpService.LCGMvpSelection(gameData).getData();
 
+            String now = dateTimeCurrent().getData();
+
             int failTeam = 0;
             String mvpPuuid = list4.get(0).getPuuid();
             String acePuuid = "";
@@ -150,7 +149,7 @@ public class PlayerService {
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
                     lcgPlayerStatistics.playerDataCounting(nickname, statsData, teams, puuid.equals(mvpPuuid) ? 1L : 0L,
-                            puuid.equals(acePuuid) ? 1L : 0L, CalculatorMultiKillScore(statsData).getData(), CalculatorJungleObjectScore(teams).getData());
+                            puuid.equals(acePuuid) ? 1L : 0L, CalculatorMultiKillScore(statsData).getData(), CalculatorJungleObjectScore(teams).getData(), now);
                 } else {
                     lcgPlayerStatisticsRepository.save(LCG_Player_Statistics.builder()
                             .lcgSummonerPuuid(puuid)
@@ -186,7 +185,9 @@ public class PlayerService {
                             .lcgCountHorde((long)teams.getHordeKills())
                             .lcgCountHerald((long)teams.getRiftHeraldKills())
                             .lcgCountAtakhan(0L)
-                            .lcgJungleObjectScore(CalculatorJungleObjectScore(teams).getData()).build());
+                            .lcgJungleObjectScore(CalculatorJungleObjectScore(teams).getData())
+                            .lcgUpdateDate(now)
+                            .build());
                 }
             }
 
@@ -204,6 +205,8 @@ public class PlayerService {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
 
+            String now = dateTimeCurrent().getData();
+
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
                 Participants participants = list2.get(i);
@@ -220,7 +223,7 @@ public class PlayerService {
                     LCG_Player_Champion lcgPlayerChampion = lcgPlayerChampionRepository.findByLcgPuuidAndLcgChampionId(puuid, championId)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerChampion.playerChampionUpdate(statsData);
+                    lcgPlayerChampion.playerChampionUpdate(statsData, now);
                 } else {
                     lcgPlayerChampionRepository.save(LCG_Player_Champion.builder()
                             .lcgPuuid(puuid)
@@ -232,6 +235,7 @@ public class PlayerService {
                             .lcgPlayCount(1L)
                             .lcgWinCount(statsData.getWin() ? 1L : 0L)
                             .lcgFailCount(statsData.getWin() ? 0L : 1L)
+                            .lcgUpdateDate(now)
                             .build());
                 }
             }
@@ -251,13 +255,15 @@ public class PlayerService {
             List<Participants> list2 = gameData.getParticipants();
             List<Teams> list3 = gameData.getTeams();
 
-            for(TeamData player : teamData) {
-                String name = player.getName();
-                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
-                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
+            String now = dateTimeCurrent().getData();
 
-                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
-            }
+//            for(TeamData player : teamData) {
+//                String name = player.getName();
+//                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
+//                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
+//
+//                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
+//            }
 
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
@@ -289,7 +295,7 @@ public class PlayerService {
                             findByLcgPersonPuuidAndLcgMatchLineAndLcgOpponentPuuid(personPuuid, line, opponentPuuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. personPuuid : " + personPuuid));
 
-                    lcgPlayerRelative.playerRelativeUpdate(statsData);
+                    lcgPlayerRelative.playerRelativeUpdate(statsData, now);
                 } else {
                     lcgPlayerRelativeRepository.save(LCG_Player_Relative.builder()
                             .lcgPersonPuuid(personPuuid)
@@ -298,6 +304,7 @@ public class PlayerService {
                             .lcgPlayCount(1L)
                             .lcgWinCount(statsData.getWin() ? 1L : 0L)
                             .lcgFailCount(statsData.getWin() ? 0L : 1L)
+                            .lcgUpdateDate(now)
                             .build());
                 }
             }
@@ -455,15 +462,17 @@ public class PlayerService {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
 
+            String now = dateTimeCurrent().getData();
+
             int duration = gameData.getGameDuration();
 
-            for(TeamData player : teamData) {
-                String name = player.getName();
-                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
-                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
-
-                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
-            }
+//            for(TeamData player : teamData) {
+//                String name = player.getName();
+//                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
+//                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
+//
+//                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
+//            }
 
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
@@ -488,7 +497,7 @@ public class PlayerService {
                     LCG_Player_Position lcgPlayerPosition = lcgPlayerPositionRepository.findById(puuid)
                             .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
-                    lcgPlayerPosition.playerPositionUpdate(nickname, duration, line, win);
+                    lcgPlayerPosition.playerPositionUpdate(nickname, duration, line, win, now);
                 } else {
                     lcgPlayerPositionRepository.save(LCG_Player_Position.builder()
                             .lcgSummonerPuuid(puuid)
@@ -510,6 +519,7 @@ public class PlayerService {
                             .lcgPositionMidPlaytime(line.equals("MID") ? (long) duration : 0L)
                             .lcgPositionAdcPlaytime(line.equals("ADC") ? (long) duration : 0L)
                             .lcgPositionSupPlaytime(line.equals("SUP") ? (long) duration : 0L)
+                            .lcgUpdateDate(now)
                             .build());
                 }
             }
