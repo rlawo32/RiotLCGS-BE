@@ -101,6 +101,10 @@ public class LCG_Player_Data {
     @Column(name = "lcg_player_hide")
     private String lcgPlayerHide;
 
+    @NotNull
+    @Column(name = "lcg_summoner_level")
+    private int lcgSummonerLevel;
+
     public LCG_Player_Data playerDataUpdate(Player playerData, RankData rankData) {
         this.lcgSummonerNickname = playerData.getGameName() + "#" + playerData.getTagLine();
         this.lcgSummonerId = playerData.getSummonerId();
@@ -117,6 +121,7 @@ public class LCG_Player_Data {
         this.lcgPreviousDivision = rankData.getPreviousDivision();
         this.lcgPreviousHighTier = rankData.getPreviousHighestTier();
         this.lcgPreviousHighDivision = rankData.getPreviousHighestDivision();
+        this.lcgSummonerLevel = rankData.getLevel();
         return this;
     }
 
@@ -147,8 +152,8 @@ public class LCG_Player_Data {
                            String lcgSummonerTag, int lcgSummonerIcon, int lcgRankPoint, int lcgRankWin,
                            String lcgPresentTier, String lcgPresentDivision, String lcgPresentHighTier,
                            String lcgPresentHighDivision, String lcgPreviousTier, String lcgPreviousDivision,
-                           String lcgPreviousHighTier, String lcgPreviousHighDivision,
-                           String lcgAiSummaryContent, String lcgAiSummaryVerify, String lcgPlayerHide) {
+                           String lcgPreviousHighTier, String lcgPreviousHighDivision, String lcgAiSummaryContent,
+                           String lcgAiSummaryVerify, String lcgPlayerHide, int lcgSummonerLevel) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgWinningStreak = lcgWinningStreak;
         this.lcgPlayer = lcgPlayer;
@@ -170,5 +175,6 @@ public class LCG_Player_Data {
         this.lcgAiSummaryContent = lcgAiSummaryContent;
         this.lcgAiSummaryVerify = lcgAiSummaryVerify;
         this.lcgPlayerHide = lcgPlayerHide;
+        this.lcgSummonerLevel = lcgSummonerLevel;
     }
 }
