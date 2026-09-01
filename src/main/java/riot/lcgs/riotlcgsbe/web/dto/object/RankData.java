@@ -15,4 +15,5 @@ public class RankData {
     private String previousDivision;
     private String previousHighestTier;
     private String previousHighestDivision;
+    private Integer level;
 }

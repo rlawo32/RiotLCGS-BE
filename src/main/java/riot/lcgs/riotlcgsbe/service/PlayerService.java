@@ -81,6 +81,7 @@ public class PlayerService {
                             .lcgAiSummaryContent("")
                             .lcgAiSummaryVerify("N")
                             .lcgPlayerHide("N")
+                            .lcgSummonerLevel(rankData.getLevel())
                             .build());
                 }
 
