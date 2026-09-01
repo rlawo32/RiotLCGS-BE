@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static riot.lcgs.riotlcgsbe.service.HttpService.*;
 import static riot.lcgs.riotlcgsbe.util.AccountCheckTool.playerAccountChk;
+import static riot.lcgs.riotlcgsbe.util.DateTimeTool.dateTimeCurrent;
 
 @RequiredArgsConstructor
 @Service
@@ -132,9 +133,7 @@ public class MainService {
             GameData gameData = requestDto.getGameData();
             List<TeamData> teamData = requestDto.getTeamData();
 
-            LocalDateTime localDateTime = LocalDateTime.now();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String now = localDateTime.format(dtf);
+            String now = dateTimeCurrent().getData();
 
             lcgTestTableRepository.save(LCG_Test_Table.builder()
                     .testContent("TEST INSERT")
@@ -142,7 +141,7 @@ public class MainService {
                     .testDate(now)
                     .build());
 
-            if(gameData.getGameId() != null) {
+            if(gameData != null) {
                 String validationMsg = validationService.ValidationCheckGameData(gameData).getMessage();
                 //String checkTeamData = validationService.ValidationCheckTeamData(teamData).getMessage();
                 if (!"Success".equals(validationMsg)) {
@@ -152,7 +151,6 @@ public class MainService {
                 }
             } else {
                 return CommonResponseDto.setFailed("GameData 없음");
-
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -167,7 +165,7 @@ public class MainService {
 
         Map<String, String> result = new HashMap<>();
 
-        if(gameData.getParticipantIdentities() != null && gameData.getParticipants() != null) {
+        if(gameData != null) {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
             List<Teams> list3 = gameData.getTeams();
@@ -197,6 +195,17 @@ public class MainService {
                     result.put("RedTeam-" + line, nickname);
                 }
             }
+        } else {
+            result.put("BlueTeam-TOP", "A-1");
+            result.put("BlueTeam-JUG", "A-2");
+            result.put("BlueTeam-MID", "A-3");
+            result.put("BlueTeam-ADC", "A-4");
+            result.put("BlueTeam-SUP", "A-5");
+            result.put("RedTeam-TOP", "B-1");
+            result.put("RedTeam-JUG", "B-2");
+            result.put("RedTeam-MID", "B-3");
+            result.put("RedTeam-ADC", "B-4");
+            result.put("RedTeam-SUP", "B-5");
         }
 
         return result;
