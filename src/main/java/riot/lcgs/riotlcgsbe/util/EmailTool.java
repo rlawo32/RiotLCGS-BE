@@ -8,8 +8,8 @@ import java.util.Properties;
 
 public class EmailTool {
 
-    private static final String USERNAME = "gandi779@gmail.com";
-    private static final String PASSWORD = "vcjttztqedaugmbd";
+    private static final String USERNAME = "";
+    private static final String PASSWORD = "";
 
     private static Session sendMailSession() {
 
