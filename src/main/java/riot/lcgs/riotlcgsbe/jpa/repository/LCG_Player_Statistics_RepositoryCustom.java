@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface LCG_Player_Statistics_RepositoryCustom {
 
+    List<Map<String, Object>> findByAllPlayer();
+
     List<Map<String, Object>> findByAllWinningRate();
 
     List<Map<String, Object>> findByAllMvpRank();
@@ -22,4 +24,6 @@ public interface LCG_Player_Statistics_RepositoryCustom {
     List<Map<String, Object>> findByAllMultiKillRank();
 
     List<Map<String, Object>> findByAllDemolisherRank();
+
+    Map<String, Integer> findByAllMaxStatistics();
 }
