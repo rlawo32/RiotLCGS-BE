@@ -27,46 +27,52 @@ public class LCG_Player_Ranking {
     @Column(name = "lcg_summoner_nickname")
     private String lcgSummonerNickname;
 
-    @NotNull
-    @Column(name = "lcg_ranking_current")
-    private int lcgRankingCurrent;
+    @Column(name = "lcg_ranking_current_rank")
+    private Integer lcgRankingCurrentRank;
 
-    @NotNull
-    @Column(name = "lcg_ranking_previous")
-    private int lcgRankingPrevious;
+    @Column(name = "lcg_ranking_previous_rank")
+    private Integer lcgRankingPreviousRank;
 
-    @NotNull
     @Column(name = "lcg_ranking_grade")
-    private int lcgRankingGrade;
+    private Integer lcgRankingGrade;
 
-    @NotNull
-    @Column(name = "lcg_ranking_score")
-    private int lcgRankingScore;
+    @Column(name = "lcg_ranking_current_score")
+    private Integer lcgRankingCurrentScore;
 
-    @NotNull
+    @Column(name = "lcg_ranking_previous_score")
+    private Integer lcgRankingPreviousScore;
+
     @Column(name = "lcg_ranking_count")
     private int lcgRankingCount;
 
-    public LCG_Player_Ranking playerRankingUpdate(int currentRank, int previousRank, int grade, int score) {
-        this.lcgRankingCurrent = currentRank;
-        this.lcgRankingPrevious = previousRank;
+    @NotNull
+    @Column(name = "lcg_ranking_active")
+    private String lcgRankingActive;
+
+    public LCG_Player_Ranking playerRankingUpdate(int currentRank, int previousRank, int grade, int currentScore, int previousScore) {
+        this.lcgRankingCurrentRank = currentRank;
+        this.lcgRankingPreviousRank = previousRank;
         this.lcgRankingGrade = grade;
-        this.lcgRankingScore = score;
+        this.lcgRankingCurrentScore = currentScore;
+        this.lcgRankingPreviousScore = previousScore;
         this.lcgRankingCount += 1;
         return this;
     }
 
     @Builder
     public LCG_Player_Ranking(String lcgSummonerPuuid, String lcgPlayerName, String lcgSummonerNickname,
-                              int lcgRankingCurrent, int lcgRankingPrevious, int lcgRankingGrade,
-                              int lcgRankingScore, int lcgRankingCount) {
+                              int lcgRankingCurrentRank, int lcgRankingPreviousRank, int lcgRankingGrade,
+                              int lcgRankingCurrentScore, int lcgRankingPreviousScore, int lcgRankingCount,
+                              String lcgRankingActive) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgPlayerName = lcgPlayerName;
         this.lcgSummonerNickname = lcgSummonerNickname;
-        this.lcgRankingCurrent = lcgRankingCurrent;
-        this.lcgRankingPrevious = lcgRankingPrevious;
+        this.lcgRankingCurrentRank = lcgRankingCurrentRank;
+        this.lcgRankingPreviousRank = lcgRankingPreviousRank;
         this.lcgRankingGrade = lcgRankingGrade;
-        this.lcgRankingScore = lcgRankingScore;
+        this.lcgRankingCurrentScore = lcgRankingCurrentScore;
+        this.lcgRankingPreviousScore = lcgRankingPreviousScore;
         this.lcgRankingCount = lcgRankingCount;
+        this.lcgRankingActive = lcgRankingActive;
     }
 }
