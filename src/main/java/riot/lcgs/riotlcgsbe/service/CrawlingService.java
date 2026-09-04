@@ -1,5 +1,6 @@
 package riot.lcgs.riotlcgsbe.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
@@ -11,13 +12,21 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Patch_Note;
-import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Patch_Note_Repository;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Info_Champion;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Info_Patch;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Info_Champion_Repository;
+import riot.lcgs.riotlcgsbe.jpa.repository.LCG_Info_Patch_Repository;
 import riot.lcgs.riotlcgsbe.util.EmailTool;
+import riot.lcgs.riotlcgsbe.web.dto.ChampionResponseDto;
+import riot.lcgs.riotlcgsbe.web.dto.ChampionResponseDto.*;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static riot.lcgs.riotlcgsbe.util.DateTimeTool.*;
@@ -27,8 +36,10 @@ import static riot.lcgs.riotlcgsbe.util.DateTimeTool.*;
 @Slf4j
 public class CrawlingService {
     private final OkHttpClient client;
+    private final ObjectMapper objectMapper;
 
-    private final LCG_Patch_Note_Repository lcgPatchNoteRepository;
+    private final LCG_Info_Patch_Repository lcgInfoPatchRepository;
+    private final LCG_Info_Champion_Repository lcgInfoChampionRepository;
 
     private String searchUrl;
 
@@ -164,7 +175,7 @@ public class CrawlingService {
     }
 
     @Transactional
-    public CommonResponseDto<String> LCGPatchNoteSave(String version) {
+    public CommonResponseDto<String> LCGInfoPatchSave(String version) {
 
         try {
             String now = dateTimeCurrent().getData();
@@ -179,7 +190,7 @@ public class CrawlingService {
                 return CommonResponseDto.setFailed("PatchNote 저장 실패!");
             } else {
                 patchNoteData.forEach((section, html) -> {
-                    lcgPatchNoteRepository.save(LCG_Patch_Note.builder()
+                    lcgInfoPatchRepository.save(LCG_Info_Patch.builder()
                             .lcgPatchVersion(version)
                             .lcgPatchSection(section)
                             .lcgPatchHtml(html)
@@ -190,6 +201,67 @@ public class CrawlingService {
 
                 return CommonResponseDto.setSuccess("PatchNote 저장 완료!", "Y");
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+    }
+
+    public CommonResponseDto<ChampionResponseDto> DataDragonAPIChampionKR(String version) {
+        HttpURLConnection conn = null;
+
+        try {
+            URL url = new URL("https://ddragon.leagueoflegends.com/cdn/" + version + "/data/ko_KR/champion.json");
+            conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/json");
+            conn.setDoOutput(true);
+
+            InputStream is;
+            if(conn.getResponseCode() == 200) {
+                is = conn.getInputStream();
+                ChampionResponseDto body = objectMapper.readValue(is, ChampionResponseDto.class);
+                return CommonResponseDto.setSuccess("DDragon Champion 통신 성공!", body);
+            } else {
+                is = conn.getErrorStream();
+                String err = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                return CommonResponseDto.setFailed("DDragon 응답 코드 " + conn.getResponseCode() + " : " + err);
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed(ex.getMessage());
+        } finally {
+            if (conn != null) conn.disconnect();
+        }
+    }
+
+    @Transactional
+    public CommonResponseDto<String> LCGInfoChampionSave(String version) {
+
+        try {
+            String now = dateTimeCurrent().getData();
+
+            Map<String, Object> startInfo = new HashMap<>();
+            startInfo.put("version", version);
+            EmailTool.sendMessage_Image("Champion", startInfo);
+
+            Map<String, ChampionData> championData = DataDragonAPIChampionKR(version).getData().getData();
+
+            for (ChampionData c : championData.values()) {
+                Long championId = Long.parseLong(c.getKey());
+                if(!lcgInfoChampionRepository.existsById(championId)) {
+                    lcgInfoChampionRepository.save(LCG_Info_Champion.builder()
+                                .lcgChampionId(championId)
+                                .lcgChampionName(c.getId())
+                                .lcgChampionNameKo(c.getName())
+                                .lcgUpdateDate(now)
+                                .build());
+                }
+            }
+
+            return CommonResponseDto.setSuccess("Champion Table 업데이트 완료!", "Y");
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
