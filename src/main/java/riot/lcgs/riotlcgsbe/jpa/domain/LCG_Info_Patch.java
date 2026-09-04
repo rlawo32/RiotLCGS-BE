@@ -10,8 +10,8 @@ import riot.lcgs.riotlcgsbe.jpa.PatchNoteId;
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "LCG_Patch_Note")
-public class LCG_Patch_Note {
+@Table(name = "LCG_Info_Patch")
+public class LCG_Info_Patch {
 
     @EmbeddedId
     private PatchNoteId id;
@@ -29,7 +29,7 @@ public class LCG_Patch_Note {
     private String lcgCreatedDate;
 
     @Builder
-    public LCG_Patch_Note(String lcgPatchVersion, String lcgPatchSection, String lcgPatchHtml,
+    public LCG_Info_Patch(String lcgPatchVersion, String lcgPatchSection, String lcgPatchHtml,
                           String lcgPatchUrl, String lcgCreatedDate) {
         this.id = new PatchNoteId(lcgPatchVersion, lcgPatchSection);
         this.lcgPatchHtml = lcgPatchHtml;
