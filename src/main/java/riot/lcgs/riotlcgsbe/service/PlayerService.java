@@ -400,16 +400,6 @@ public class PlayerService {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
 
-            int duration = gameData.getGameDuration();
-
-            for(TeamData player : teamData) {
-                String name = player.getName();
-                LCG_Player_Data lcgPlayerData = lcgPlayerDataRepository.findByLcgPlayer(name)
-                        .orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Name : " + name));
-
-                player.setPuuid(lcgPlayerData.getLcgSummonerPuuid());
-            }
-
             for(int i=0; i<list1.size(); i++) {
                 ParticipantIdentities participantIdentities = list1.get(i);
                 Participants participants = list2.get(i);
