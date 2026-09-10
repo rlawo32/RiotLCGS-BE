@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class PatchNoteId implements Serializable {
+public class InfoPatchId implements Serializable {
 
     @Column(name = "lcg_patch_version")
     private String lcgPatchVersion;
