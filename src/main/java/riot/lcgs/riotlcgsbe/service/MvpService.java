@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Info_Maximum;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Match_Etc;
-import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Position;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Data;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Glory;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Ranking;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
+import riot.lcgs.riotlcgsbe.util.GloryTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
@@ -25,9 +26,12 @@ public class MvpService {
     private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
     private final LCG_Player_Ranking_Repository lcgPlayerRankingRepository;
     private final LCG_Player_Position_Repository lcgPlayerPositionRepository;
+    private final LCG_Player_Champion_Repository lcgPlayerChampionRepository;
+    private final LCG_Player_Glory_Repository lcgPlayerGloryRepository;
     private final LCG_Info_Maximum_Repository lcgInfoMaximumRepository;
 
-    @Transactional
+    private final GloryService gloryService;
+
     public CommonResponseDto<List<Metrics>> LCGMvpSelection(GameData gameData) {
 
         try {
@@ -145,6 +149,44 @@ public class MvpService {
             List<Metrics> list = Arrays.asList(metrics);
 
             return CommonResponseDto.setSuccess("Mvp 데이터 계산 완료!", list);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Database Insert Failed !");
+        }
+    }
+
+    public CommonResponseDto<List<Map<String, String>>> LCGMvpProvider(GameData gameData) {
+
+        try {
+            List<Metrics> list = LCGMvpSelection(gameData).getData();
+
+            List<Map<String, String>> result = new ArrayList<>();
+            Map<String, String> map = new HashMap<>();
+
+            String mvpPuuid = list.get(0).getPuuid();
+            String acePuuid = "";
+
+            for(Metrics metrics : list) {
+                if(!metrics.isWin()) {
+                    acePuuid = metrics.getPuuid();
+                    break;
+                }
+            }
+
+            for(int j=0; j<list.size(); j++) {
+                String puuid = list.get(j).getPuuid();
+                int rank = j+1;
+                if(mvpPuuid.equals(puuid)) {
+                    map.put(puuid, "M" + rank);
+                } else if (acePuuid.equals(puuid)) {
+                    map.put(puuid, "A" + rank);
+                } else {
+                    map.put(puuid, "D" + rank);
+                }
+                result.add(map);
+            }
+
+            return CommonResponseDto.setSuccess("Mvp 데이터 계산 완료!", result);
         } catch (Exception ex) {
             ex.printStackTrace();
             return CommonResponseDto.setFailed("Database Insert Failed !");
@@ -312,24 +354,13 @@ public class MvpService {
             String now = dateTimeCurrent().getData();
 
             Map<String, Integer> listMax = lcgPlayerStatisticsRepository.findByAllMaxStatistics();
-            List<Map<String, Object>> listLane = lcgPlayerPositionRepository.findAllLaneRate();
+            Map<String, List<Map<String, Object>>> listLane = gloryService.LCGPlayerPositionSelectMax();
 
-            List<Map<String, Object>> listLaneTop = new ArrayList<>(listLane);
-            List<Map<String, Object>> listLaneJug = new ArrayList<>(listLane);
-            List<Map<String, Object>> listLaneMid = new ArrayList<>(listLane);
-            List<Map<String, Object>> listLaneAdc = new ArrayList<>(listLane);
-            List<Map<String, Object>> listLaneSup = new ArrayList<>(listLane);
-
-            listLaneTop.removeIf(map -> ((Long) map.get("play_top")) <= 20);
-            listLaneTop.sort(Comparator.comparing((Map<String, Object> map) -> (Double)map.get("rate_top")).reversed());
-            listLaneJug.removeIf(map -> ((Long) map.get("play_jug")) <= 20);
-            listLaneJug.sort(Comparator.comparing((Map<String, Object> map) -> (Double)map.get("rate_jug")).reversed());
-            listLaneMid.removeIf(map -> ((Long) map.get("play_mid")) <= 20);
-            listLaneMid.sort(Comparator.comparing((Map<String, Object> map) -> (Double)map.get("rate_mid")).reversed());
-            listLaneAdc.removeIf(map -> ((Long) map.get("play_adc")) <= 20);
-            listLaneAdc.sort(Comparator.comparing((Map<String, Object> map) -> (Double)map.get("rate_adc")).reversed());
-            listLaneSup.removeIf(map -> ((Long) map.get("play_sup")) <= 20);
-            listLaneSup.sort(Comparator.comparing((Map<String, Object> map) -> (Double)map.get("rate_sup")).reversed());
+            List<Map<String, Object>> listLaneTop = listLane.get("top");
+            List<Map<String, Object>> listLaneJug = listLane.get("jug");
+            List<Map<String, Object>> listLaneMid = listLane.get("mid");
+            List<Map<String, Object>> listLaneAdc = listLane.get("adc");
+            List<Map<String, Object>> listLaneSup = listLane.get("sup");
 
             lcgInfoMaximumRepository.save(LCG_Info_Maximum.builder()
                     .lcgMaxKill(listMax.get("kill"))
@@ -356,6 +387,18 @@ public class MvpService {
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("Database Insert Failed !");
+        }
+    }
+
+    @Transactional
+    public void LCGPlayerGloryMain() {
+
+        try {
+            gloryService.LCGPlayerGloryLaneKing();
+            gloryService.LCGPlayerGloryPerfect();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

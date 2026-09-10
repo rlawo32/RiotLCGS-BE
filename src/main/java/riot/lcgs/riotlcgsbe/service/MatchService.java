@@ -5,11 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.*;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
+import riot.lcgs.riotlcgsbe.util.DateTimeTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static riot.lcgs.riotlcgsbe.util.CalculatorTool.*;
@@ -21,6 +20,7 @@ import static riot.lcgs.riotlcgsbe.util.DateTimeTool.*;
 public class MatchService {
 
     private final MvpService mvpService;
+    private final DateTimeTool dateTimeTool;
 
     private final LCG_Match_Etc_Repository lcgMatchEtcRepository;
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
@@ -123,22 +123,7 @@ public class MatchService {
             Arrays.sort(maxDamageTotal);
             Arrays.sort(maxDamageTaken);
 
-            // 게임 세트 구하기
-            LocalDateTime now = LocalDateTime.now();
-            LocalDateTime minus = now.minusHours(4);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
-            String todayGameSet = minus.format(formatter);
-            String gameSet = "";
-
-            Optional<LCG_Match_Main> lcgMatchMain = lcgMatchMainRepository.findTopByLcgGameSetContainingOrderByRowNumDesc(todayGameSet);
-
-            if(lcgMatchMain.isPresent()) {
-                String prevSet = lcgMatchMain.get().getLcgGameSet(); // ex. 09/18-SET_01
-                int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
-                gameSet = prevSet.split("_")[0] + "_" +String.format("%02d", nextNumber); // ex. 09/18-SET_02
-            } else {
-                gameSet = todayGameSet + "-SET_01";
-            }
+            String gameSet = dateTimeTool.gameSetProvider().getData();
 
             lcgMatchInfoRepository.save(LCG_Match_Info.builder()
                     .lcgGameId(gameId)
@@ -239,51 +224,9 @@ public class MatchService {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
             List<Teams> list3 = gameData.getTeams();
-            List<Metrics> list4 = mvpService.LCGMvpSelection(gameData).getData();
+            List<Map<String, String>> mvpList = mvpService.LCGMvpProvider(gameData).getData();
 
-            // 게임 세트 구하기
-            LocalDateTime now = LocalDateTime.now();
-            LocalDateTime minus = now.minusHours(4);
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd");
-            String todayGameSet = minus.format(formatter);
-            String gameSet = "";
-
-            Optional<LCG_Match_Main> lcgMatchMain = lcgMatchMainRepository.findTopByLcgGameSetContainingOrderByRowNumDesc(todayGameSet);
-
-            if(lcgMatchMain.isPresent()) {
-                String prevSet = lcgMatchMain.get().getLcgGameSet(); // ex. 09/18-SET_01
-                int nextNumber = Integer.parseInt(prevSet.split("_")[1]) + 1;
-                gameSet = prevSet.split("_")[0] + "_" +String.format("%02d", nextNumber); // ex. 09/18-SET_02
-            } else {
-                gameSet = todayGameSet + "-SET_01";
-            }
-
-            String mvpPuuid = "";
-            String acePuuid = "";
-            int winTeam = 0;
-            int failTeam = 0;
-
-            for(Teams teams : list3) {
-                if(teams.getWin().equals("Win")) {
-                    winTeam = teams.getTeamId();
-                } else {
-                    failTeam = teams.getTeamId();
-                }
-            }
-
-            for(Metrics metrics : list4) {
-                if(winTeam == metrics.getTeam()) {
-                    mvpPuuid = metrics.getPuuid();
-                    break;
-                }
-            }
-
-            for(Metrics metrics : list4) {
-                if(failTeam == metrics.getTeam()) {
-                    acePuuid = metrics.getPuuid();
-                    break;
-                }
-            }
+            String gameSet = dateTimeTool.gameSetProvider().getData();
 
             for(TeamData player : teamData) {
                 String name = player.getName();
@@ -301,16 +244,9 @@ public class MatchService {
 
                 String mvpRank = "";
 
-                for(int j=0; j<list4.size(); j++) {
-                    int rank = j+1;
-                    if(list4.get(j).getPuuid().equals(playerData.getPuuid())) {
-                        if(mvpPuuid.equals(list4.get(j).getPuuid())) {
-                            mvpRank = "M" + rank;
-                        } else if (acePuuid.equals(list4.get(j).getPuuid())) {
-                            mvpRank = "A" + rank;
-                        } else {
-                            mvpRank = "D" + rank;
-                        }
+                for (Map<String, String> mvpData : mvpList) {
+                    if (mvpData.containsKey(playerData.getPuuid())) {
+                        mvpRank = mvpData.get(playerData.getPuuid());
                     }
                 }
 
