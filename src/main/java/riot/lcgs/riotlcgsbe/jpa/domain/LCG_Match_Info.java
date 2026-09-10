@@ -21,7 +21,7 @@ public class LCG_Match_Info {
     private Long lcgGameId;
 
     @NotNull
-    @Column(name = "lcg_game_set")
+    @Column(name = "lcg_game_set", unique = true)
     private String lcgGameSet;
 
     @NotNull
