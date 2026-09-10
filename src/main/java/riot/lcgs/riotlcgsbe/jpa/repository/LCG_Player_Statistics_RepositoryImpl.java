@@ -6,10 +6,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Statistics;
+import riot.lcgs.riotlcgsbe.jpa.domain.QLCG_Player_Statistics;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
+import java.util.function.Function;
 
-import static riot.lcgs.riotlcgsbe.jpa.domain.QLCG_Player_Position.lCG_Player_Position;
 import static riot.lcgs.riotlcgsbe.jpa.domain.QLCG_Player_Statistics.lCG_Player_Statistics;
 
 public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupport implements LCG_Player_Statistics_RepositoryCustom {
@@ -269,6 +272,53 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
         return result;
     }
 
+    @Override
+    public List<Map<String, Object>> findAllTopRank() {
+        QLCG_Player_Statistics p = lCG_Player_Statistics;
+
+        List<Tuple> rows = queryFactory
+                .select(p.lcgSummonerPuuid, p.lcgNickname, p.lcgCountPlay,
+                        p.lcgCountKill, p.lcgCountDeath, p.lcgCountAssist,
+                        p.lcgCountMinion, p.lcgCountJungle, p.lcgCountGold,
+                        p.lcgCountWardKill, p.lcgCountCrowdTime, p.lcgMultiKillScore,
+                        p.lcgCountVisionWard, p.lcgCountTower, p.lcgCountInhibitor)
+                .from(p)
+                .fetch();
+
+        // 목록 순서가 곧 출력 순서 (sort_order 역할)
+        List<Metric> metrics = List.of(
+                new Metric("kill",        0, t -> flat(nz(t.get(p.lcgCountKill)))),
+                new Metric("death",       0,  t -> flat(nz(t.get(p.lcgCountDeath)))),
+                new Metric("assist",      0,  t -> flat(nz(t.get(p.lcgCountAssist)))),
+                new Metric("cs",          30, t -> perPlay(nz(t.get(p.lcgCountMinion)) + nz(t.get(p.lcgCountJungle)), t.get(p.lcgCountPlay))),
+                new Metric("gold",        30, t -> perPlay(nz(t.get(p.lcgCountGold)),      t.get(p.lcgCountPlay))),
+                new Metric("ward_kill",   30, t -> perPlay(nz(t.get(p.lcgCountWardKill)),  t.get(p.lcgCountPlay))),
+                new Metric("crowd_time",  30, t -> perPlay(nz(t.get(p.lcgCountCrowdTime)), t.get(p.lcgCountPlay))),
+                new Metric("multi_kill",  30, t -> flat(nz(t.get(p.lcgMultiKillScore)))),
+                new Metric("vision_ward", 0,  t -> flat(nz(t.get(p.lcgCountVisionWard)))),
+                new Metric("objective",   0,  t -> flat(nz(t.get(p.lcgCountTower)) + nz(t.get(p.lcgCountInhibitor))))
+        );
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Metric m : metrics) {
+            rows.stream()
+                    .filter(t -> nz(t.get(p.lcgCountPlay)) >= m.minPlay())
+                    .map(t -> Map.entry(t, m.value().apply(t)))
+                    .filter(e -> e.getValue() != null)
+                    .max(Comparator.<Map.Entry<Tuple, BigDecimal>, BigDecimal>comparing(Map.Entry::getValue)
+                            .thenComparing(e -> e.getKey().get(p.lcgSummonerPuuid), Comparator.reverseOrder()))
+                    .ifPresent(e -> {
+                        Map<String, Object> row = new LinkedHashMap<>();
+                        row.put("title", m.title());
+                        row.put("puuid", e.getKey().get(p.lcgSummonerPuuid));
+                        row.put("nickname", e.getKey().get(p.lcgNickname));
+                        row.put("value", e.getValue());
+                        result.add(row);
+                    });
+        }
+        return result;
+    }
+
     private NumberExpression<Double> calcWinningRate(NumberPath<Long> lcgCountPlay, NumberPath<Long> lcgCountVictory) {
         NumberExpression<Double> count = Expressions.numberTemplate(Double.class,"nullif({0}, 0)", lcgCountPlay);
         return Expressions.numberTemplate(Double.class, "FLOOR({0}*10)/10", (lcgCountVictory.doubleValue().multiply(100.0)).divide(count));
@@ -288,5 +338,21 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
 
     private NumberExpression<Double> calcAvg(NumberPath<Long> target, NumberPath<Long> play) {
         return Expressions.numberTemplate(Double.class, "FLOOR({0}*100)/100", target.divide(play));
+    }
+
+    private record Metric(String title, int minPlay, Function<Tuple, BigDecimal> value) {}
+
+    private static long nz(Number n) {
+        return n == null ? 0L : n.longValue();
+    }
+
+    private static BigDecimal flat(long v) {
+        return BigDecimal.valueOf(v).setScale(1, RoundingMode.HALF_UP);
+    }
+
+    private static BigDecimal perPlay(long total, Number play) {
+        if (play == null || play.longValue() == 0) return null;   // nullif(play, 0)
+        return BigDecimal.valueOf(total)
+                .divide(BigDecimal.valueOf(play.longValue()), 1, RoundingMode.HALF_UP);
     }
 }

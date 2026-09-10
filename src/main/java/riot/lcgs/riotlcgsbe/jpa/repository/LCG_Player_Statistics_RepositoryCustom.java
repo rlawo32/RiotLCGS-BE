@@ -26,4 +26,6 @@ public interface LCG_Player_Statistics_RepositoryCustom {
     List<Map<String, Object>> findByAllDemolisherRank();
 
     Map<String, Integer> findByAllMaxStatistics();
+
+    List<Map<String, Object>> findAllTopRank();
 }
