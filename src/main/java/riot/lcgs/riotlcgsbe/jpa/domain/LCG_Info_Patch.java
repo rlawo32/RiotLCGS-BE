@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import riot.lcgs.riotlcgsbe.jpa.PatchNoteId;
+import riot.lcgs.riotlcgsbe.jpa.InfoPatchId;
 
 @NoArgsConstructor
 @Entity
@@ -14,7 +14,7 @@ import riot.lcgs.riotlcgsbe.jpa.PatchNoteId;
 public class LCG_Info_Patch {
 
     @EmbeddedId
-    private PatchNoteId id;
+    private InfoPatchId id;
 
     @NotNull
     @Column(name = "lcg_patch_html")
@@ -31,7 +31,7 @@ public class LCG_Info_Patch {
     @Builder
     public LCG_Info_Patch(String lcgPatchVersion, String lcgPatchSection, String lcgPatchHtml,
                           String lcgPatchUrl, String lcgCreatedDate) {
-        this.id = new PatchNoteId(lcgPatchVersion, lcgPatchSection);
+        this.id = new InfoPatchId(lcgPatchVersion, lcgPatchSection);
         this.lcgPatchHtml = lcgPatchHtml;
         this.lcgPatchUrl = lcgPatchUrl;
         this.lcgCreatedDate = lcgCreatedDate;
