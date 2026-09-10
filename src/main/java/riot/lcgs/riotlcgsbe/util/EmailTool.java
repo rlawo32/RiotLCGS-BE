@@ -51,6 +51,9 @@ public class EmailTool {
             } else if(messageType.equals("PatchNote")) {
                 message.setSubject("[LCGS-BE] LOL 신규 패치노트 업데이트 진행 안내 메일");
                 message.setText("신규 버전 " + (String) messageInfo.get("version") + " 패치노트 업데이트 진행");
+            } else if(messageType.equals("Champion")) {
+                message.setSubject("[LCGS-BE] LOL 신규 버전 챔피언 업데이트 진행 안내 메일");
+                message.setText("신규 버전 " + (String) messageInfo.get("version") + " 챔피언 업데이트 진행");
             }
 
             Transport.send(message);
