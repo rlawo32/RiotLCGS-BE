@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import riot.lcgs.riotlcgsbe.jpa.domain.*;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
+import riot.lcgs.riotlcgsbe.util.DateTimeTool;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.object.*;
 
@@ -23,15 +24,15 @@ public class PlayerService {
 
 
     private final MvpService mvpService;
+    private final DateTimeTool dateTimeTool;
 
     private final LCG_Match_Etc_Repository lcgMatchEtcRepository;
-    private final LCG_Match_Sub_Repository lcgMatchSubRepository;
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
     private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
     private final LCG_Player_Champion_Repository lcgPlayerChampionRepository;
     private final LCG_Player_Relative_Repository lcgPlayerRelativeRepository;
-    private final LCG_Player_Ranking_Repository lcgPlayerRankingRepository;
     private final LCG_Player_Position_Repository lcgPlayerPositionRepository;
+    private final LCG_Player_Point_Repository lcgPlayerPointRepository;
 
     @Transactional
     public CommonResponseDto<?> LCGPlayerDataSave(GameData gameData, List<RankData> list1) {
@@ -105,24 +106,19 @@ public class PlayerService {
             List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
             List<Participants> list2 = gameData.getParticipants();
             List<Teams> list3 = gameData.getTeams();
-            List<Metrics> list4 = mvpService.LCGMvpSelection(gameData).getData();
+            List<Map<String, String>> mvpList = mvpService.LCGMvpProvider(gameData).getData();
 
             String now = dateTimeCurrent().getData();
 
-            int failTeam = 0;
-            String mvpPuuid = list4.get(0).getPuuid();
+            String mvpPuuid = "";
             String acePuuid = "";
 
-            for(Teams teams : list3) {
-                if(teams.getWin().equals("Fail")) {
-                    failTeam = teams.getTeamId();
-                }
-            }
-
-            for(Metrics metrics : list4) {
-                if(failTeam == metrics.getTeam()) {
-                    acePuuid = metrics.getPuuid();
-                    break;
+            for (Map<String, String> mvpData : mvpList) {
+                for (Map.Entry<String, String> entry : mvpData.entrySet()) {
+                    String puuid = entry.getKey();
+                    String value = entry.getValue();
+                    if (value.startsWith("M")) { mvpPuuid = puuid; }
+                    if (value.startsWith("A")) { acePuuid = puuid; }
                 }
             }
 
@@ -413,6 +409,76 @@ public class PlayerService {
 						.orElseThrow(() -> new IllegalArgumentException("해당 플레이어가 없습니다. Puuid. : " + puuid));
 
 				lcgPlayerData.winningStreakUpdate(win, lcgPlayerData.getLcgWinningStreak());
+            }
+
+            return CommonResponseDto.setSuccess("플레이어 연승 기록 완료!", "Success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return CommonResponseDto.setFailed("Failed");
+        }
+    }
+
+    @Transactional
+    public CommonResponseDto<?> LCGPlayerPointUpdate(GameData gameData) {
+
+        try {
+            List<ParticipantIdentities> list1 = gameData.getParticipantIdentities();
+            List<Participants> list2 = gameData.getParticipants();
+            List<Map<String, String>> mvpList = mvpService.LCGMvpProvider(gameData).getData();
+
+            String now = dateTimeCurrent().getData();
+            String gameSet = dateTimeTool.gameSetProvider().getData();
+
+            Long gameId = gameData.getGameId();
+
+            String mvpPuuid = "";
+            String acePuuid = "";
+
+            for (Map<String, String> mvpData : mvpList) {
+                for (Map.Entry<String, String> entry : mvpData.entrySet()) {
+                    String puuid = entry.getKey();
+                    String value = entry.getValue();
+                    if (value.startsWith("M")) { mvpPuuid = puuid; }
+                    if (value.startsWith("A")) { acePuuid = puuid; }
+                }
+            }
+
+            for(int i=0; i<list1.size(); i++) {
+                ParticipantIdentities participantIdentities = list1.get(i);
+                Participants participants = list2.get(i);
+                Player playerData = participantIdentities.getPlayer();
+                Stats statsData = participants.getStats();
+
+                String puuid = playerData.getPuuid();
+                boolean win = statsData.getWin();
+
+                long pointChange;
+                String pointResult;
+                if(puuid.equals(mvpPuuid)) {
+                    pointChange = 3L;
+                    pointResult = "M";
+                } else if(puuid.equals(acePuuid)) {
+                    pointChange = 0L;
+                    pointResult = "A";
+                } else {
+                    pointChange = win ? 2L : -1L;
+                    pointResult = win ? "W" : "L";
+                }
+
+                Long pointTotal = lcgPlayerPointRepository
+                        .findFirstByIdLcgSummonerPuuidOrderByIdLcgGameIdDesc(puuid)
+                        .map(LCG_Player_Point::getLcgPointTotal)
+                        .orElse(0L);
+
+                lcgPlayerPointRepository.save(LCG_Player_Point.builder()
+                        .lcgGameId(gameId)
+                        .lcgSummonerPuuid(puuid)
+                        .lcgGameSet(gameSet)
+                        .lcgPointChange(pointChange)
+                        .lcgPointTotal(pointTotal + pointChange)
+                        .lcgPointResult(pointResult)
+                        .lcgUpdateDate(now)
+                        .build());
             }
 
             return CommonResponseDto.setSuccess("플레이어 연승 기록 완료!", "Success");
