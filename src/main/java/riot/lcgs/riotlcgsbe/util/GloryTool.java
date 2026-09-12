@@ -27,7 +27,7 @@ public enum GloryTool {
     ADC("adc", "ADCKING", 4, "Y"),
     SUP("sup", "SUPKING", 4, "Y"),
     ATTENDANCE("attendance", "개근상", 2, "N"),
-    PENTA("penta", "펜타킬 기계", 4, "N"),
+    PENTA("penta", "펜타킬 유저", 4, "N"),
     PERFECT("perfect", "절대자", 5, "N"),
     MASTER("master", "장인", 4, "N");
 
