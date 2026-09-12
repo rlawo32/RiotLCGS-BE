@@ -2,11 +2,13 @@ package riot.lcgs.riotlcgsbe.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Info_Champion;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Data;
 import riot.lcgs.riotlcgsbe.jpa.domain.LCG_Player_Glory;
 import riot.lcgs.riotlcgsbe.jpa.repository.*;
 import riot.lcgs.riotlcgsbe.util.GloryTool;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static riot.lcgs.riotlcgsbe.util.DateTimeTool.dateTimeCurrent;
@@ -15,6 +17,7 @@ import static riot.lcgs.riotlcgsbe.util.DateTimeTool.dateTimeCurrent;
 @Service
 public class GloryService {
 
+    private final LCG_Match_Info_Repository lcgMatchInfoRepository;
     private final LCG_Match_Sub_Repository lcgMatchSubRepository;
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
     private final LCG_Player_Statistics_Repository lcgPlayerStatisticsRepository;
@@ -23,6 +26,7 @@ public class GloryService {
     private final LCG_Player_Champion_Repository lcgPlayerChampionRepository;
     private final LCG_Player_Glory_Repository lcgPlayerGloryRepository;
     private final LCG_Info_Maximum_Repository lcgInfoMaximumRepository;
+    private final LCG_Info_Champion_Repository lcgInfoChampionRepository;
 
     // gloryGrade
     // S등급 : 5 , A등급 : 4 , B등급 : 3 , C등급 : 2 , D등급 : 1
@@ -49,7 +53,7 @@ public class GloryService {
 
     public void LCGPlayerGlorySave(String puuid, String nickname, String gloryId,
                                    String gloryTitle, String gloryInfo, int gloryGrade,
-                                   String gloryUnique, String gloryActive) {
+                                   String gloryUnique, String gloryActive, String gloryHide) {
         String now = dateTimeCurrent().getData();
 
         lcgPlayerGloryRepository.save(LCG_Player_Glory.builder()
@@ -61,6 +65,7 @@ public class GloryService {
                 .lcgGloryGrade(gloryGrade)
                 .lcgGloryUnique(gloryUnique)
                 .lcgGloryActive(gloryActive)
+                .lcgGloryHide(gloryHide)
                 .lcgUpdateDate(now)
                 .build());
     }
@@ -86,6 +91,28 @@ public class GloryService {
         lcgPlayerGloryRepository
                 .findByLcgGloryIdAndLcgGloryUniqueAndLcgGloryActive(gloryId, "Y", "Y")
                 .ifPresent(glory -> glory.playerGloryActiveUpdate(now));
+    }
+
+    public void LCGPlayerGloryInfoUpdate(String puuid, String gloryId, String gloryInfo) {
+        String now = dateTimeCurrent().getData();
+        LCG_Player_Glory lcgPlayerGlory = lcgPlayerGloryRepository
+                .findByLcgSummonerPuuidAndLcgGloryIdAndLcgGloryActive(puuid, gloryId, "Y")
+                .orElse(null);
+
+        if (lcgPlayerGlory != null) {
+            lcgPlayerGlory.playerGloryInfoUpdate(gloryInfo, now);
+        }
+    }
+
+    public void LCGPlayerGloryTitleUpdate(String puuid, String gloryId, String gloryTitle) {
+        String now = dateTimeCurrent().getData();
+        LCG_Player_Glory lcgPlayerGlory = lcgPlayerGloryRepository
+                .findByLcgSummonerPuuidAndLcgGloryIdAndLcgGloryActive(puuid, gloryId, "Y")
+                .orElse(null);
+
+        if (lcgPlayerGlory != null) {
+            lcgPlayerGlory.playerGloryTitleUpdate(gloryTitle, now);
+        }
     }
 
     public Map<String, List<Map<String, Object>>> LCGPlayerPositionSelectMax() {
@@ -144,7 +171,9 @@ public class GloryService {
                 if(LCGPlayerGloryUniqueCheck(gloryTop.getUnique())) {
                     LCGPlayerGloryActiveUpdate(gloryId);
                 }
-                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryTop.getTitle(), info, gloryTop.getGrade(), gloryTop.getUnique(), "Y");
+                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryTop.getTitle(), info, gloryTop.getGrade(), gloryTop.getUnique(), "Y", "N");
+            } else {
+                LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
             }
 
             gloryId = "jug";
@@ -157,7 +186,9 @@ public class GloryService {
                 if(LCGPlayerGloryUniqueCheck(gloryJug.getUnique())) {
                     LCGPlayerGloryActiveUpdate(gloryId);
                 }
-                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryJug.getTitle(), info, gloryJug.getGrade(), gloryJug.getUnique(), "Y");
+                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryJug.getTitle(), info, gloryJug.getGrade(), gloryJug.getUnique(), "Y", "N");
+            } else {
+                LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
             }
 
             gloryId = "mid";
@@ -170,7 +201,9 @@ public class GloryService {
                 if(LCGPlayerGloryUniqueCheck(gloryMid.getUnique())) {
                     LCGPlayerGloryActiveUpdate(gloryId);
                 }
-                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryMid.getTitle(), info, gloryMid.getGrade(), gloryMid.getUnique(), "Y");
+                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryMid.getTitle(), info, gloryMid.getGrade(), gloryMid.getUnique(), "Y", "N");
+            } else {
+                LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
             }
 
             gloryId = "adc";
@@ -183,7 +216,9 @@ public class GloryService {
                 if(LCGPlayerGloryUniqueCheck(gloryAdc.getUnique())) {
                     LCGPlayerGloryActiveUpdate(gloryId);
                 }
-                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryAdc.getTitle(), info, gloryAdc.getGrade(), gloryAdc.getUnique(), "Y");
+                LCGPlayerGlorySave(puuid, nickname, gloryId, gloryAdc.getTitle(), info, gloryAdc.getGrade(), gloryAdc.getUnique(), "Y", "N");
+            } else {
+                LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
             }
 
             gloryId = "sup";
@@ -196,7 +231,9 @@ public class GloryService {
                 if(LCGPlayerGloryUniqueCheck(glorySup.getUnique())) {
                     LCGPlayerGloryActiveUpdate(gloryId);
                 }
-                LCGPlayerGlorySave(puuid, nickname, gloryId, glorySup.getTitle(), info, glorySup.getGrade(), glorySup.getUnique(), "Y");
+                LCGPlayerGlorySave(puuid, nickname, gloryId, glorySup.getTitle(), info, glorySup.getGrade(), glorySup.getUnique(), "Y", "N");
+            } else {
+                LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -226,7 +263,147 @@ public class GloryService {
                     if(LCGPlayerGloryUniqueCheck(gloryPerfect.getUnique())) {
                         LCGPlayerGloryActiveUpdate(gloryId);
                     }
-                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryPerfect.getGrade(), gloryPerfect.getUnique(), "Y");
+                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryPerfect.getGrade(), gloryPerfect.getUnique(), "Y", "N");
+                } else {
+                    LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
+                    LCGPlayerGloryTitleUpdate(puuid, gloryId, title);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void LCGPlayerGloryWinningRate() {
+
+        try {
+            Long gameCount = lcgMatchInfoRepository.count();
+            List<Map<String, Object>> listWinningRate = lcgPlayerStatisticsRepository.findByAllWinningRate();
+            listWinningRate.removeIf(map -> ((Number) map.get("countPlay")).intValue() < (gameCount/2));
+            listWinningRate.sort(Comparator.comparing(
+                            map -> ((Number) map.get("grade")).doubleValue(),
+                            Comparator.reverseOrder()));
+
+            String gloryId = "winner";
+            GloryTool gloryWinner = GloryTool.findById(gloryId);
+
+            if(!listWinningRate.isEmpty()) {
+                Map<String, Object> map = listWinningRate.get(0);
+                String title = gloryWinner.getTitle();
+                String puuid = (String) map.get("puuid");
+                Long play = (Long) map.get("countPlay");
+                double grade = (double) map.get("grade");
+                String info = play + "판, 승률 " + grade + "%";
+
+                String nickname = LCGPlayerDataSelectNickname(puuid);
+
+                if(LCGPlayerGloryDuplicationCheck(puuid, gloryId)) {
+                    if(LCGPlayerGloryUniqueCheck(gloryWinner.getUnique())) {
+                        LCGPlayerGloryActiveUpdate(gloryId);
+                    }
+                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryWinner.getGrade(), gloryWinner.getUnique(), "Y", "N");
+                } else {
+                    LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void LCGPlayerGloryAttendanceRate() {
+
+        try {
+            Long gameCount = lcgMatchInfoRepository.count();
+            List<Map<String, Object>> listAttendanceRate = lcgPlayerStatisticsRepository.findByAllAttendanceRate(gameCount);
+
+            String gloryId = "attendance";
+            GloryTool gloryAttendance = GloryTool.findById(gloryId);
+
+            for(Map<String, Object> map : listAttendanceRate) {
+                String title = gloryAttendance.getTitle();
+                if(listAttendanceRate.size() == 1) { title = "유일무이 개근상"; }
+                String puuid = (String) map.get("puuid");
+                String nickname = (String) map.get("nickname");
+                String info = "출석률 100%";
+
+                if(LCGPlayerGloryDuplicationCheck(puuid, gloryId)) {
+                    if(LCGPlayerGloryUniqueCheck(gloryAttendance.getUnique())) {
+                        LCGPlayerGloryActiveUpdate(gloryId);
+                    }
+                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryAttendance.getGrade(), gloryAttendance.getUnique(), "Y", "N");
+                } else {
+                    LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
+                    LCGPlayerGloryTitleUpdate(puuid, gloryId, title);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void LCGPlayerGloryPentakill() {
+
+        try {
+            List<Map<String, Object>> listPentakill = lcgPlayerStatisticsRepository.findByAllPentaKill();
+
+            String gloryId = "penta";
+            GloryTool gloryPenta = GloryTool.findById(gloryId);
+
+            for(Map<String, Object> map : listPentakill) {
+                String title = gloryPenta.getTitle();
+                if(listPentakill.size() == 1) { title = "유일무이 펜타킬"; }
+                String puuid = (String) map.get("puuid");
+                String nickname = (String) map.get("nickname");
+                Long pentakill = (Long) map.get("pentakill");
+                String info = "펜타킬 " + pentakill + "회";
+
+                if(LCGPlayerGloryDuplicationCheck(puuid, gloryId)) {
+                    if(LCGPlayerGloryUniqueCheck(gloryPenta.getUnique())) {
+                        LCGPlayerGloryActiveUpdate(gloryId);
+                    }
+                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryPenta.getGrade(), gloryPenta.getUnique(), "Y", "N");
+                } else {
+                    LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
+                    LCGPlayerGloryTitleUpdate(puuid, gloryId, title);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void LCGPlayerGloryMaster() {
+
+        try {
+            List<Map<String, Object>> listMaster = lcgPlayerChampionRepository.findChampionMaster();
+
+            String gloryId = "master";
+            GloryTool gloryMaster = GloryTool.findById(gloryId);
+
+            for(Map<String, Object> map : listMaster) {
+                String title = gloryMaster.getTitle();
+                String puuid = (String) map.get("puuid");
+                String nickname = (String) map.get("nickname");
+                String champion = (String) map.get("champion");
+                LCG_Info_Champion lcgInfoChampion = lcgInfoChampionRepository
+                        .findByLcgChampionName(champion)
+                        .orElse(null);
+                String championKo = lcgInfoChampion.getLcgChampionNameKo();
+                title = championKo + " " + title;
+                Long play = (Long) map.get("play");
+                double rate = (double) map.get("rate");
+                String info = play + "판, 승률" + rate + "%";
+
+                boolean existsCheck = lcgPlayerGloryRepository.existsByLcgSummonerPuuidAndLcgGloryIdAndLcgGloryActiveAndLcgGloryTitleContaining(puuid, gloryId, "Y", championKo);
+
+                if(!existsCheck) {
+                    if(LCGPlayerGloryUniqueCheck(gloryMaster.getUnique())) {
+                        LCGPlayerGloryActiveUpdate(gloryId);
+                    }
+                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryMaster.getGrade(), gloryMaster.getUnique(), "Y", "N");
+                } else {
+                    LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
                 }
             }
         } catch (Exception ex) {
@@ -237,27 +414,61 @@ public class GloryService {
     public void LCGPlayerGloryStatisticsTopRank() {
 
         try {
-            // 절대자
-            List<Map<String, Object>> listPerfect = lcgPlayerStatisticsRepository.findAllTopRank();
+            List<Map<String, Object>> listTopRank = lcgPlayerStatisticsRepository.findAllTopRank();
 
-            String gloryId = "perfect";
-            GloryTool gloryPerfect = GloryTool.findById(gloryId);
-
-            for(Map<String, Object> map : listPerfect) {
-                String title = gloryPerfect.getTitle();
-                if(listPerfect.size() == 1) { title = "유일무이 절대자"; }
+            for(Map<String, Object> map : listTopRank) {
+                String gloryId = (String) map.get("title");
+                GloryTool gloryTopRank = GloryTool.findById(gloryId);
+                String title = gloryTopRank.getTitle();
                 String puuid = (String) map.get("puuid");
-                String champion = (String) map.get("champion");
-                Long play = (Long) map.get("play");
-                String info = champion + "-" + play + "회 승률 100%";
+                String nickname = (String) map.get("nickname");
+                String info = "";
 
-                String nickname = LCGPlayerDataSelectNickname(puuid);
+                if(gloryId.equals("kill")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "총 누적 " + val + "킬 달성!";
+                } else if (gloryId.equals("death")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "총 누적 " + val + "데스 달성!";
+                } else if (gloryId.equals("assist")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "총 누적 " + val + "어시 달성!";
+                } else if (gloryId.equals("cs")) {
+                    double val = ((BigDecimal) map.get("value")).doubleValue();
+                    info = "평균 CS " + val + "개";
+                } else if (gloryId.equals("gold")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "평균 골드 " + val + "원";
+                } else if (gloryId.equals("ward")) {
+                    double val = ((BigDecimal) map.get("value")).doubleValue();
+                    info = "평균 와드킬 " + val + "개";
+                } else if (gloryId.equals("crowd")) {
+                    double val = ((BigDecimal) map.get("value")).doubleValue();
+                    info = "평균 CC시간 " + val + "초";
+                } else if (gloryId.equals("multi")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "멀티킬 스코어 " + val + "점 달성!";
+                } else if (gloryId.equals("pink")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "총 누적 " + val + "개 구매";
+                } else if (gloryId.equals("demolisher")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "총 누적 " + val + "개 철거";
+                } else if (gloryId.equals("dragon")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "총 누적 " + val + "마리 처치";
+                } else if (gloryId.equals("baron")) {
+                    int val = ((BigDecimal) map.get("value")).intValue();
+                    info = "총 누적 " + val + "마리 처치";
+                }
 
                 if(LCGPlayerGloryDuplicationCheck(puuid, gloryId)) {
-                    if(LCGPlayerGloryUniqueCheck(gloryPerfect.getUnique())) {
+                    if(LCGPlayerGloryUniqueCheck(gloryTopRank.getUnique())) {
                         LCGPlayerGloryActiveUpdate(gloryId);
                     }
-                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryPerfect.getGrade(), gloryPerfect.getUnique(), "Y");
+                    LCGPlayerGlorySave(puuid, nickname, gloryId, title, info, gloryTopRank.getGrade(), gloryTopRank.getUnique(), "Y", "N");
+                } else {
+                    LCGPlayerGloryInfoUpdate(puuid, gloryId, info);
                 }
             }
         } catch (Exception ex) {

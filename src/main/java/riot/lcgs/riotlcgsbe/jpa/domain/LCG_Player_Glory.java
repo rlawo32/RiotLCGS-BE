@@ -49,6 +49,10 @@ public class LCG_Player_Glory {
     private String lcgGloryActive;
 
     @NotNull
+    @Column(name = "lcg_glory_hide")
+    private String lcgGloryHide;
+
+    @NotNull
     @Column(name = "lcg_update_date")
     private String lcgUpdateDate;
 
@@ -58,10 +62,22 @@ public class LCG_Player_Glory {
         return this;
     }
 
+    public LCG_Player_Glory playerGloryInfoUpdate(String lcgGloryInfo, String lcgUpdateDate) {
+        this.lcgGloryInfo = lcgGloryInfo;
+        this.lcgUpdateDate = lcgUpdateDate;
+        return this;
+    }
+
+    public LCG_Player_Glory playerGloryTitleUpdate(String lcgGloryTitle, String lcgUpdateDate) {
+        this.lcgGloryTitle = lcgGloryTitle;
+        this.lcgUpdateDate = lcgUpdateDate;
+        return this;
+    }
+
     @Builder
     public LCG_Player_Glory(String lcgSummonerPuuid, String lcgSummonerNickname, String lcgGloryId,
-                            String lcgGloryTitle, String lcgGloryInfo, int lcgGloryGrade,
-                            String lcgGloryUnique, String lcgGloryActive,String lcgUpdateDate) {
+                            String lcgGloryTitle, String lcgGloryInfo, int lcgGloryGrade, String lcgGloryUnique,
+                            String lcgGloryActive, String lcgGloryHide, String lcgUpdateDate) {
         this.lcgSummonerPuuid = lcgSummonerPuuid;
         this.lcgSummonerNickname = lcgSummonerNickname;
         this.lcgGloryId = lcgGloryId;
@@ -70,6 +86,7 @@ public class LCG_Player_Glory {
         this.lcgGloryGrade = lcgGloryGrade;
         this.lcgGloryUnique = lcgGloryUnique;
         this.lcgGloryActive = lcgGloryActive;
+        this.lcgGloryHide = lcgGloryHide;
         this.lcgUpdateDate = lcgUpdateDate;
     }
 }
