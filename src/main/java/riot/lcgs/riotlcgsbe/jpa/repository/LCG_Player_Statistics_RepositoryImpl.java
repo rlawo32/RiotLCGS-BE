@@ -273,6 +273,48 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
     }
 
     @Override
+    public List<Map<String, Object>> findByAllAttendanceRate(Long gameCount) {
+        List<Tuple> query = queryFactory
+                .select(lCG_Player_Statistics.lcgSummonerPuuid, lCG_Player_Statistics.lcgNickname, lCG_Player_Statistics.lcgCountPlay)
+                .from(lCG_Player_Statistics)
+                .where(lCG_Player_Statistics.lcgCountPlay.eq(gameCount))
+                .fetch();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for(Tuple tuple : query) {
+            Map<String, Object> row = new HashMap<>();
+            row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
+            row.put("nickname", tuple.get(lCG_Player_Statistics.lcgNickname));
+            row.put("play", tuple.get(lCG_Player_Statistics.lcgCountPlay));
+
+            result.add(row);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> findByAllPentaKill() {
+        List<Tuple> query = queryFactory
+                .select(lCG_Player_Statistics.lcgSummonerPuuid, lCG_Player_Statistics.lcgNickname, lCG_Player_Statistics.lcgCountPentaKill)
+                .from(lCG_Player_Statistics)
+                .where(lCG_Player_Statistics.lcgCountPentaKill.goe(1L))
+                .fetch();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for(Tuple tuple : query) {
+            Map<String, Object> row = new HashMap<>();
+            row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
+            row.put("nickname", tuple.get(lCG_Player_Statistics.lcgNickname));
+            row.put("pentakill", tuple.get(lCG_Player_Statistics.lcgCountPentaKill));
+
+            result.add(row);
+        }
+
+        return result;
+    }
+
+    @Override
     public List<Map<String, Object>> findAllTopRank() {
         QLCG_Player_Statistics p = lCG_Player_Statistics;
 
@@ -281,22 +323,25 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
                         p.lcgCountKill, p.lcgCountDeath, p.lcgCountAssist,
                         p.lcgCountMinion, p.lcgCountJungle, p.lcgCountGold,
                         p.lcgCountWardKill, p.lcgCountCrowdTime, p.lcgMultiKillScore,
-                        p.lcgCountVisionWard, p.lcgCountTower, p.lcgCountInhibitor)
+                        p.lcgCountVisionWard, p.lcgCountTower, p.lcgCountInhibitor,
+                        p.lcgCountDragon, p.lcgCountBaron)
                 .from(p)
                 .fetch();
 
         // 목록 순서가 곧 출력 순서 (sort_order 역할)
         List<Metric> metrics = List.of(
-                new Metric("kill",        0, t -> flat(nz(t.get(p.lcgCountKill)))),
-                new Metric("death",       0,  t -> flat(nz(t.get(p.lcgCountDeath)))),
-                new Metric("assist",      0,  t -> flat(nz(t.get(p.lcgCountAssist)))),
-                new Metric("cs",          30, t -> perPlay(nz(t.get(p.lcgCountMinion)) + nz(t.get(p.lcgCountJungle)), t.get(p.lcgCountPlay))),
-                new Metric("gold",        30, t -> perPlay(nz(t.get(p.lcgCountGold)),      t.get(p.lcgCountPlay))),
-                new Metric("ward_kill",   30, t -> perPlay(nz(t.get(p.lcgCountWardKill)),  t.get(p.lcgCountPlay))),
-                new Metric("crowd_time",  30, t -> perPlay(nz(t.get(p.lcgCountCrowdTime)), t.get(p.lcgCountPlay))),
-                new Metric("multi_kill",  30, t -> flat(nz(t.get(p.lcgMultiKillScore)))),
-                new Metric("vision_ward", 0,  t -> flat(nz(t.get(p.lcgCountVisionWard)))),
-                new Metric("objective",   0,  t -> flat(nz(t.get(p.lcgCountTower)) + nz(t.get(p.lcgCountInhibitor))))
+                new Metric("kill",      0,  t -> flat(nz(t.get(p.lcgCountKill)))),
+                new Metric("death",     0,  t -> flat(nz(t.get(p.lcgCountDeath)))),
+                new Metric("assist",    0,  t -> flat(nz(t.get(p.lcgCountAssist)))),
+                new Metric("cs",        30, t -> perPlay(nz(t.get(p.lcgCountMinion)) + nz(t.get(p.lcgCountJungle)), t.get(p.lcgCountPlay))),
+                new Metric("gold",      30, t -> perPlay(nz(t.get(p.lcgCountGold)),      t.get(p.lcgCountPlay))),
+                new Metric("ward",      30, t -> perPlay(nz(t.get(p.lcgCountWardKill)),  t.get(p.lcgCountPlay))),
+                new Metric("crowd",     30, t -> perPlay(nz(t.get(p.lcgCountCrowdTime)), t.get(p.lcgCountPlay))),
+                new Metric("multi",     30, t -> flat(nz(t.get(p.lcgMultiKillScore)))),
+                new Metric("pink",      0,  t -> flat(nz(t.get(p.lcgCountVisionWard)))),
+                new Metric("demolisher",0,  t -> flat(nz(t.get(p.lcgCountTower)) + nz(t.get(p.lcgCountInhibitor)))),
+                new Metric("dragon",    30, t -> flat(nz(t.get(p.lcgCountDragon)))),
+                new Metric("baron",     30, t -> flat(nz(t.get(p.lcgCountBaron))))
         );
 
         List<Map<String, Object>> result = new ArrayList<>();

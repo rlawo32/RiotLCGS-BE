@@ -27,5 +27,9 @@ public interface LCG_Player_Statistics_RepositoryCustom {
 
     Map<String, Integer> findByAllMaxStatistics();
 
+    List<Map<String, Object>> findByAllAttendanceRate(Long gameCount);
+
+    List<Map<String, Object>> findByAllPentaKill();
+
     List<Map<String, Object>> findAllTopRank();
 }
