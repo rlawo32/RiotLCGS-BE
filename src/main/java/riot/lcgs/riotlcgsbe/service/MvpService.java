@@ -394,8 +394,28 @@ public class MvpService {
     public void LCGPlayerGloryMain() {
 
         try {
+            // TOPKING, JUGKING, MIDKING, ADCKING, SUPKING
             gloryService.LCGPlayerGloryLaneKing();
+
+            // 절대자 (특정 챔피언 5판 이상 승률 100%, 유일무이)
             gloryService.LCGPlayerGloryPerfect();
+
+            // 승리자 (게임 승률 1등)
+            gloryService.LCGPlayerGloryWinningRate();
+
+            // 개근상 (내전 참가율 100%, 유일무이)
+            gloryService.LCGPlayerGloryAttendanceRate();
+
+            // 펜타킬 유저 (펜타킬 여부, 유일무이)
+            gloryService.LCGPlayerGloryPentakill();
+
+            // 챔피언 장인 (챔피언 마다 부여, 게임 50판 이상/승률 50% 이상)
+            gloryService.LCGPlayerGloryMaster();
+
+            // 바론 슬레이어(누적), 드래곤 슬레이어(누적), 철거반장(누적)
+            // 킬링머신(누적), 데스 왕(누적), 어시스트 왕(누적), 핑와 애호가(누적), 멀티킬 기계(누적)
+            // CS 장인(평균), 골드 부자(평균), 와드 사냥꾼(평균), CC성애자(평균)
+            gloryService.LCGPlayerGloryStatisticsTopRank();
 
         } catch (Exception ex) {
             ex.printStackTrace();
