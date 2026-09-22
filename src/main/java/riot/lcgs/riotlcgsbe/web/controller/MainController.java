@@ -3,6 +3,7 @@ package riot.lcgs.riotlcgsbe.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import riot.lcgs.riotlcgsbe.service.MainService;
+import riot.lcgs.riotlcgsbe.service.MvpService;
 import riot.lcgs.riotlcgsbe.web.dto.ApiTestDataRequestDto;
 import riot.lcgs.riotlcgsbe.web.dto.CommonResponseDto;
 import riot.lcgs.riotlcgsbe.web.dto.CustomGameRequestDto;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class MainController {
 
     private final MainService mainService;
+    private final MvpService mvpService;
 
     @PostMapping("/insertPlayerData")
     public CommonResponseDto<?> insertPlayerData(@RequestBody PlayerDataRequestDto requestDto) {
@@ -45,6 +47,11 @@ public class MainController {
     @GetMapping("/updatePatchNote")
     public void updatePatchNote(@RequestParam String version) {
         mainService.LCGPatchNoteSave(true, version);
+    }
+
+    @GetMapping("/updateRanking")
+    public void updateRanking() {
+        mvpService.LCGPlayerRankingSave();
     }
 
     @PostMapping("/test")

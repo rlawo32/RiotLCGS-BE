@@ -37,7 +37,7 @@ public class MainService {
     private final LCG_Match_Info_Repository lcgMatchInfoRepository;
     private final LCG_Match_Main_Repository lcgMatchMainRepository;
     private final LCG_Player_Data_Repository lcgPlayerDataRepository;
-    private final LCG_Patch_Note_Repository lcgPatchNoteRepository;
+    private final LCG_Info_Patch_Repository lcgInfoPatchRepository;
     private final LCG_Test_Table_Repository lcgTestTableRepository;
 
     @Transactional
@@ -99,7 +99,8 @@ public class MainService {
         playerService.LCGPlayerStatisticsSave(gameData);
         playerService.LCGPlayerPositionSave(gameData, teamData);
         playerService.LCGPlayerWinningStreakUpdate(gameData, teamData);
-        playerService.LCGPlayerRankingSave();
+        mvpService.LCGPlayerRankingSave();
+        mvpService.LCGInfoMaximumSave();
 
         return CommonResponseDto.setSuccess("저장 완료", "Success");
     }
@@ -162,6 +163,11 @@ public class MainService {
         GameData gameData = requestDto.getGameData();
         List<TeamData> teamData = requestDto.getTeamData();
         List<RankData> rankData = requestDto.getRankData();
+
+//        mvpService.LCGInfoMaximumSave();
+//        mvpService.LCGPlayerRankingSave();
+//        mvpService.LCGPlayerGloryMain();
+//        playerService.LCGPlayerPointUpdate(gameData);
 
         Map<String, String> result = new HashMap<>();
 
@@ -231,28 +237,36 @@ public class MainService {
         try {
 //            String latestVersion = lcgMatchEtcRepository.findLatestValue();
             int ver = 1;
-            String[] latestVersion = lcgPatchNoteRepository.findLatestValue().split("-");
+            String[] latestVersion = lcgInfoPatchRepository.findLatestValue().split("-");
             String year = String.valueOf(LocalDate.now().getYear()).substring(2);
 
             if(latestVersion[0].equals(year)) {
-                ver = (passivityUpload ? Integer.parseInt(version) : Integer.parseInt(latestVersion[1])) + 1;
+                ver = (passivityUpload ? Integer.parseInt(version) : Integer.parseInt(latestVersion[1]) + 1);
             }
 
             String patchVer = year + "-" + (ver < 10 ? "0" + ver : ver);
 
-            boolean duplicationChk1 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "CHAMPION");
-            boolean duplicationChk2 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "ITEM");
-            boolean duplicationChk3 = lcgPatchNoteRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "BUGFIXE");
+            boolean duplicationChk1 = lcgInfoPatchRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "CHAMPION");
+            boolean duplicationChk2 = lcgInfoPatchRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "ITEM");
+            boolean duplicationChk3 = lcgInfoPatchRepository.existsByIdLcgPatchVersionAndIdLcgPatchSection(patchVer, "BUGFIXE");
 
             if((!duplicationChk1 && !duplicationChk2 && !duplicationChk3) || passivityUpload) {
-                boolean result = crawlingService.LCGPatchNoteSave(patchVer).isResult();
-                if(result) {
+                boolean resultPatchNote = crawlingService.LCGInfoPatchSave(patchVer).isResult();
+                if(resultPatchNote) {
                     System.out.println("PatchNote 저장 완료! / Version : " + patchVer);
                 } else {
                     System.out.println("PatchNote 저장 실패! / Version : " + patchVer);
                 }
             } else {
                 System.out.println("PatchNote 저장 실패! / 해당 버전 존재 Version : " + patchVer);
+            }
+
+            Map<String, String> championVer = DataDragonAPIVersion().getData();
+            boolean resultChampion = crawlingService.LCGInfoChampionSave(championVer.get("ver")).isResult();
+            if(resultChampion) {
+                System.out.println("Champion 업데이트 완료! / Version : " + championVer.get("ver"));
+            } else {
+                System.out.println("Champion 업데이트 실패! / Version : " + championVer.get("ver"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
