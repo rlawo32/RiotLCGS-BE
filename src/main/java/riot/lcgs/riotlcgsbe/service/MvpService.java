@@ -265,16 +265,24 @@ public class MvpService {
             calcPlayerRankingScore(listPlayer, listMultiKillRank, "D", listPlayer.size(), 1);
             calcPlayerRankingScore(listPlayer, listDemolisherRank, "L", listPlayer.size(), 1);
 
-            // 판수 어드밴티지
+            // 점수 어드밴티지 처리
             for (Map<String, Object> map : listPlayer) {
-                int play = ((Number) map.get("play")).intValue();
                 int score = ((Number) map.get("score")).intValue();
 
+                // 판수 어드밴티지
+                int play = ((Number) map.get("play")).intValue();
 //                if (play < 30) { score -= 100; }
 //                else if (play < 70) { score -= 60; }
 //                else if (play < 100) { score -= 20; }
                 if (play < 10) { score -= 100; }
                 else if (play < 30) { score -= 60; }
+
+                // 승점 어드밴티지 (victory:+2, defeat:-1)
+                int victory = ((Number) map.get("victory")).intValue();
+                int defeat = ((Number) map.get("defeat")).intValue();
+
+                score += victory * 2;
+                score -= defeat;
 
                 map.put("score", score);
             }
@@ -302,13 +310,18 @@ public class MvpService {
                 String nickName = (String) map.get("nickname");
                 int currentScore = Integer.parseInt(String.valueOf(map.get("score")));
                 int currentRank = Integer.parseInt(String.valueOf(map.get("rank")));
-                int gradeStandard = Math.round((float) gradeRange / 5);
+                int gradeStandard = (int) Math.ceil((float) gradeRange / 5);
                 int grade = 5;
-                for(int i=gradeStandard; i<=listPlayer.size(); i+=gradeStandard) {
-                    if(currentRank <= i) {
-                        break;
+
+                if(currentRank == 0) {
+                    grade = 1;
+                } else {
+                    for(int i=gradeStandard; i<=listPlayer.size(); i+=gradeStandard) {
+                        if(currentRank <= i) {
+                            break;
+                        }
+                        grade--;
                     }
-                    grade--;
                 }
 
                 boolean duplicationCheck = lcgPlayerRankingRepository.existsLCG_Player_RankingByLcgSummonerPuuid(puuid);

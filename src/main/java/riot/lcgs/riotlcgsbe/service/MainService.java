@@ -88,6 +88,7 @@ public class MainService {
         ExtractionTool.jsonChampion = championResult.getData();
         ExtractionTool.jsonPerk = perkResult.getData();
 
+        // 데이터 저장 Start ---------------------------------------------
         matchService.LCGMatchInfoSave(gameId, gameData, version);
         matchService.LCGMatchEtcSave(version);
         matchService.LCGTeamLogSave(gameId, gameData, version);
@@ -101,6 +102,8 @@ public class MainService {
         playerService.LCGPlayerWinningStreakUpdate(gameData, teamData);
         mvpService.LCGPlayerRankingSave();
         mvpService.LCGInfoMaximumSave();
+        mvpService.LCGPlayerGloryMain();
+        playerService.LCGPlayerPointUpdate(gameData);
 
         return CommonResponseDto.setSuccess("저장 완료", "Success");
     }
@@ -117,6 +120,7 @@ public class MainService {
             if(checkGameData.equals("Success") && checkRankData.equals("Success")) {
                 //playerService.LCGPlayerRankingSave();
                 playerService.LCGPlayerDataSave(gameData, rankData);
+                mvpService.LCGPlayerRankingSave();
 
                 return CommonResponseDto.setSuccess("플레이어 저장 완료!", "Success");
             } else {

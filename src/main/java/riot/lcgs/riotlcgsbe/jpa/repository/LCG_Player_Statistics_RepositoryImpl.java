@@ -27,7 +27,8 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
     @Override
     public List<Map<String, Object>> findByAllPlayer() {
         List<Tuple> query = queryFactory
-                .select(lCG_Player_Statistics.lcgSummonerPuuid, lCG_Player_Statistics.lcgNickname, lCG_Player_Statistics.lcgCountPlay)
+                .select(lCG_Player_Statistics.lcgSummonerPuuid, lCG_Player_Statistics.lcgNickname,
+                        lCG_Player_Statistics.lcgCountPlay, lCG_Player_Statistics.lcgCountVictory, lCG_Player_Statistics.lcgCountDefeat)
                 .from(lCG_Player_Statistics).fetch();
 
         List<Map<String, Object>> result = new ArrayList<>();
@@ -36,6 +37,8 @@ public class LCG_Player_Statistics_RepositoryImpl extends QuerydslRepositorySupp
             row.put("puuid", tuple.get(lCG_Player_Statistics.lcgSummonerPuuid));
             row.put("nickname", tuple.get(lCG_Player_Statistics.lcgNickname));
             row.put("play", tuple.get(lCG_Player_Statistics.lcgCountPlay));
+            row.put("victory", tuple.get(lCG_Player_Statistics.lcgCountVictory));
+            row.put("defeat", tuple.get(lCG_Player_Statistics.lcgCountDefeat));
             row.put("score", 0);
             row.put("rank", 0);
 
