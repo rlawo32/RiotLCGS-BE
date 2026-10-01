@@ -431,6 +431,10 @@ public class PlayerService {
 
             Long gameId = gameData.getGameId();
 
+            if(lcgPlayerPointRepository.existsById_LcgGameId(gameId)) {
+                return CommonResponseDto.setFailed("중복 저장");
+            }
+
             String mvpPuuid = "";
             String acePuuid = "";
 

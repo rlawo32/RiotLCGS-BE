@@ -8,5 +8,7 @@ import java.util.Optional;
 
 public interface LCG_Player_Point_Repository extends JpaRepository<LCG_Player_Point, PlayerPointId> {
 
+    boolean existsById_LcgGameId(Long gameId);
+
     Optional<LCG_Player_Point> findFirstByIdLcgSummonerPuuidOrderByIdLcgGameIdDesc(String puuid);
 }
